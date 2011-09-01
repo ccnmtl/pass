@@ -157,7 +157,7 @@ var saveOrderOfPageBlocks = function() {
 
 <div id="add-pageblock-tab">
 
-{% for blocktype in available_pageblocks %}
+{% for blocktype in section.available_pageblocks %}
 {% if blocktype %}
 <form action="{% url add-pageblock section.id %}"
 {% if blocktype.add_form.is_multipart %}

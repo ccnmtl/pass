@@ -93,7 +93,6 @@ def edit_page(request,path):
     return dict(section=section,
                 module=get_module(section),
                 modules=root.get_children(),
-                can_admin=can_admin,
                 root=section.hierarchy.get_root())
 
 
