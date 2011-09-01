@@ -40,6 +40,10 @@ def page(request,path):
     root = section.hierarchy.get_root()
     module = get_module(section)
 
+    can_edit = False
+    if not request.user.is_anonymous():
+        can_edit = request.user.is_staff
+
     if section.id == root.id:
         # trying to visit the root page
         if section.get_next():
@@ -66,6 +70,7 @@ def page(request,path):
                     modules=root.get_children(),
                     root=section.hierarchy.get_root(),
                     instructor_link=instructor_link,
+                    can_edit=can_edit,
                     )
 @login_required
 @rendered_with("main/instructor_page.html")
