@@ -1,4 +1,4 @@
-# Django settings for match project.
+# Django settings for pass project.
 import os.path
 
 DEBUG = True
@@ -9,7 +9,7 @@ ADMINS = ( )
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'postgresql_psycopg2' # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'match' # Or path to database file if using sqlite3.
+DATABASE_NAME = 'pass' # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -19,7 +19,7 @@ TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = False
-MEDIA_ROOT = "/var/www/match/uploads/"
+MEDIA_ROOT = "/var/www/pass/uploads/"
 MEDIA_URL = '/uploads/'
 ADMIN_MEDIA_PREFIX = '/media/'
 SECRET_KEY = ')ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
@@ -42,10 +42,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
 )
 
-ROOT_URLCONF = 'match.urls'
+ROOT_URLCONF = 'pass.urls'
 
 TEMPLATE_DIRS = (
-    "/var/www/match/templates/",
+    "/var/www/pass/templates/",
     os.path.join(os.path.dirname(__file__),"templates"),
 )
 
@@ -93,12 +93,12 @@ if SentryHandler not in map(lambda x: x.__class__, logger.handlers):
 SENTRY_REMOTE_URL = 'http://sentry.ccnmtl.columbia.edu/sentry/store/'
 # remember to set the SENTRY_KEY in a local_settings.py
 # as documented in the wiki
-SENTRY_SITE = 'match'
+SENTRY_SITE = 'pass'
 
 THUMBNAIL_SUBDIR = "thumbs"
-EMAIL_SUBJECT_PREFIX = "[match] "
+EMAIL_SUBJECT_PREFIX = "[pass] "
 EMAIL_HOST = 'localhost'
-SERVER_EMAIL = "match@ccnmtl.columbia.edu"
+SERVER_EMAIL = "pass@ccnmtl.columbia.edu"
 
 # put any static media here to override app served static media
 STATICMEDIA_MOUNTS = (

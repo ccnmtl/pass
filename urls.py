@@ -19,9 +19,9 @@ urlpatterns = patterns('',
                        (r'^uploads/(?P<path>.*)$','django.views.static.serve',{'document_root' : settings.MEDIA_ROOT}),
                        (r'^_quiz/',include('quizblock.urls')),
                        (r'^_careermap/',include('careermapblock.urls')),
-                       (r'^edit/(?P<path>.*)$','match.main.views.edit_page',{},'edit-page'),
-                       (r'^instructor/(?P<path>.*)$','match.main.views.instructor_page'),
-                       (r'^(?P<path>.*)$','match.main.views.page'),
+                       (r'^edit/(?P<path>.*)$','pass.main.views.edit_page',{},'edit-page'),
+                       (r'^instructor/(?P<path>.*)$','pass.main.views.instructor_page'),
+                       (r'^(?P<path>.*)$','pass.main.views.page'),
                        
 ) 
 
