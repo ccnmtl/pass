@@ -7,6 +7,8 @@ admin.autodiscover()
 site_media_root = os.path.join(os.path.dirname(__file__),"media")
 
 urlpatterns = patterns('',
+                       (r'^$','main.views.intro'),
+
                        (r'^export/$','main.views.exporter'),
                        (r'^import/$','main.views.importer'),
 
