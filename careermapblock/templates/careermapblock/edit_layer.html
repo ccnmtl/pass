@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block content %}
+<h2><a href="{% url edit-careermap-layers layer.cmap.id %}">Career Map</a> Layer {{layer.display_number}}: {{ layer.name }}</h2>
+
+<img alt="{{layer.name}}" src="{% thumbnail layer.image 600x600 %}" />
+
+<form action="." method="post">
+<table width="100%">
+{{ layer.edit_form.as_table }}
+</table>
+<input type="submit" value="save" />
+</form>
+
+{% endblock %}

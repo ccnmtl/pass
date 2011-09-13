@@ -1,0 +1,79 @@
+{% load markup %}
+{% load thumbnail %}
+
+
+
+<div class="careermaptabs">
+<ul>
+  <li><a href="#{{block.id}}-map">map</a></li>
+  <li><a href="#{{block.id}}-questions">questions</a></li>
+</ul>
+
+<div id="{{block.id}}-map">
+
+<table>
+<tr>
+<td>
+
+<select id="{{block.id}}-basemap-control"
+onchange="jQuery('#{{block.id}}-basemap').attr('src',this.value)">
+{% for basemap in block.basemap_set.all %}
+<option value="{% thumbnail basemap.image 600x600 %}">{{basemap.name}}</option>
+{% endfor %}
+</select><br />
+
+<table class="layer-controls">
+{% for layer in block.layer_set.all %}
+<tr>
+<td><div class="layer-box" style="background-color:
+			      {{layer.color}};"> </div>
+</td>
+<td>
+<a href="#layer-{{layer.id}}" onclick="jQuery('#layer-{{layer.id}}').toggle()">{{layer.name}}    </a></li>
+</td>
+</tr>
+{% endfor %}
+</table>
+
+<div class="description">
+{{block.description|markdown}}
+</div>
+
+</td>
+<td>
+<div id="{{block.id}}-base" class="careermap-base">
+<img id="{{block.id}}-basemap" alt="career map" src="{% thumbnail block.default_base_map.image 600x600 %}" />
+
+{% for layer in block.layer_set.all %}
+<img id="layer-{{layer.id}}" src="/uploads/{{layer.image}}"
+     class="careermap-layer" />
+{% endfor %}
+
+</div>
+
+[[data table will go here]]
+
+</td>
+</tr></table>
+
+
+
+</div>
+
+
+
+<div id="{{block.id}}-questions">
+{% if request.user.is_anonymous %}
+<p class="warning">You must be logged in to view this content</p>
+{% else %}
+{% for question in block.question_set.all %}
+<textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}">
+{{question.text}}
+</textarea><br />
+{% endfor %}
+{% endif %}
+</div>
+
+</div>
+
+
