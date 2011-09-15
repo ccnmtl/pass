@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2><a href="{% url edit-careermap-county_stat_types county_stat_type.cmap.id %}">Career Map</a> Column of per-column statistics {{county_stat_type.display_number}}: "{{ county_stat_type.name }}"</h2>
+
+<form action="." method="post">
+<table width="100%">
+{{ county_stat_type.edit_form.as_table }}
+</table>
+<input type="submit" value="save" />
+</form>
+
+{% endblock %}

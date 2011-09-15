@@ -1,4 +1,6 @@
-from models import CareerMap, Question, Layer, Response, BaseMap
+#from models import CareerMap, Question, Layer, Response, BaseMap
+
+from models import CareerMap, Question, Layer, BaseMap, County, CountyStatType, CountyStatValue
 
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse
@@ -166,8 +168,119 @@ def edit_basemap(request,id):
     basemap = get_object_or_404(BaseMap,id=id)
     if request.method == "POST":
         form = basemap.edit_form(request.POST)
-        basemap = form.save(commit=False)
-        basemap.save()
+        #import pdb
+        #pdb.set_trace()
+        #why is a form being assigned to a basemap??
+        #
+        #basemap = form.save(commit=False)
+        #basemap.save()
         return HttpResponseRedirect(reverse("edit-careermap-basemap",args=[basemap.id]))
     return dict(basemap=basemap)
+    
+#COUNTY STAT TYPES:
+    
+def delete_county_stat_type(request,id):
+    county_stat_type = get_object_or_404(CountyStatType,id=id)
+    if request.method == "POST":
+        cmap = county_stat_type.cmap
+        county_stat_type.delete()
+        return HttpResponseRedirect(reverse("edit-careermap-county_stat_types",args=[cmap.id]))
+    return HttpResponse("""
+<html><body><form action="." method="post">Are you Sure?
+<input type="submit" value="Yes, delete it" /></form></body></html>
+""")
 
+def reorder_county_stat_types(request,id):
+    if request.method != "POST":
+        return HttpResponse("only use POST for this", status=400)
+    cmap = get_object_or_404(CareerMap,id=id)
+    keys = request.GET.keys()
+    county_stat_type_keys = [int(k[len('county_stat_type_'):]) for k in keys if k.startswith('county_stat_type_')]
+    county_stat_type_keys.sort()
+    county_stat_types = [int(request.GET['county_stat_type_' + str(k)]) for k in county_stat_type_keys]
+    cmap.update_county_stat_types_order(county_stat_types)
+    return HttpResponse("ok")
+
+
+def add_county_stat_type(request,id):
+    cmap = get_object_or_404(CareerMap,id=id)
+    form = cmap.add_county_stat_type_form(request.POST)
+    if form.is_valid():
+        county_stat_type = form.save(commit=False)
+        county_stat_type.cmap = cmap
+        county_stat_type.save()
+    else:
+        print "form was not valid"
+        print form.errors
+    return HttpResponseRedirect(reverse("edit-careermap-county_stat_types",args=[cmap.id]))
+
+@rendered_with('careermapblock/edit_county_stat_type.html')
+def edit_county_stat_type(request,id):
+    county_stat_type = get_object_or_404(CountyStatType,id=id)
+    if request.method == "POST":
+        form = county_stat_type.edit_form(request.POST)
+        county_stat_type = form.save(commit=False)
+        county_stat_type.save()
+        return HttpResponseRedirect(reverse("edit-careermap-county_stat_type",args=[county_stat_type.id]))
+    return dict(county_stat_type=county_stat_type)
+    
+
+@rendered_with('careermapblock/edit_county_stat_types.html')
+def edit_county_stat_types(request,id):
+    cmap = get_object_or_404(CareerMap,id=id)
+    section = cmap.pageblock().section
+    return dict(cmap=cmap,section=section)
+    
+#COUNTIES:
+    
+def delete_county(request,id):
+    county = get_object_or_404(County,id=id)
+    if request.method == "POST":
+        cmap = county.cmap
+        county.delete()
+        return HttpResponseRedirect(reverse("edit-careermap-counties",args=[cmap.id]))
+    return HttpResponse("""
+<html><body><form action="." method="post">Are you Sure?
+<input type="submit" value="Yes, delete it" /></form></body></html>
+""")
+
+def reorder_counties(request,id):
+    if request.method != "POST":
+        return HttpResponse("only use POST for this", status=400)
+    cmap = get_object_or_404(CareerMap,id=id)
+    keys = request.GET.keys()
+    county_keys = [int(k[len('county_'):]) for k in keys if k.startswith('county_')]
+    county_keys.sort()
+    counties = [int(request.GET['county_' + str(k)]) for k in county_keys]
+    cmap.update_counties_order(counties)
+    return HttpResponse("ok")
+
+
+def add_county(request,id):
+    cmap = get_object_or_404(CareerMap,id=id)
+    form = cmap.add_county_form(request.POST)
+    if form.is_valid():
+        county = form.save(commit=False)
+        county.cmap = cmap
+        county.save()
+    else:
+        print "form was not valid"
+        print form.errors
+    return HttpResponseRedirect(reverse("edit-careermap-counties",args=[cmap.id]))
+
+@rendered_with('careermapblock/edit_county.html')
+def edit_county(request,id):
+    county = get_object_or_404(County,id=id)
+    if request.method == "POST":
+        form = county.edit_form(request.POST)
+        county = form.save(commit=False)
+        county.save()
+        return HttpResponseRedirect(reverse("edit-careermap-county",args=[county.id]))
+    return dict(county=county)
+
+@rendered_with('careermapblock/edit_counties.html')
+def edit_counties(request,id):
+    cmap = get_object_or_404(CareerMap,id=id)
+    section = cmap.pageblock().section
+    return dict(cmap=cmap,section=section)
+    
