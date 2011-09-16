@@ -5,7 +5,15 @@
 {% block content %}
 <h2>Welcome to PASS</h2>
 
+{% if request.user.is_anonymous %}
+<p>If you have an account already, you
+  can <a href="/accounts/login/?next=/">login</a>.</p>
+<p>Otherwise, you should <a href="/registration/register/">create an
+    account</a>.</p>
+{% else %}
+
 <p>Content goes here</p>
 
 <p>Start on <a href="/module-1/survey/">Module 1</a></p>
+{% endif %}
 {% endblock %}

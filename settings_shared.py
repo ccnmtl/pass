@@ -15,6 +15,7 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
+DEFAULT_FROM_EMAIL = 'pass@pass.ccnmtl.columbia.edu'
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
@@ -70,7 +71,9 @@ INSTALLED_APPS = (
     'main',
     'quizblock',
     'careermapblock',
+    'registration',
 )
+ACCOUNT_ACTIVATION_DAYS = 7
 
 PAGEBLOCKS = ['pageblocks.TextBlock',
               'pageblocks.HTMLBlock',
