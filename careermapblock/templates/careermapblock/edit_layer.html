@@ -4,7 +4,7 @@
 {% block content %}
 <h2><a href="{% url edit-careermap-layers layer.cmap.id %}">Career Map</a> Layer {{layer.display_number}}: {{ layer.name }}</h2>
 
-<img alt="{{layer.name}}" src="{% thumbnail layer.image 600x600 %}" />
+<img alt="{{layer.name}}" src="{% thumbnail layer.image 600x600 %}" style = "background-color:#b0c4de;" enctype="multipart/form-data"/>
 
 <form action="." method="post">
 <table width="100%">

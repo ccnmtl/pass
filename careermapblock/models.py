@@ -99,6 +99,33 @@ class CareerMap(models.Model):
 
     def default_base_map(self):
         return self.basemap_set.all()[0]
+        
+        
+
+class CountyStatType(models.Model):
+    """County_stat_type
+        e.g.
+            White person %, Black person %, Foreign Born %, etc.
+            many-to-many: basemap.
+    """
+    cmap = models.ForeignKey(CareerMap)
+    name = models.TextField(default="",blank=True,null=True)
+    
+    class Meta:
+        order_with_respect_to = 'cmap'
+
+    def __unicode__(self):
+        return self.name or "County ID %d" % self.id
+
+    def dir(self):
+        return dir(self)
+    
+    def edit_form(self,request=None):
+      return CountyStatTypeForm(request, instance=self)
+
+
+
+        
 
 class BaseMap(models.Model):
     cmap = models.ForeignKey(CareerMap)
@@ -106,7 +133,7 @@ class BaseMap(models.Model):
     name = models.CharField(max_length=256,default="")
     
     #The columns of stats that need to be shown when this base map is selected:
-    county_stat_types = models.ManyToManyField ('CountyStatType')
+    county_stat_types = models.ManyToManyField ('CountyStatType', blank=True)
    
     image = ImageWithThumbnailsField(upload_to="images/careermapblock/base_maps/%Y/%m/%d",
                                      thumbnail = {
@@ -132,23 +159,6 @@ class BaseMap(models.Model):
         """ Return all the stats associated with this basemap """
         return None
 
-    def edit_form(self, request_post=None):
-        class EditForm(forms.Form):
-            assert self != None
-            image = forms.FileField(label="replace image")
-            name = forms.CharField(initial=self.name)
-            columns = forms.ModelMultipleChoiceField(
-                queryset=CountyStatType.objects.all(),
-                initial = [c.pk for c in CountyStatType.objects.all() if c in  self.county_stat_types.all()]
-            )
-        return EditForm()
-
-    def edit(self,vals,files):
-        self.name = vals.get('name','')
-        if 'image' in files:
-            self.save_image(files['image'])
-        self.save()
-
     def save_image(self,f):
         ext = f.name.split(".")[-1].lower()
         basename = slugify(f.name.split(".")[-2].lower())[:20]
@@ -170,6 +180,23 @@ class BaseMap(models.Model):
         self.save()
 
 
+    def edit_form(self,request=None, files=None):
+        the_form =  BaseMapForm(request, files, instance=self)
+        the_form.fields['name']   = forms.CharField(initial=self.name)
+        the_form.fields['image']  = forms.FileField(label="replace image")
+        the_form.fields['county_stat_types'] = forms.ModelMultipleChoiceField(
+            queryset=CountyStatType.objects.all(),
+            initial = [c.pk for c in CountyStatType.objects.all() if c in  self.county_stat_types.all()]
+        )
+        return the_form
+        
+        
+class BaseMapForm(forms.ModelForm):   
+    class Meta:
+        model = BaseMap
+        fields = ('name', 'image', 'county_stat_types',)
+
+
 class Layer(models.Model):
     cmap = models.ForeignKey(CareerMap)
     name = models.CharField(max_length=256,default="")
@@ -183,7 +210,7 @@ class Layer(models.Model):
         return dir(self)
     
     #The columns of stats that need to be shown when this layer is selected:
-    county_stat_types = models.ManyToManyField ('CountyStatType')
+    county_stat_types = models.ManyToManyField ('CountyStatType', blank=True)
     
     image = ImageWithThumbnailsField(upload_to="images/careermapblock/layers/%Y/%m/%d",
                                      thumbnail = {
@@ -198,21 +225,12 @@ class Layer(models.Model):
     class Meta:
         order_with_respect_to = 'cmap'
 
-    def edit_form(self):
-        class EditForm(forms.Form):
-            image = forms.FileField(label="replace image")
-            name = forms.CharField(initial=self.name)
-            color = forms.CharField(initial=self.color)
-            #adding:
-            columns = forms.ModelMultipleChoiceField(queryset=CountyStatType.objects.all())
-
-        return EditForm()
-
-    def edit(self,vals,files):
-        self.name = vals.get('name','')
-        if 'image' in files:
-            self.save_image(files['image'])
-        self.save()
+    if 1 == 0:
+        def edit(self,vals,files):
+            self.name = vals.get('name','')
+            if 'image' in files:
+                self.save_image(files['image'])
+            self.save()
 
     def save_image(self,f):
         ext = f.name.split(".")[-1].lower()
@@ -233,6 +251,35 @@ class Layer(models.Model):
         fd.close()
         self.image = full_filename
         self.save()
+
+    if 1 == 0:
+        def edit_form(self,request=None):
+            class EditForm(forms.Form):
+                image = forms.FileField(label="replace image")
+                name = forms.CharField(initial=self.name)
+                color = forms.CharField(initial=self.color)
+                #adding:
+                columns = forms.ModelMultipleChoiceField(queryset=CountyStatType.objects.all())
+
+            return EditForm()
+
+
+    def edit_form(self,request=None, files=None):
+        the_form =  LayerForm(request, files, instance=self)
+        the_form.fields['name']   = forms.CharField(initial=self.name)
+        the_form.fields['image']  = forms.FileField(label="replace image")
+        the_form.fields['county_stat_types'] = forms.ModelMultipleChoiceField(
+            queryset=CountyStatType.objects.all(),
+            initial = [c.pk for c in CountyStatType.objects.all() if c in  self.county_stat_types.all()]
+        )
+        return the_form
+
+
+class LayerForm(forms.ModelForm):
+    class Meta:
+        model = Layer
+        fields = ('name', 'color', 'image', 'county_stat_types')
+
 
 class County(models.Model):
     """County
@@ -255,28 +302,12 @@ class County(models.Model):
     def edit_form(self,request=None):
       return CountyForm(request, instance=self)
       
-
-
-class CountyStatType(models.Model):
-    """County_stat_type
-        e.g.
-            White person %, Black person %, Foreign Born %, etc.
-            many-to-many: basemap.
-    """
-    cmap = models.ForeignKey(CareerMap)
-    name = models.TextField(default="",blank=True,null=True)
-    
+class CountyForm(forms.ModelForm):
     class Meta:
-        order_with_respect_to = 'cmap'
+        model = County
+        exclude = ("cmap",)
+        fields = ('name', )
 
-    def __unicode__(self):
-        return self.name or "County ID %d" % self.id
-
-    def dir(self):
-        return dir(self)
-    
-    def edit_form(self,request=None):
-      return CountyStatTypeForm(request, instance=self)
 
 
 
@@ -299,6 +330,8 @@ class CountyStatValue(models.Model):
     
 
 
+                            
+                            
 class Question(models.Model):
     """ These are just "did you know" questions"""
     
@@ -319,18 +352,6 @@ class QuestionForm(forms.ModelForm):
         model = Question
         exclude = ("cmap",)
         fields = ('text', )
-
-class LayerForm(forms.ModelForm):
-    class Meta:
-        model = Layer
-        exclude = ("cmap",)
-        fields = ('name', 'color', 'image', 'county_stat_types')
-
-class BaseMapForm(forms.ModelForm):
-    class Meta:
-        model = BaseMap
-        exclude = ("cmap",)
-        fields = ('name', 'image', 'county_stat_types')
         
 class CountyStatTypeForm(forms.ModelForm):
     class Meta:
@@ -338,9 +359,5 @@ class CountyStatTypeForm(forms.ModelForm):
         exclude = ("cmap",)
         fields = ('name',)
         
-class CountyForm(forms.ModelForm):
-    class Meta:
-        model = County
-        exclude = ("cmap",)
-        fields = ('name', )
+
 

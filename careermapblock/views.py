@@ -1,11 +1,9 @@
-#from models import CareerMap, Question, Layer, Response, BaseMap
-
 from models import CareerMap, Question, Layer, BaseMap, County, CountyStatType, CountyStatValue
-
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
+import IPython
 
 class rendered_with(object):
     def __init__(self, template_name):
@@ -117,13 +115,33 @@ def add_layer(request,id):
         print form.errors
     return HttpResponseRedirect(reverse("edit-careermap-layers",args=[cmap.id]))
 
+
+
 @rendered_with('careermapblock/edit_layer.html')
 def edit_layer(request,id):
+
+    print request.FILES
+
     layer = get_object_or_404(Layer,id=id)
     if request.method == "POST":
-        form = layer.edit_form(request.POST)
-        layer = form.save(commit=False)
+        form = layer.edit_form(request.POST, request.FILES)
+        if request.POST.has_key('county_stat_types'):
+            selected_objects = CountyStatType.objects.filter(id__in= request.POST.getlist('county_stat_types'))
+            layer.county_stat_types = selected_objects
+        else:
+            layer.county_stat_types = []
         layer.save()
+        
+        
+        try:
+            layer = form.save(commit=False)
+        except ValueError:
+            if form.errors == {'county_stat_types': [u'This field is required.']}:
+                pass #this field is NOT required.  TODO fix this.
+            else:
+                IPython.embed()
+        layer.save()
+        
         return HttpResponseRedirect(reverse("edit-careermap-layer",args=[layer.id]))
     return dict(layer=layer)
 
@@ -167,13 +185,22 @@ def add_basemap(request,id):
 def edit_basemap(request,id):
     basemap = get_object_or_404(BaseMap,id=id)
     if request.method == "POST":
-        form = basemap.edit_form(request.POST)
-        #import pdb
-        #pdb.set_trace()
-        #why is a form being assigned to a basemap??
-        #
-        #basemap = form.save(commit=False)
-        #basemap.save()
+        form = basemap.edit_form(request.POST, request.FILES)
+        if request.POST.has_key('county_stat_types'):
+            selected_objects = CountyStatType.objects.filter(id__in= request.POST.getlist('county_stat_types'))
+            basemap.county_stat_types = selected_objects
+        else:
+            basemap.county_stat_types = []
+        basemap.save()
+
+        try:
+            basemap = form.save(commit=False)
+        except ValueError:
+            if form.errors == {'county_stat_types': [u'This field is required.']}:
+                pass #this field is NOT required. TODO fix this.
+            else:
+                IPython.embed()
+        basemap.save()
         return HttpResponseRedirect(reverse("edit-careermap-basemap",args=[basemap.id]))
     return dict(basemap=basemap)
     
@@ -210,7 +237,6 @@ def add_county_stat_type(request,id):
         county_stat_type.cmap = cmap
         county_stat_type.save()
     else:
-        print "form was not valid"
         print form.errors
     return HttpResponseRedirect(reverse("edit-careermap-county_stat_types",args=[cmap.id]))
 

@@ -42,14 +42,18 @@ var saveOrder = function() {
 {% block content %}
 <h2><a href="/edit{{section.get_absolute_url}}">{{section.label}}</a>: {{cmap.pageblock.label}}</h2>
 <ul id="county_stat_types" class="dragparent">
-{% for county_stat_type in cmap.county_stat_type_set.all %}
+{% for county_stat_type in cmap.countystattype_set.all %}
     <li class="draggable" id="county_stat_type-{{county_stat_type.id}}">
     <span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>[<a href="{% url delete-careermap-county_stat_type county_stat_type.id %}">delete</a>] 
-    County Stat Type {{ county_stat_type.display_number }}: 
-    <a href="{% url edit-careermap-county_stat_type county_stat_type.id %}">{{county_stat_type.text|truncatewords:5}}</a>
+     Column
+    <a href="{% url edit-careermap-county_stat_type county_stat_type.id %}">{{county_stat_type.name|truncatewords:5}}</a>
+    shown on basemaps: {{county_stat_type.basemap_set.all}} and layers: {{county_stat_type.layer_set.all}}
 </li>
 {% endfor %}
 </ul>
+<div>
+    <strong>Note:</strong> To associate a column of stats with a basemap or a layer, so that it shows up in the table underneath the map, you need to edit the basemap or layer and make sure that stat column is selected.
+</div>
 
 <form action="{% url edit-careermap-add-county_stat_type cmap.id %}"
       method="post" enctype="multipart/form-data">
