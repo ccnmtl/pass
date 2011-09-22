@@ -13,7 +13,9 @@ from pagetree.models import Section
 from pagetree_export.exportimport import export_zip, import_zip
 from pageblocks.exportimport import *
 from quizblock.exportimport import *
+from quizblock.models import Submission, Response
 import os
+import csv
 
 class rendered_with(object):
     def __init__(self, template_name):
@@ -90,6 +92,93 @@ def instructor_page(request,path):
                 module=get_module(section),
                 modules=root.get_children(),
                 root=h.get_root())
+
+
+@login_required
+@rendered_with("main/all_results.html")
+def all_results(request):
+    h = get_hierarchy(request.get_host())
+    all_users = User.objects.all()
+    quizzes = []
+    for s in h.get_root().get_descendants():
+        for p in s.pageblock_set.all():
+            if hasattr(p.block(),'needs_submit') and p.block().needs_submit():
+                quizzes.append(p)
+
+    questions = []
+    for qz in quizzes:
+        for q in qz.block().question_set.all():
+            questions.append(q)
+
+    class Column(object):
+        def __init__(self,question=None,answer=None):
+            self.question = question
+            self.answer = answer
+            self._label_cache = None
+
+        def label(self):
+            # don't want to have to recompute the labels on every row
+            if self._label_cache is None:
+                if self.answer is None:
+                    self._label_cache = "%d%s%s/%s" % (self.question.id,self.question.quiz.pageblock().section.get_absolute_url(),
+                                                     self.question.quiz.pageblock().label,
+                                                     self.question.text)
+                else:
+                    self._label_cache = "%d%s%s/%s/%s" % (self.question.id,self.question.quiz.pageblock().section.get_absolute_url(),
+                                                          self.question.quiz.pageblock().label,
+                                                          self.question.text,self.answer.label)
+            return self._label_cache
+
+        def value(self,user):
+            r = Submission.objects.filter(quiz=self.question.quiz,user=user).order_by("-submitted")
+            if r.count() == 0:
+                # user has not submitted this form
+                return ""
+            submission = r[0]
+            r = Response.objects.filter(question=self.question,submission=submission)
+            if r.count() > 0:
+                if self.answer is None:
+                    # text/short answer type question
+                    return r[0].value
+                else:
+                    # multiple/single choice
+                    if self.answer.value in [res.value for res in self.question.user_responses(user)]:
+                        return "1"
+                    else:
+                        return "0"
+            else:
+                # user submitted this form, but left this question blank somehow
+                return ""
+
+    columns = []
+    for q in questions:
+        if q.answerable():
+            # need to make a column for each answer
+            for a in q.answer_set.all():
+                columns.append(Column(question=q,answer=a))
+        else:
+            columns.append(Column(question=q))
+
+    all_responses = []
+    for u in all_users:
+        row = []
+        for column in columns:
+            v = column.value(u)
+            row.append(v)
+        all_responses.append(dict(user=u,row=row))
+
+    if request.GET.get('format','html') == 'csv':
+        response = HttpResponse(mimetype='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=match_responses.csv'
+        writer = csv.writer(response)
+        headers = ['user'] + ["%s" % c.label().encode('utf-8') for c in columns]
+        writer.writerow(headers)
+        for r in all_responses:
+            rd = [r['user'].username] + r['row']
+            writer.writerow(rd)
+        return response
+    else:
+        return dict(all_columns=columns,all_responses=all_responses)
 
 @login_required
 @rendered_with('main/edit_page.html')

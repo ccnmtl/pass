@@ -225,12 +225,6 @@ class Layer(models.Model):
     class Meta:
         order_with_respect_to = 'cmap'
 
-    if 1 == 0:
-        def edit(self,vals,files):
-            self.name = vals.get('name','')
-            if 'image' in files:
-                self.save_image(files['image'])
-            self.save()
 
     def save_image(self,f):
         ext = f.name.split(".")[-1].lower()
@@ -251,18 +245,6 @@ class Layer(models.Model):
         fd.close()
         self.image = full_filename
         self.save()
-
-    if 1 == 0:
-        def edit_form(self,request=None):
-            class EditForm(forms.Form):
-                image = forms.FileField(label="replace image")
-                name = forms.CharField(initial=self.name)
-                color = forms.CharField(initial=self.color)
-                #adding:
-                columns = forms.ModelMultipleChoiceField(queryset=CountyStatType.objects.all())
-
-            return EditForm()
-
 
     def edit_form(self,request=None, files=None):
         the_form =  LayerForm(request, files, instance=self)
@@ -338,6 +320,9 @@ class Question(models.Model):
     cmap = models.ForeignKey(CareerMap)
     text = models.TextField(default="",blank=True,null=True)
 
+    layer = models.ForeignKey(Layer, blank=True,null=True)
+    basemap = models.ForeignKey(BaseMap, blank=True,null=True)
+
     class Meta:
         order_with_respect_to = 'cmap'
 
@@ -351,7 +336,7 @@ class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         exclude = ("cmap",)
-        fields = ('text', )
+        fields = ('text', 'layer', 'basemap')
         
 class CountyStatTypeForm(forms.ModelForm):
     class Meta:

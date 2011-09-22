@@ -2,11 +2,15 @@
 {% load thumbnail %}
 
 {% block content %}
+
+<div>
+    {{layer.image}}
+</div>
 <h2><a href="{% url edit-careermap-layers layer.cmap.id %}">Career Map</a> Layer {{layer.display_number}}: {{ layer.name }}</h2>
 
-<img alt="{{layer.name}}" src="{% thumbnail layer.image 600x600 %}" style = "background-color:#b0c4de;" enctype="multipart/form-data"/>
+<img alt="{{layer.name}}" src="{% thumbnail layer.image 600x600 %}" style="background-color:#b0c4de;" />
 
-<form action="." method="post">
+<form action="." method="post" enctype="multipart/form-data">
 <table width="100%">
 {{ layer.edit_form.as_table }}
 </table>
@@ -14,3 +18,4 @@
 </form>
 
 {% endblock %}
+

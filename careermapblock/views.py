@@ -120,6 +120,7 @@ def add_layer(request,id):
 @rendered_with('careermapblock/edit_layer.html')
 def edit_layer(request,id):
 
+    print "files is:"
     print request.FILES
 
     layer = get_object_or_404(Layer,id=id)
