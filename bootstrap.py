@@ -7,7 +7,11 @@ import shutil
 pwd = os.path.abspath(os.path.dirname(__file__))
 vedir = os.path.abspath(os.path.join(pwd,"ve"))
 
-if os.path.exists(vedir):
+clear = True
+if len(sys.argv) > 1:
+    if sys.argv[1] == "--fast":
+        clear = False
+if clear and os.path.exists(vedir):
     shutil.rmtree(vedir)
 
 virtualenv_support_dir = os.path.abspath(os.path.join(pwd, "requirements", "virtualenv_support"))
