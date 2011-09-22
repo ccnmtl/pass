@@ -15,5 +15,5 @@ requirements/src/django-pagetree-0.7.1.tar.gz
 requirements/src/django-pageblocks-0.5.tar.gz
 requirements/src/django-quizblock-0.5.0.tar.gz
 requirements/src/django-pagetree_export-0.3.tar.gz
-requirements/src/django-careermapblock-0.2.1.tar.gz
+requirements/src/django-careermapblock-0.2.2.tar.gz
 requirements/src/django-registration-0.7.tar.gz
