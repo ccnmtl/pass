@@ -204,12 +204,12 @@ a:visited
 {
 	min-width: 912px;
 	width: 912px;
-	height: 112px;
+	height: 76px;
 	overflow: hidden;
 	margin: 0;
 	padding: 0;
 	border: 0;
-	background: url('../img/bg_header.jpg') left top no-repeat;
+	border-bottom: 1px solid #dedede;
 	position: relative;
 }
 
@@ -289,20 +289,18 @@ a:visited
 {
 	min-width: 912px;
 	width: 912px;
-	height: 31px;
-	overflow: hidden;
 	margin: 0;
 	padding: 0;
 	border: 0;
-	        background-color:#228B22 ;
+    background: url("../img/children_header.png") no-repeat scroll left top transparent;
+    height: 188px;
 }
 
 #primarynav ul.globalnav
 {
 	display: block;
 	float: left;
-	overflow: hidden;
-	margin: 0 0 0 6px;
+    margin: 156px 0 0 0;
 	padding: 0;
 	border: 0;
 	list-style: none;
@@ -341,15 +339,14 @@ a:visited
 #primarynav #usernav
 {
 	display: block;
-	float: right;
-	overflow: hidden;
-	margin: 0 6px 0 0;
 	padding: 0;
 	border: 0;
 	list-style: none;
-	color: #fff;
+    color: #666;
+    float: right;
+    font-size: 85%;
+    margin: 163px 10px 0;
 }
-
 
 #primarynav ul.usernav li
 {
@@ -987,12 +984,6 @@ p.warning {
   color: #900;
 }
 
-#primarynav ul.globalnav {
-
-margin: 144px 0 0 1px;
-float: none;
-overflow: hidden;
-}
 
 #primarynav ul.globalnav li a {
 
@@ -1004,11 +995,6 @@ background-color: transparent;
     display: none;
 }
 
-#header {
-    background: #fff;
-    height: 80px;
- 
-}
 
 h1#logo_project {
 height: 80px;
@@ -1027,24 +1013,5 @@ background: url("../img/uncharted_logo.png") no-repeat scroll left top transpare
 float: right;
 }
 
-#primarynav {
-    overflow: auto;
-    height: auto;
-background: url("../img/children_header.png") no-repeat scroll left top transparent;
-height: 188px;
 
-
-}
-
-#primarynav ul {
-    background-color: transparent;
-}
-
-#primarynav #usernav {
-    color: #666;
-    right: 10px;
-    font-size: 90%;
-    position: relative;
-    top: 19px;
-}
 
