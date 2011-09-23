@@ -164,25 +164,25 @@ li
 
 a
 {
-	color: #6c0;
+	color: #f46b08;
 	text-decoration: none;
 }
 
 a:hover
 {
-	color: #000;
+	color: #35a0a4;
 	text-decoration: none;
 }
 
 a:active
 {
-	color: #000;
+	color: #35a0a4;
 	text-decoration: none;
 }
 
 a:visited
 {
-	color: #6c0;
+	color: #f46b08;
 	text-decoration: none;
 }
 
@@ -292,12 +292,9 @@ a:visited
 	height: 31px;
 	overflow: hidden;
 	margin: 0;
-	margin-top: -12px;
 	padding: 0;
-	padding-top: 12px;
 	border: 0;
-	border-top: 1px solid #666;
-        background-color:#228B22 ;
+	        background-color:#228B22 ;
 }
 
 #primarynav ul.globalnav
@@ -1009,7 +1006,7 @@ background-color: transparent;
 
 #header {
     background: #fff;
-    height: 92px;
+    height: 80px;
  
 }
 
@@ -1044,10 +1041,10 @@ height: 188px;
 }
 
 #primarynav #usernav {
-    color: black;
-    left: 57%;
-    margin: 0 6px 0 0;
-    position: absolute;
-    top: 66px;
+    color: #666;
+    right: 10px;
+    font-size: 90%;
+    position: relative;
+    top: 19px;
 }
 
