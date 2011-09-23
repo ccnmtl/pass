@@ -73,6 +73,7 @@ INSTALLED_APPS = (
     'careermapblock',
     'registration',
     'responseblock',
+    'proxyblock',
 )
 ACCOUNT_ACTIVATION_DAYS = 7
 
@@ -84,6 +85,7 @@ PAGEBLOCKS = ['pageblocks.TextBlock',
               'quizblock.Quiz',
               'careermapblock.CareerMap',
               'responseblock.Response',
+              'proxyblock.ProxyBlock',
               ]
 
 import logging
