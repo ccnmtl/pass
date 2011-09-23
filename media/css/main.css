@@ -24,46 +24,43 @@ body
 	padding: 0;
 	border: 0;
 	background-color: #eee;
-	font: normal 0.88em "lucida grande", arial, helvetica, sans-serif;
-	color: #000;
+	font: normal 90% "lucida grande", arial, helvetica, sans-serif;
+	color: #333;
 }
 
 h1, h2, h3, h4, h5, h6
 {
-	margin: 0 0 0 0;
+	margin: 1em 0;
 	padding: 0;
 	border: 0;
-	font-family: "lucida grande", arial, helvetica, sans-serif;
 	font-weight: bold;
+	color: #000;
 }
 
 h1
-{
-	margin: 0 0 0 0;
-	font-size: 180%;
-	font-weight: normal;
-}
-
-h2
 {
 	margin: 0 0 0 0;
 	font-size: 140%;
 	font-weight: normal;
 }
 
+h2
+{
+	margin: 0 0 0 0;
+	font-size: 120%;
+	font-weight: normal;
+}
+
 h3
 {
-	padding: 1.4em 0 0.7em 0;
 	font-size: 110%;
 	font-weight: bold;
 }
 
 h4
 {
-	padding: 1em 0 1em 0;
-	margin: 0;
-	font-size: 110%;
-	font-style: italic;
+	font-size: 100%;
+	font-weight: bold;
 }
 
 h5
@@ -527,29 +524,17 @@ a:visited
 
 #content h1
 {
-	margin: 0 0 0.5em 0;
-	padding: 0;
-	border: 0;
-	font: normal 28px "lucida grande", arial, helvetica, sans-serif;
-	color: #000;
+
+	
 }
 
 #content h2
 {
-	margin: 1em 0 0.5em 0;
-	padding: 0;
-	border: 0;
-	font: normal 20px "lucida grande", arial, helvetica, sans-serif;
-	color: #000;
 }
 
 #content h3
 {
-	margin: 1em 0 0.5em 0;
-	padding: 0;
-	border: 0;
-	font: normal 20px "lucida grande", arial, helvetica, sans-serif;
-	color: #000;
+
 }
 
 #content p
@@ -1013,5 +998,12 @@ background: url("../img/uncharted_logo.png") no-repeat scroll left top transpare
 float: right;
 }
 
+.maintext {
+    margin-bottom: 2.5em;
+}
 
+.emphasis {
+    font-weight: bold;
+    font-style: italic;
 
+}
