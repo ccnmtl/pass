@@ -41,7 +41,7 @@
 
 
 {% for block in section.pageblock_set.all %}
-<div class="pageblock-{{block.block.display_name|iriencode|lower}}" id="pageblock-{{block.id}}">
+<div class="pageblock" id="pageblock-{{block.id}}">
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
 {% render block %}
 </div>
