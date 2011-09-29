@@ -41,8 +41,10 @@
 
 
 {% for block in section.pageblock_set.all %}
+<div class="pageblock" id="pageblock-{{block.id}}">
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
 {% render block %}
+</div>
 {% endfor %}
 
 
