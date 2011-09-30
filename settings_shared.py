@@ -57,6 +57,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.markup',
+    'django.contrib.humanize',
     'staticmedia',
     'sorl.thumbnail',
     'django.contrib.admin',
@@ -73,6 +74,7 @@ INSTALLED_APPS = (
     'careermapblock',
     'registration',
     'responseblock',
+    'proxyblock',
 )
 ACCOUNT_ACTIVATION_DAYS = 7
 
@@ -84,6 +86,7 @@ PAGEBLOCKS = ['pageblocks.TextBlock',
               'quizblock.Quiz',
               'careermapblock.CareerMap',
               'responseblock.Response',
+              'proxyblock.ProxyBlock',
               ]
 
 import logging

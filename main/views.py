@@ -34,6 +34,15 @@ def has_responses(section):
     quizzes = [p.block() for p in section.pageblock_set.all() if hasattr(p.block(),'needs_submit') and p.block().needs_submit()]
     return quizzes != []
 
+def allow_redo(section):
+    """ if blocks on the page allow redo """
+    allowed = True
+    for p in section.pageblock_set.all():
+        if hasattr(p.block(),'allow_redo'):
+            if not p.block().allow_redo:
+                allowed = False
+    return allowed
+
 @rendered_with('main/intro.html')
 def intro(request):
     return dict()
@@ -77,6 +86,7 @@ def page(request,path):
                     root=section.hierarchy.get_root(),
                     instructor_link=instructor_link,
                     can_edit=can_edit,
+                    allow_redo=allow_redo(section),
                     )
 @login_required
 @rendered_with("main/instructor_page.html")

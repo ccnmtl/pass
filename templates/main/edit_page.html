@@ -105,6 +105,9 @@ var saveOrderOfPageBlocks = function() {
 <input type="submit" value="delete block {{block.ordinality}}" />
 </form></td></tr>
 <tr>
+<th colspan="2">{{block.edit_label}}</th>
+</tr>
+<tr>
 <td>
 {% if block.block.exportable %}
 <a href="{% url export-pageblock-json block.id %}">export json</a>
