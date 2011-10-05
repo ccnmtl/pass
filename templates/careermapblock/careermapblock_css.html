@@ -37,7 +37,7 @@
 .careermaptabs table
 {
 
-    margin: 5px 0;
+    margin: 5px;
     border: none;
 
 }
@@ -54,11 +54,13 @@ h5 {
 
 .careermap-base {
     position: relative;
+    background-image: url('../../../site_media/img/geography_background.png');
 }
 
 .careermap-base img{
     width: 600px;
     height: 337px;
+
 }
 
 .careermap-layer {
@@ -67,14 +69,16 @@ h5 {
     left: 0px;
     width: 600px;
     height: 337px;
+    
 }
 
 .layer-box {
-    width: 15px; 
-    height: 15px;
+    width: 13px; 
+    height: 13px;
     background-color: #fff;
     border: 1px solid #ccc;
     margin-right: 5px;
+    cursor: pointer;
 }
 
 
@@ -87,7 +91,7 @@ h5 {
 }
 
 .table_container {
-    width:100%;
+    width:600px;
     overflow:auto;
 }
 
@@ -113,10 +117,6 @@ tr.selected_layer div.layer-box {
 }
 
 
-.did_you_know_title {
-   height: 150px;  /* do we still need this? */
-   font-size:80%;
-}
 
 #left_hand_td, #right_hand_td {
     vertical-align:top;
@@ -136,16 +136,16 @@ tr.selected_layer div.layer-box {
     background-color: #FFFFFF;
     border: 1px solid #999999;
     display: block;
-    margin: 0;
+    margin: 10px 0 0 0;
     padding: 10px;
 }
 
 #stats_table {
-    width: 600px;
-    max-width: 600px;
+
     margin: 5px 5px 0 0;
     font-size: 85%;
-    overflow: auto;
+    min-width: 600px;
+
 
 }
 
