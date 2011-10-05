@@ -7,7 +7,6 @@
     width: 912px;
     margin-left: -222px;
     font-size: .85em;
-    min-height: 600px;
     position: absolute;
     top: 10px;
 
@@ -70,12 +69,6 @@ h5 {
     height: 337px;
 }
 
-
-/*  this used to be in the javascript. moving to here. */
-.careermap-layer.show_and_hideable{
-     display:none; /* start these off hidden */
-}
-
 .layer-box {
     width: 15px; 
     height: 15px;
@@ -102,14 +95,13 @@ h5 {
     white-space:nowrap;
 }
 
-.layer-controls tr td { 
+.layer-controls tr td a{
     color: #999999;
-    cursor:pointer;
+
 }
 
-.layer-controls tr.selected_layer td {
+.layer-controls tr.selected_layer td a {
     color: #000000;
-    cursor: pointer;
 }
 
 tr.selected_layer div.layer-box {
@@ -150,11 +142,22 @@ tr.selected_layer div.layer-box {
 
 #stats_table {
     width: 600px;
-    margin: 5px 0 0 0;
+    max-width: 600px;
+    margin: 5px 5px 0 0;
     font-size: 85%;
     overflow: auto;
 
 }
+
+#stats_table td {
+
+    margin: 5px 0 0 0;
+    font-size: 85%;
+    overflow: auto;
+    border: 1px solid #999;
+
+}
+
 #stats_table th{
     width: 100px;
 
