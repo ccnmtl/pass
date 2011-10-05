@@ -70,6 +70,12 @@ h5 {
     height: 337px;
 }
 
+
+/*  this used to be in the javascript. moving to here. */
+.careermap-layer.show_and_hideable{
+     display:none; /* start these off hidden */
+}
+
 .layer-box {
     width: 15px; 
     height: 15px;
@@ -96,13 +102,14 @@ h5 {
     white-space:nowrap;
 }
 
-.layer-controls tr td a{
+.layer-controls tr td { 
     color: #999999;
-
+    cursor:pointer;
 }
 
-.layer-controls tr.selected_layer td a {
+.layer-controls tr.selected_layer td {
     color: #000000;
+    cursor: pointer;
 }
 
 tr.selected_layer div.layer-box {
