@@ -44,16 +44,16 @@ Choose base map:
 Show layers:
 </h5>
 <table class="layer-controls">
-{% for layer in block.layer_set.all %}
-<tr id="show_layer_{{layer.id}}" >
-    <td><div class="layer-box" style="background-color:
-			          {{layer.color}};"> </div>
-    </td>
-    <td>
-        <a href="#layer-{{layer.id}}" onclick="toggle_layer ({{layer.id}})">{{layer.name}}    </a></li>
-    </td>
-</tr>
-{% endfor %}
+    {% for layer in block.layer_set.all %}
+    <tr id="show_layer_{{layer.id}}" >
+        <td onclick="toggle_layer ({{layer.id}})" >
+            <div class="layer-box" style="background-color:{{layer.color}};"> </div>
+        </td>
+        <td onclick="toggle_layer ({{layer.id}})" >
+            {{layer.name}}
+        </td>
+    </tr>
+    {% endfor %}
 </table>
 
 

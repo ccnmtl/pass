@@ -174,14 +174,14 @@ function update_questions() {
         }
     }    
     //console.log ('layer *and* basemap questions are  ' + candidate_questions)
-    question_to_show = pick_ball_from_urn (candidate_questions);
+    question_to_show = pick_one_item_at_random_from (candidate_questions);
     jQuery('.did_you_know_title').hide();
     jQuery('div#question_' + question_to_show).show()
     
 }	
 
-function pick_ball_from_urn ( urn) { 
-    return (urn[  Math.floor ( Math.random() * urn.length )  ]);
+function pick_one_item_at_random_from ( arr) { 
+    return (arr[  Math.floor ( Math.random() * arr.length )  ]);
 }
 	
 
