@@ -27,17 +27,23 @@ var toggleCareerMap = function () {
 
 jQuery(function() {
 	jQuery( ".careermaptabs" ).tabs();
-        jQuery( ".careermap-layer").hide();
-        update_questions();
-        update_columns();
-        if (jQuery(".pageblock").length > 1) {
-          jQuery(".pageblock").hide();
-          jQuery(".careermapblock").show();
-          careerMapBlockPageBlockDiv().show();
-          jQuery("#hide-show-label").click(toggleCareerMap);
-       } else {
-          jQuery("#hide-show-label").hide();
-       }
+	
+    // moving this to CSS; as of now, not ALL careermap-layers are supposed to be hidden.
+    //jQuery( ".careermap-layer").hide();
+    
+    update_questions();
+    update_columns();
+    if (jQuery(".pageblock").length > 1) {
+      jQuery(".pageblock").hide();
+      jQuery(".careermapblock").show();
+      careerMapBlockPageBlockDiv().show();
+      jQuery("#hide-show-label").click(toggleCareerMap);
+   } else {
+      jQuery("#hide-show-label").hide();
+   }
+   // adding this (experimental, for Liz) to give a css scope denoting the outermost pageblock
+   // on any place that contains a pageblock.
+   jQuery(jQuery('.pageblock:visible')[0]).addClass ('outermost_pageblock_on_current_careermap_page');
 });
 
 
@@ -61,34 +67,7 @@ function visible_basemap () {
 function column_ids_in_order () {
     return jQuery('.stat_id').map(function(a, b) { return parseInt(b.innerHTML);})
 }
-	
-function do_we_show_a_column_1 (column_id, basemaps_to_county_stats, the_visible_basemap) {
-    //console.log ('Columns to show for each basemap: ' + JSON.stringify(basemaps_to_county_stats));
-    //console.log ('The visible basemap: ' + the_visible_basemap);
-    bid = the_visible_basemap;
-    if (basemaps_to_county_stats.hasOwnProperty(bid)) {
-        if (basemaps_to_county_stats [bid].indexOf (column_id) != -1) {
-            //console.log ("Column " + column_id + " found in the list of columns " + basemaps_to_county_stats [bid] +  " for basemap " + bid );
-            return true;
-        }
-    }
-    return false
-}
 
-function do_we_show_a_column_2 (column_id, layers_to_county_stats, the_visible_layers) {
-    //console.log ('Columns to show for each layer: ' + JSON.stringify(layers_to_county_stats));
-    for (var i=0; i<the_visible_layers.length; i++) {
-        lid = the_visible_layers[i];
-        if (layers_to_county_stats.hasOwnProperty(lid)) {
-            if (layers_to_county_stats [lid].indexOf (column_id) != -1) {
-                //console.log ("Column " + column_id + " found in the list of columns " + layers_to_county_stats [lid] +  " for layer " + lid );
-                return true;
-            }
-        }
-    }
-    return false;
-}
-	
 function update_array(arr, val) {
     if (arr.indexOf(val) == -1) { arr.push (val); }
 }
@@ -126,11 +105,11 @@ function update_columns() {
     
     for (var i=0; i<the_column_ids_in_order.length; i++) {
         cid = the_column_ids_in_order[i];
-        if  (do_we_show_a_column_1 (cid, table_info['basemaps_to_county_stats'], visible_basemap())) {
+        if  (do_we_show_a_column_considering_basemaps (cid, table_info['basemaps_to_county_stats'], visible_basemap())) {
             update_array (column_ids_to_show,     cid); // just for debugging
             update_array (column_indices_to_show, i  );
         }
-        if  (do_we_show_a_column_2 (cid, table_info['layers_to_county_stats'],   visible_layers())) {
+        if  (do_we_show_a_column_considering_layers (cid, table_info['layers_to_county_stats'],   visible_layers())) {
             update_array (column_ids_to_show,     cid); // just for debugging
             update_array (column_indices_to_show, i  );
         }
@@ -139,6 +118,35 @@ function update_columns() {
     //console.log (the_column_ids_in_order)
     //console.log (column_ids_to_show)
     show_only_stat_columns(column_indices_to_show);
+    
+}
+
+
+function do_we_show_a_column_considering_basemaps (column_id, basemaps_to_county_stats, the_visible_basemap) {
+    //console.log ('Columns to show for each basemap: ' + JSON.stringify(basemaps_to_county_stats));
+    //console.log ('The visible basemap: ' + the_visible_basemap);
+    bid = the_visible_basemap;
+    if (basemaps_to_county_stats.hasOwnProperty(bid)) {
+        if (basemaps_to_county_stats [bid].indexOf (column_id) != -1) {
+            //console.log ("Column " + column_id + " found in the list of columns " + basemaps_to_county_stats [bid] +  " for basemap " + bid );
+            return true;
+        }
+    }
+    return false
+}
+
+function do_we_show_a_column_considering_layers (column_id, layers_to_county_stats, the_visible_layers) {
+    //console.log ('Columns to show for each layer: ' + JSON.stringify(layers_to_county_stats));
+    for (var i=0; i<the_visible_layers.length; i++) {
+        lid = the_visible_layers[i];
+        if (layers_to_county_stats.hasOwnProperty(lid)) {
+            if (layers_to_county_stats [lid].indexOf (column_id) != -1) {
+                //console.log ("Column " + column_id + " found in the list of columns " + layers_to_county_stats [lid] +  " for layer " + lid );
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 
@@ -149,17 +157,18 @@ function update_questions() {
     
     
     candidate_questions = []
-    console.log ('basemap is '+ the_visible_basemap); 
+    //console.log ('basemap is '+ the_visible_basemap); 
     if (question_info['basemaps_to_questions'].hasOwnProperty (the_visible_basemap)) {
         candidate_questions = question_info['basemaps_to_questions'][the_visible_basemap]
     }
-    console.log ('basemap questions are ' + candidate_questions)
+    //console.log ('basemap questions are ' + candidate_questions)
+    
     
     for (var i=0; i<the_visible_layers.length; i++) {
         lid = the_visible_layers[i]
         if (question_info['layers_to_questions'].hasOwnProperty(lid)) {
             questions_for_this_layer = question_info['layers_to_questions'][lid]
-            for (var i=0; i<questions_for_this_layer.length; i++) {
+            for (var j=0; j<questions_for_this_layer.length; j++) {
                 update_array(candidate_questions, questions_for_this_layer[i]);
             }
         }
