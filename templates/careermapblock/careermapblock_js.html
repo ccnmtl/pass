@@ -1,0 +1,195 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" ></script> 
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/jquery-ui.min.js"
+	type="text/javascript"></script> 
+
+<script>
+var showingCareerMap = true;
+
+var careerMapBlockPageBlockDiv = function () {
+    return jQuery(".careermapblock").parent();
+};
+
+var toggleCareerMap = function () {
+   if (showingCareerMap) {
+     jQuery(".pageblock").show();
+     jQuery(".careermapblock").hide();
+     jQuery("#hide-show-label").text("Show Map");
+     showingCareerMap = false;
+   } else {
+     jQuery(".pageblock").hide();
+     jQuery(".careermapblock").show();
+     careerMapBlockPageBlockDiv().show();
+     jQuery("#hide-show-label").text("Hide Map");
+     showingCareerMap = true;
+   }
+};
+
+
+jQuery(function() {
+	jQuery( ".careermaptabs" ).tabs();
+        jQuery( ".careermap-layer").hide();
+        update_questions();
+        update_columns();
+        if (jQuery(".pageblock").length > 1) {
+          jQuery(".pageblock").hide();
+          jQuery(".careermapblock").show();
+          careerMapBlockPageBlockDiv().show();
+          jQuery("#hide-show-label").click(toggleCareerMap);
+       } else {
+          jQuery("#hide-show-label").hide();
+       }
+});
+
+
+	
+var visible_layers;
+
+function visible_layers() {
+    var realArray = jQuery.makeArray (jQuery('.careermap-layer:visible'))
+    return jQuery.map( realArray, function(el, i) {
+            return el.id.split ('-')[1];
+        }
+    );
+}
+
+
+function visible_basemap () {
+    return jQuery("select#1-basemap-control option:selected").attr('basemap_id');
+}
+
+
+function column_ids_in_order () {
+    return jQuery('.stat_id').map(function(a, b) { return parseInt(b.innerHTML);})
+}
+	
+function do_we_show_a_column_1 (column_id, basemaps_to_county_stats, the_visible_basemap) {
+    //console.log ('Columns to show for each basemap: ' + JSON.stringify(basemaps_to_county_stats));
+    //console.log ('The visible basemap: ' + the_visible_basemap);
+    bid = the_visible_basemap;
+    if (basemaps_to_county_stats.hasOwnProperty(bid)) {
+        if (basemaps_to_county_stats [bid].indexOf (column_id) != -1) {
+            //console.log ("Column " + column_id + " found in the list of columns " + basemaps_to_county_stats [bid] +  " for basemap " + bid );
+            return true;
+        }
+    }
+    return false
+}
+
+function do_we_show_a_column_2 (column_id, layers_to_county_stats, the_visible_layers) {
+    //console.log ('Columns to show for each layer: ' + JSON.stringify(layers_to_county_stats));
+    for (var i=0; i<the_visible_layers.length; i++) {
+        lid = the_visible_layers[i];
+        if (layers_to_county_stats.hasOwnProperty(lid)) {
+            if (layers_to_county_stats [lid].indexOf (column_id) != -1) {
+                //console.log ("Column " + column_id + " found in the list of columns " + layers_to_county_stats [lid] +  " for layer " + lid );
+                return true;
+            }
+        }
+    }
+    return false;
+}
+	
+function update_array(arr, val) {
+    if (arr.indexOf(val) == -1) { arr.push (val); }
+}
+
+
+function hide_all_columns () {
+    jQuery('table#stats_table tr th').hide();
+    jQuery('table#stats_table tr td').hide();
+    
+    //but do show the county names:    
+    jQuery('table#stats_table tr th:nth-child(1)').show()
+
+
+}
+
+function nth_column_of_stats_table(n) {
+    // argument n is 0-based numbering.
+    // css uses 1-based numbering. add 1
+    // we have a heading column; that doesn't count. add 1 again:
+    child_number = n + 2;
+    return jQuery('table#stats_table tr td:nth-child(' + child_number + '), table#stats_table tr th:nth-child(' + child_number + ')');
+}
+
+function show_only_stat_columns (array_of_column_indices_to_show) {
+    hide_all_columns();
+    array_of_column_indices_to_show.map(function (a) { nth_column_of_stats_table(a).show() })
+}
+
+
+function update_columns() {
+    table_info = JSON.parse(jQuery('#table_json')[0].innerHTML);
+    the_column_ids_in_order = column_ids_in_order();
+    column_ids_to_show = [];
+    column_indices_to_show = [];
+    
+    for (var i=0; i<the_column_ids_in_order.length; i++) {
+        cid = the_column_ids_in_order[i];
+        if  (do_we_show_a_column_1 (cid, table_info['basemaps_to_county_stats'], visible_basemap())) {
+            update_array (column_ids_to_show,     cid); // just for debugging
+            update_array (column_indices_to_show, i  );
+        }
+        if  (do_we_show_a_column_2 (cid, table_info['layers_to_county_stats'],   visible_layers())) {
+            update_array (column_ids_to_show,     cid); // just for debugging
+            update_array (column_indices_to_show, i  );
+        }
+    }
+    
+    //console.log (the_column_ids_in_order)
+    //console.log (column_ids_to_show)
+    show_only_stat_columns(column_indices_to_show);
+}
+
+
+function update_questions() {
+    question_info = JSON.parse(jQuery('#question_json')[0].innerHTML);
+    the_visible_layers = visible_layers();
+    the_visible_basemap = visible_basemap();
+    
+    
+    candidate_questions = []
+    console.log ('basemap is '+ the_visible_basemap); 
+    if (question_info['basemaps_to_questions'].hasOwnProperty (the_visible_basemap)) {
+        candidate_questions = question_info['basemaps_to_questions'][the_visible_basemap]
+    }
+    console.log ('basemap questions are ' + candidate_questions)
+    
+    for (var i=0; i<the_visible_layers.length; i++) {
+        lid = the_visible_layers[i]
+        if (question_info['layers_to_questions'].hasOwnProperty(lid)) {
+            questions_for_this_layer = question_info['layers_to_questions'][lid]
+            for (var i=0; i<questions_for_this_layer.length; i++) {
+                update_array(candidate_questions, questions_for_this_layer[i]);
+            }
+        }
+    }    
+    //console.log ('layer *and* basemap questions are  ' + candidate_questions)
+    question_to_show = pick_ball_from_urn (candidate_questions);
+    jQuery('.did_you_know_title').hide();
+    jQuery('div#question_' + question_to_show).show()
+    
+}	
+
+function pick_ball_from_urn ( urn) { 
+    return (urn[  Math.floor ( Math.random() * urn.length )  ]);
+}
+	
+
+function update_basemap (menu) {
+    jQuery('#1-basemap').attr('src',menu.value)
+    basemap_id = jQuery('#1-basemap-control option:selected').attr('basemap_id');
+    update_questions();
+    update_columns();
+}
+
+
+function toggle_layer (layer_id) {
+    jQuery('#layer-' + layer_id).toggle();
+    jQuery('#show_layer_' + layer_id).toggleClass('selected_layer')
+    update_questions();
+    update_columns();
+}
+
+
+</script>
