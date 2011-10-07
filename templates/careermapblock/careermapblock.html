@@ -32,12 +32,8 @@
 Choose base map:
 </h5>
 <select id="{{block.id}}-basemap-control" onchange="update_basemap (this)">
-<!--
-<option value="null">Choose Base Map</option> 
--->
-<!-- what happens when you choose this? -->
 {% for basemap in block.basemap_set.all %}
-<option basemap_id="{{basemap.id}}" value="{% thumbnail basemap.image 600x600 %}">{{basemap.name}}</option>
+<option basemap_id="{{basemap.id}}" value="/uploads/{{ basemap.image }}">{{basemap.name}}</option>
 {% endfor %}
 </select><br />
 <h5>
@@ -81,7 +77,7 @@ Show layers:
 </td>
 <td id = "right_hand_td">
 <div id="{{block.id}}-base" class="careermap-base">
-<img class="basemap_image"  id="{{block.id}}-basemap" alt="career map" src="{% thumbnail block.default_base_map.image 600x600 %}"/>
+<img class="basemap_image"  id="{{block.id}}-basemap" alt="career map" src="/uploads/{{ block.default_base_map.image}}"/>
 
 
 
