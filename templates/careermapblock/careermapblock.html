@@ -97,51 +97,71 @@ Show layers:
 </div>
 
 
-<div class ="table_container">
-{%with block.per_county_stats as stats%}
-<table id="stats_table">
-<tr>
-    <th>&nbsp;</th>
-    {%for s in stats.stat_type_list %}
-        <th>{{s}} <span class="stat_id_container">(#<span class ="stat_id">{{s.id}}</span>)</span></th>
-    {%endfor %}
-</tr>
-<tr id = "layer_row">
-    <th>Layers</th>
-    {%for all_layers in stats.layers%}
-        <td>
-            <span class ="list_of_layers">
-                {%for layer in all_layers%}
-                    <span class="layer_id">{{layer}} (#{{layer.id}})</span>
-                {%endfor%}
-            </span>
-        </td>
-    {%endfor %}
-</tr>
-<tr id = "basemap_row">
-    <th>Basemaps</th>
-    {%for all_basemaps in stats.basemaps %}
-        <td>
-            <span class ="list_of_basemaps">
-            {%for b in all_basemaps %}
-                <span>{{b.name}} (#{{b.id}})</span>
-            {%endfor %}
-            </span>
-        </td>
-    {%endfor %}
-</tr>
+            <table id = "county_and_stats">
+            <tr>
+            <td>
+                    <table id="county_table">
+                                <tr>
+                                    <th>&nbsp;</th>
+                                </tr>
+                                {%for county, stat_values in block.per_county_stats.counties.items %}
+                                    <tr>
+                                        <th>{{county}}</th>
+                                    </tr>
+                                {%endfor %}
+                    </table>
+            </td>
+           
+           
+           
+            <td>
+                    <div class ="table_container">
+                                {%with block.per_county_stats as stats%}
+                                <table id="stats_table">
+                                <tr>
+                                    {%for s in stats.stat_type_list %}
+                                        <th>{{s}} <span class="stat_id_container">(#<span class ="stat_id">{{s.id}}</span>)</span></th>
+                                    {%endfor %}
+                                </tr>
+                                <tr id = "layer_row">
+                                    <th>Layers</th>
+                                    {%for all_layers in stats.layers%}
+                                        <td>
+                                            <span class ="list_of_layers">
+                                                {%for layer in all_layers%}
+                                                    <span class="layer_id">{{layer}} (#{{layer.id}})</span>
+                                                {%endfor%}
+                                            </span>
+                                        </td>
+                                    {%endfor %}
+                                </tr>
+                                <tr id = "basemap_row">
+                                    <th>Basemaps</th>
+                                    {%for all_basemaps in stats.basemaps %}
+                                        <td>
+                                            <span class ="list_of_basemaps">
+                                            {%for b in all_basemaps %}
+                                                <span>{{b.name}} (#{{b.id}})</span>
+                                            {%endfor %}
+                                            </span>
+                                        </td>
+                                    {%endfor %}
+                                </tr>
 
-{%for county, stat_values in stats.counties.items %}
-<tr>
-    <th>{{county}}</th>
-    {%for value in stat_values %}
-            <td>{{value|intcomma}}</td>
-    {%endfor %}
-</tr>
-{%endfor %}
-</tr>
-</table>
-{%endwith%}
+                                {%for county, stat_values in stats.counties.items %}
+                                <tr>
+                                    {%for value in stat_values %}
+                                            <td>{{value|intcomma}}</td>
+                                    {%endfor %}
+                                </tr>
+                                {%endfor %}
+                                </tr>
+                                </table>
+                                {%endwith%}
+
+            </td>
+            </tr>
+
 </div>
 
 </td>

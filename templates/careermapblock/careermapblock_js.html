@@ -77,23 +77,18 @@ function hide_all_columns () {
     jQuery('table#stats_table tr th').hide();
     jQuery('table#stats_table tr td').hide();
     
-    //but do show the county names:    
-    jQuery('table#stats_table tr th:nth-child(1)').show()
-
-
 }
 
 function nth_column_of_stats_table(n) {
     // argument n is 0-based numbering.
     // css uses 1-based numbering. add 1
-    // we have a heading column; that doesn't count. add 1 again:
-    child_number = n + 2;
+    child_number = n + 1;
     return jQuery('table#stats_table tr td:nth-child(' + child_number + '), table#stats_table tr th:nth-child(' + child_number + ')');
 }
 
 function show_only_stat_columns (array_of_column_indices_to_show) {
-    hide_all_columns();
-    array_of_column_indices_to_show.map(function (a) { nth_column_of_stats_table(a).show() })
+    //hide_all_columns();
+    //array_of_column_indices_to_show.map(function (a) { nth_column_of_stats_table(a).show() })
 }
 
 
