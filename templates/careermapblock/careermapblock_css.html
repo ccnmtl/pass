@@ -92,8 +92,69 @@ h5 {
     width: 200px;
 }
 
+/*inserting a new table: */
+table#county_and_stats {
+    padding : 0;
+    margin : 5px 0;
+    width: 600px;
+    /* border: 1px solid #e00; */
+
+}
+
+table#county_and_stats td{
+    padding : 0;
+    margin : 0;
+    vertical-align: top;
+        font-size: 85%;
+
+}
+
+table#county_and_stats td table#county_table {
+    width: 120px;
+    margin: 0;
+}
+
+table#county_and_stats td #county_table th {
+    margin: 0;
+    border: 1px solid #999;
+    text-align: right;
+    height: 20px;
+    padding: 2px 5px;
+    background-color: #ccc;
+}
+
+table#county_and_stats td #county_table th.blank {
+
+    border-left: 1px solid #fff;
+    border-top: 1px solid #fff;
+    background-color: #fff;
+}
+
+table#county_and_stats td table#stats_table {
+    min-width: 480px;
+    margin: 0;
+
+}
+
+table#county_and_stats td #stats_table td {
+    margin: 0;
+    border: 1px solid #999;
+    height: 20px;
+    padding: 2px 5px;
+}
+
+table#county_and_stats td #stats_table th {
+    width: 100px;
+    height: 20px;
+    padding: 2px 5px;
+}
+
+
+
+
+
 .table_container {
-    width:600px;
+    width:480px;
     overflow:auto;
 }
 
@@ -131,6 +192,7 @@ tr.selected_layer div.layer-box {
 
 #right_hand_td {
     width: 600px;
+    max-width: 600px;
     background-color: #fff;
 }
 
@@ -142,49 +204,7 @@ tr.selected_layer div.layer-box {
     padding: 10px;
 }
 
- table#county_table, table#stats_table {
-    /* background-color: #0E0; */
-    margin: 0;
-    padding: 0;
-    font-size: 85%;
-}
 
-/*inserting a new table: */
-table#county_and_stats {
-    padding : 0;
-    margin : 0;
-    /* border: 1px solid #e00; */
-
-}
-
-table#county_table {
-    width: 100px;
-}
-
-table#stats_table {
-    min-width: 540px;
-}
-
-#county_table th, #county_table td, #stats_table th, #stats_table td {
-    height: 20px; !important
-}
-
-#county_table th {
-    margin: 0;
-    font-size: 100%;
-    border: 1px solid #999;
-}
-
-#stats_table td {
-    margin: 0;
-    font-size: 85%;
-    overflow: auto;
-    border: 1px solid #999;
-}
-
-#stats_table th {
-    width: 100px;
-}
 
 
 </style>
