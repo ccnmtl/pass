@@ -15,44 +15,46 @@ var careerMapBlockPageBlockDiv = function () {
 
 var toggleCareerMap = function () {
    if (showingCareerMap) {
-     // turning the map off:
-     jQuery("#hide-show-label").text("Show Map");
-     jQuery("#hide-show-label").removeClass("map-on");
-     jQuery("#hide-show-label").addClass("map-off");
-     jQuery(".pageblock").show();
-     jQuery(".careermapblock").hide();
-     showingCareerMap = false;
+        turn_map_off();
    } else {
-     // turning the map on:
-     jQuery(".pageblock").hide();
-     jQuery(".careermapblock").show();
-     careerMapBlockPageBlockDiv().show();
-     jQuery("#hide-show-label").text("Hide Map");
-     jQuery("#hide-show-label").removeClass("map-off");
-     jQuery("#hide-show-label").addClass("map-on");
-     showingCareerMap = true;
+        turn_map_on();
    }
 };
 
 
-jQuery(function() {
+var turn_map_on = function () {
+    jQuery("#hide-show-label").text("Hide Map");
+    jQuery(".pageblock").hide();
+    jQuery(".careermapblock").show();
+    careerMapBlockPageBlockDiv().show();
+    jQuery("#hide-show-label").removeClass("map-off");
+    jQuery("#hide-show-label").addClass("map-on");
+    showingCareerMap = true;
+}
 
-   // turning this off for now:
-    
+
+var turn_map_off = function () {
+    jQuery("#hide-show-label").text("Show Map");
+    jQuery(".pageblock").show();
+    jQuery(".careermapblock").hide();
+    jQuery("#hide-show-label").addClass("map-off");
+    jQuery("#hide-show-label").removeClass("map-on");
+    showingCareerMap = false;
+}
+
+
+jQuery(function() {
    update_questions();
    update_columns();
+   turn_map_on();
    
-    if (jQuery(".pageblock").length > 1) {
-      jQuery(".pageblock").hide();
-      jQuery(".careermapblock").show();
-      careerMapBlockPageBlockDiv().show();
+   if (jQuery(".pageblock").length > 1) {
       jQuery("#hide-show-label").click(toggleCareerMap);
    } else {
       jQuery("#hide-show-label").hide();
    }
    
-   
-   //set the first basemap to be selected at pageload, despite remembered cached value.
+   //set the first basemap to be selected at pageload, regardless of any browser-cached value.
    jQuery(".base_map_select option:eq(0)").attr("selected", "selected");
    
    // add a special class to the outermost pageblock:
