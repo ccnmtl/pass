@@ -395,7 +395,7 @@ a:visited
 	display: block;
 	float: left;
 	width: 201px;
-	margin: 0;
+	margin: 10px 0 0 0;
 	padding: 0;
 	border: 0;
 }
