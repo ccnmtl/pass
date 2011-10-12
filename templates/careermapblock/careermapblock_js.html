@@ -29,6 +29,8 @@ var turn_map_on = function () {
     careerMapBlockPageBlockDiv().show();
     jQuery("#hide-show-label").removeClass("map-off");
     jQuery("#hide-show-label").addClass("map-on");
+    jQuery("#hide-show-label").addClass("map-on");
+    jQuery('input').hide()
     showingCareerMap = true;
 }
 
@@ -39,6 +41,7 @@ var turn_map_off = function () {
     jQuery(".careermapblock").hide();
     jQuery("#hide-show-label").addClass("map-off");
     jQuery("#hide-show-label").removeClass("map-on");
+    jQuery('input').show()
     showingCareerMap = false;
 }
 
