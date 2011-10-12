@@ -8,7 +8,6 @@ var showingCareerMap = true;
 
 
 var careerMapBlockPageBlockDiv = function () {
-    // this isn't right.
     return jQuery(".careermapblock").parent();
 };
 
@@ -18,8 +17,8 @@ var toggleCareerMap = function () {
    if (showingCareerMap) {
      // turning the map off:
      jQuery("#hide-show-label").text("Show Map");
-     jQuery("#hide-show-label").removeClass("map_on");
-     jQuery("#hide-show-label").addClass("map_off");
+     jQuery("#hide-show-label").removeClass("map-on");
+     jQuery("#hide-show-label").addClass("map-off");
      jQuery(".pageblock").show();
      jQuery(".careermapblock").hide();
      showingCareerMap = false;
@@ -27,11 +26,10 @@ var toggleCareerMap = function () {
      // turning the map on:
      jQuery(".pageblock").hide();
      jQuery(".careermapblock").show();
-     // why do we need to show its parent too?
      careerMapBlockPageBlockDiv().show();
      jQuery("#hide-show-label").text("Hide Map");
-     jQuery("#hide-show-label").removeClass("map_off");
-     jQuery("#hide-show-label").addClass("map_on");
+     jQuery("#hide-show-label").removeClass("map-off");
+     jQuery("#hide-show-label").addClass("map-on");
      showingCareerMap = true;
    }
 };
@@ -53,6 +51,11 @@ jQuery(function() {
       jQuery("#hide-show-label").hide();
    }
    
+   
+   //set the first basemap to be selected at pageload, despite remembered cached value.
+   jQuery(".base_map_select option:eq(0)").attr("selected", "selected");
+   
+   // add a special class to the outermost pageblock:
    jQuery(jQuery('.pageblock:visible')[0]).addClass ('outermost_pageblock_on_current_careermap_page');
 });
 

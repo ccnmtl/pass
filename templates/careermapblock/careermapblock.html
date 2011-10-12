@@ -33,7 +33,7 @@
         <h5>
         Choose base map:
         </h5>
-        <select id="{{block.id}}-basemap-control" onchange="update_basemap (this)">
+        <select id="{{block.id}}-basemap-control" class="base_map_select" onchange="update_basemap (this)">
         {% for basemap in block.basemap_set.all %}
         <option basemap_id="{{basemap.id}}" value="/uploads/{{ basemap.image }}">{{basemap.name}}</option>
         {% endfor %}
