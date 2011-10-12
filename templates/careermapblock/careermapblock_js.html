@@ -5,34 +5,45 @@
 <script>
 var showingCareerMap = true;
 
+
+
 var careerMapBlockPageBlockDiv = function () {
+    // this isn't right.
     return jQuery(".careermapblock").parent();
 };
 
+
+
 var toggleCareerMap = function () {
    if (showingCareerMap) {
+     // turning the map off:
+     jQuery("#hide-show-label").text("Show Map");
+     jQuery("#hide-show-label").removeClass("map_on");
+     jQuery("#hide-show-label").addClass("map_off");
      jQuery(".pageblock").show();
      jQuery(".careermapblock").hide();
-     jQuery("#hide-show-label").text("Show Map");
      showingCareerMap = false;
    } else {
+     // turning the map on:
      jQuery(".pageblock").hide();
      jQuery(".careermapblock").show();
+     // why do we need to show its parent too?
      careerMapBlockPageBlockDiv().show();
      jQuery("#hide-show-label").text("Hide Map");
+     jQuery("#hide-show-label").removeClass("map_off");
+     jQuery("#hide-show-label").addClass("map_on");
      showingCareerMap = true;
    }
 };
 
 
 jQuery(function() {
-	//jQuery( ".careermaptabs" ).tabs();
-	
-    // moving this to CSS; as of now, not ALL careermap-layers are supposed to be hidden.
-    //jQuery( ".careermap-layer").hide();
+
+   // turning this off for now:
     
-    update_questions();
-    update_columns();
+   update_questions();
+   update_columns();
+   
     if (jQuery(".pageblock").length > 1) {
       jQuery(".pageblock").hide();
       jQuery(".careermapblock").show();
@@ -41,8 +52,7 @@ jQuery(function() {
    } else {
       jQuery("#hide-show-label").hide();
    }
-   // adding this (experimental, for Liz) to give a css scope denoting the outermost pageblock
-   // on any place that contains a pageblock.
+   
    jQuery(jQuery('.pageblock:visible')[0]).addClass ('outermost_pageblock_on_current_careermap_page');
 });
 
