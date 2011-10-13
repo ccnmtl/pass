@@ -6,10 +6,11 @@
 <h2>Welcome to PASS</h2>
 
 {% if request.user.is_anonymous %}
-<p>If you have an account already, you
-  can <a href="/accounts/login/?next=/">login</a>.</p>
-<p>Otherwise, you should <a href="/registration/register/">create an
-    account</a>.</p>
+<br />
+<div class='maintext'><p>If you have a Columbia UNI or have created an account already, <a href="/accounts/login/?next=/">login</a>.</p>
+
+<p>Otherwise, <a href="/registration/register/">create an account</a>.</p>
+</div>
 {% else %}
 
 <p>Content goes here</p>
