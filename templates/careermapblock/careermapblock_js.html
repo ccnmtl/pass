@@ -45,11 +45,34 @@ var turn_map_off = function () {
     showingCareerMap = false;
 }
 
+var turn_legend_on = function () {
+    //jQuery("#legend").show();
+    jQuery("#show_legend_button").hide();
+    jQuery("#hide_legend_button").show();
+    jQuery("#legend_container").addClass("showing_legend");
+}
+
+
+var turn_legend_off = function () {
+    //jQuery("#legend").hide();
+    jQuery("#show_legend_button").show()
+    jQuery("#hide_legend_button").hide()
+    jQuery("#legend_container").removeClass("showing_legend");
+}
+
+
 
 jQuery(function() {
    update_questions();
    update_columns();
-   turn_map_on();
+   
+   //off by default
+   turn_map_off();
+   turn_legend_off()
+   
+   
+   jQuery("#show_legend_button").click(turn_legend_on);
+   jQuery("#hide_legend_button").click(turn_legend_off);
    
    if (jQuery(".pageblock").length > 1) {
       jQuery("#hide-show-label").click(toggleCareerMap);

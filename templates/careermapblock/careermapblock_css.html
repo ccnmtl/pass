@@ -148,11 +148,37 @@ table#county_and_stats {
 
 }
 
+div#legend_container{
+    height: 0px;
+    position:relative;
+    width: 600px;
+}
+
+div#legend_container.showing_legend{
+    height: 100px;
+    background-image:url(http://kang.ccnmtl.columbia.edu:7894/site_media/img/pass_logo.png);
+    background-repeat:   no-repeat;
+    background-position: center,center;    
+}
+
+a.legend_show_hide_button {
+    height: 15px;
+    width: 100px;
+    display: block;
+    padding: 0px;
+    margin: 2px;
+    color: #555;
+    background-color: #ccc;
+    border: 1px solid #999;
+    cursor: pointer;
+    font-size: 85%;
+    text-align: center;
+}
+
 table#county_and_stats td{
     padding : 0;
     margin : 0;
     vertical-align: top;
-        font-size: 85%;
 
 }
 
