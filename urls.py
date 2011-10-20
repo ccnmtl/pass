@@ -2,13 +2,18 @@ from django.conf.urls.defaults import *
 from django.contrib import admin
 from django.conf import settings
 import os.path
+from django.views.generic.simple import direct_to_template
 admin.autodiscover()
+
 
 site_media_root = os.path.join(os.path.dirname(__file__),"media")
 
 urlpatterns = patterns('',
                        (r'^$','main.views.intro'),
 
+                       (r'^about/',direct_to_template, {'template': 'main/about.html'}),
+                       (r'^help/',direct_to_template, {'template': 'main/help.html'}),
+          
                        (r'^export/$','main.views.exporter'),
                        (r'^import/$','main.views.importer'),
                        ('^_allresults/$','main.views.all_results'),
