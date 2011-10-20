@@ -452,52 +452,35 @@ a:visited
 	list-style: none;	
 }
 
-#secondary_navigation .block ul li
+#secondary_navigation .block ul li.menu-3
 {
 	margin: 0 0 2px 0;
 	padding: 0;
 	border: 0;
 	padding-left: 13px;
 	background: url('../img/bullet.gif') left 4px no-repeat;
-}
-
-#secondary_navigation .block ul li ul
-{
-	display: block;
+    display: block;
 	width: 151px;
-	margin: 0 0 0 0;
-	padding: 0;
-	border: 0;
 	list-style: none;	
 }
 
-#secondary_navigation .block ul li ul li
+
+#secondary_navigation .block ul li.menu-3 ul
 {
-	margin: 0 0 2px 0;
+    boder: 1px solid red;
+}
+
+
+#secondary_navigation li..menu-4
+{
+	margin: 0 0 2px 20px;
 	padding: 0;
 	border: 0;
 	padding-left: 13px;
 	background: url('../img/bullet_diamond.gif') left 4px no-repeat;
 }
 
-#secondary_navigation .block ul ul ul
-{
-	display: block;
-	width: 130px;
-	margin: 0 0 0 0;
-	padding: 0;
-	border: 0;
-	list-style: none;	
-}
 
-#secondary_navigation .block ul ul ul li
-{
-	margin: 0 0 2px 0;
-	padding: 0;
-	border: 0;
-	padding-left: 13px;
-	background: url('../img/bullet_diamond_hollow.gif') left 4px no-repeat;
-}
 
 /* ***** Content ***** */
 
@@ -757,10 +740,8 @@ a:visited
 .pullquote
 {
 	display: block;
-	width: 240px;
-	float: right;
-	margin: 3px 0 3px 3px;
-	padding: 5px;
+	margin: 10px 0;
+	padding: 15px;
 	border: 1px solid #999;
 	background-color: #f2e6d8;
 }
