@@ -1,0 +1,33 @@
+{% load getresponse %}
+{% if request.user.is_anonymous %}
+  <p class="warning">You must be logged in to view this content</p>
+{% else %}
+{% with block.question as question %}
+{% getquestionresponse question as response %}
+{% if response %}
+  {% if question.answerable %}
+    {% if question.is_single_choice %}
+      {% for answer in question.answer_set.all %}
+         {% ifequal response.value answer.value %}
+           {{answer.label}}
+         {% endifequal %}
+      {% endfor %}
+    {% else %}
+      <ul>
+      {% for answer in question.answer_set.all %}
+         {% ifanswerin response answer %}
+         <li>{{answer.label}}</li>
+	 {% else %}
+         {% endifanswerin %}
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% else %}
+    {{ response.value }}
+  {% endif %}
+{% else %}
+  <p class="warning">[User has not responded to this question]</p>
+{% endif %}
+{% endwith %}
+{% endif %}
+
