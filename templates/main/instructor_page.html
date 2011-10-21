@@ -30,11 +30,16 @@
 <tr class="submissionheader">
 <th>{{submission.user.first_name}} {{submission.user.last_name}} ({{submission.user.username}})</th>
 <td>{{submission.submitted}}</td>
+<td><form action="." method="post">
+{% csrf_token %}
+<input type="hidden" name="clear" value="{{submission.id}}" />
+<input type="submit" value="clear" /></form>
 </tr>
 {% for response in submission.response_set.all %}
 <tr class="submissionresponse">
 <td>Question {{response.question.ordinality}}: {{response.question.text}}</td>
 <td class="{% if response.question.answerable %}{% if response.is_correct %}correct{% else %}incorrect{% endif %}{% endif %}">{{response.value}}</td>
+<td></td>
 </tr>
 {% endfor %}
 {% endfor %}

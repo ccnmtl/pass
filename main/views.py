@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpRequest
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from pagetree.helpers import get_hierarchy, get_section_from_path, get_module, needs_submit, submitted
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -95,6 +95,12 @@ def instructor_page(request,path):
     section = get_section_from_path(path,hierarchy=h)
     root = section.hierarchy.get_root()
     module = get_module(section)
+
+    if request.method == "POST":
+        if 'clear' in request.POST.keys():
+            submission = get_object_or_404(Submission,id=request.POST['clear'])
+            submission.delete()
+            return HttpResponseRedirect("/instructor" + section.get_absolute_url())
 
     quizzes = [p.block() for p in section.pageblock_set.all() if hasattr(p.block(),'needs_submit') and p.block().needs_submit()]
     return dict(section=section,
