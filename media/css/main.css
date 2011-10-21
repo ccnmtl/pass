@@ -102,6 +102,15 @@ table
 	font-size: 100%;
 }
 
+table.noborders,
+table.noborders td
+
+{
+    border: none;
+    padding: 10px;
+    vertical-align: top;
+}
+
 table tbody
 {
 	border: 0;
@@ -730,6 +739,18 @@ a:visited
 	margin: 0;
 	padding: 0;
 	border: 0;
+}
+
+.question-sub 
+
+{
+
+    width: 300px;
+    float: left;
+    background-color: #eee;
+    padding: 10px;
+    margin: 10px;
+
 }
 
 .cases li
