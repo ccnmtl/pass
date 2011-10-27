@@ -3,7 +3,7 @@
 {% block title %}Welcome to PASS{% endblock %}
 
 {% block content %}
-<h2>Welcome to PASS</h2>
+<h3>A Population-Based Approach to Patient Service and Professional Success (PASS)</h3>
 
 {% if request.user.is_anonymous %}
 <br />
@@ -13,8 +13,18 @@
 </div>
 {% else %}
 
-<p>Content goes here</p>
+<div class='maintext'>
+<p>While your dental education intensely prepares you for understanding and applying biomedical and chemical competencies, there is little opportunity to consider the patient populations you will be able to serve at the completion of your training.</p>
 
-<p>Start on <a href="/module-1/survey/">Module 1</a></p>
+<p>These modules are designed to orient you to populations across the lifespan so that you can consider how your career may align with your professional and personals goals.</p>
+
+
+<p>The first of five modules focuses on the young children in the United States. </p>
+<br />
+<h4>Get started:</h4>
+<ul>
+<li><a href="/module-1/survey/">Register for Module 1</a></li></ul>
+
+
 {% endif %}
 {% endblock %}
