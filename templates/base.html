@@ -111,6 +111,17 @@ logged in as {{request.user.first_name}} {{request.user.last_name}} [<a href="/l
 {% block footer %}
 	<!-- ###### Footer ###### -->
 	<div id="footer">
+	<ul id="standard-elements">
+	<li>
+	<a href="{{site_root}}/about">About</a>
+	</li>
+	<li>
+	<a href="{{site_root}}/help">Help</a>
+	</li>
+	<li>
+	<a href="mailto:">Contact</a>
+	</li>
+	</ul>
 	<p class="printonly"><br /><img src="/site_media/img/logo_ccnmtl_sidebar.gif" class="printonly" /></p>
 	</div><!-- id="footer" -->
 {% endblock %}

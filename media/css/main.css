@@ -924,8 +924,21 @@ body#poctools a#poctools
 	margin: 0;
 	padding: 0;
 	border: 0;
+	background-color: #dedede;
 }
 
+ul#standard-elements {
+    list-style: none;
+    text-align: center;
+    padding-top: 12px;
+    font-size: 90%;
+
+}
+
+ul#standard-elements li{
+    display: inline;
+    margin: 10px;
+}
 .block-edit {
     border: #999 solid 1px;
     margin: 1em;
