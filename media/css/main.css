@@ -403,15 +403,15 @@ a:visited
 {
 	display: block;
 	float: left;
-	width: 201px;
-	margin: 10px 0 0 0;
-	padding: 0;
+	width: 205px;
+	margin: 0;
+	padding: 0 0 20px 0;
 	border: 0;
 }
 
 #secondary_navigation #fadetop
 {
-	display: block;
+	display: none;
 	width: 201px;
 	height: 30px;
 	margin: 0;
@@ -421,7 +421,7 @@ a:visited
 
 #secondary_navigation #fadebottom
 {
-	display: block;
+	display: none;
 	width: 201px;
 	height: 30px;
 	margin: 0;
@@ -432,8 +432,7 @@ a:visited
 #secondary_navigation .block
 {
 	display: block;
-	width: 180px;
-	margin: 0 0 20px 20px;
+	margin:10px;
 	padding: 0;
 	border: 0;
 	font-size: 0.95em;
@@ -442,67 +441,88 @@ a:visited
 #secondary_navigation .block h3
 {
 	display: block;
-	width: 165px;
 	margin: 0 0 10px 0;
 	padding: 0;
 	border: 0;
 	border-bottom: 1px dotted #6c0;
-	color: #000;
 	font-weight: bold;
 }
 
 #secondary_navigation .block ul
 {
 	display: block;
-	width: 171px;
-	margin: 0;
+	margin: 5px 0 0 0;
 	padding: 0;
 	border: 0;
 	list-style: none;	
+	background-color: #7CAFB2;
+	padding: 15px;
 	
 }
 
 #secondary_navigation .block ul li
 {
-	margin: 0 0 2px 0;
+	margin: 3px 0 0 0;
 	padding: 0;
 	border: 0;
-	border-bottom: 1px solid #35a0a4;
-	padding: 5px;
-	color: #35a0a4;
 	font-weight: normal;
+	color: #fff;
+	font-size: 95%;
+	padding: 1px;
+	border-bottom: 1px dotted #dedede;
 
 }
 
 #secondary_navigation .block ul li a
 {
-    color: #999;
+    color: #dedede;
+    font-size: 100%;
+
+}
+
+#secondary_navigation .block ul li a:hover
+{
+    color: #ecd785;
 
 }
 
 #secondary_navigation .block ul li a:visited
 {
-    color: #000;
+
 
 }
 
-#secondary_navigation .block ul ul
+#secondary_navigation .block ul li ul
 {
 	display: block;
-	width: 151px;
-	margin: 5px 0 0 0;
+	margin: 5px 0 5px 10px;
+	padding: 0;
+	border: 0;
+	list-style: none;
+	
+}
+
+#secondary_navigation .block ul li ul li
+{
+
+	font-size: 88%;
+	margin: 3px 0 0 0;
+	border: none;
+
+}
+
+#secondary_navigation .block ul li ul li ul
+{
+	display: block;
+	margin: 10px 0 0 10px;
 	padding: 0;
 	border: 0;
 	list-style: none;	
 }
 
-#secondary_navigation .block ul li ul li
+#secondary_navigation .block ul li ul li ul li
 {
-	margin: 3px 3px 0 20px;
-	padding: 0;
-	border: 0;
-	font-size: 95%;
-
+	font-size: 90%;
 }
 /* ***** Content ***** */
 
