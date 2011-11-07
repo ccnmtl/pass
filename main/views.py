@@ -14,8 +14,48 @@ from pagetree_export.exportimport import export_zip, import_zip
 from pageblocks.exportimport import *
 from quizblock.exportimport import *
 from quizblock.models import Submission, Response
+from main.models import UserProfile, UserVisited
 import os
 import csv
+
+def get_or_create_profile(user,section):
+    try:
+        user_profile,created = UserProfile.objects.get_or_create(user=user)
+    except django.core.exceptions.MultipleObjectsReturned:
+        user_profile = UserProfile.objects.filter(user=user)[0]
+        created = False
+    if created:
+        first_leaf = section.hierarchy.get_first_leaf(section)
+        ancestors = first_leaf.get_ancestors()
+        for a in ancestors:
+            user_profile.save_visit(a)
+    return user_profile
+
+def _unlocked(profile,section):
+    """ if the user can proceed past this section """
+    if not section:
+        return True
+    if section.is_root():
+        return True
+    if profile.has_visited(section):
+        return True
+
+    previous = section.get_previous()
+    if not previous:
+        return True
+    else:
+        if not profile.has_visited(previous):
+            return False
+
+    # if the previous page had blocks to submit
+    # we only let them by if they submitted
+    for p in previous.pageblock_set.all():
+        if hasattr(p.block(),'unlocked'):
+            if p.block().unlocked(profile.user) == False:
+                return False
+          
+    return profile.has_visited(previous)
+
 
 class rendered_with(object):
     def __init__(self, template_name):
@@ -55,6 +95,13 @@ def page(request,path):
     root = section.hierarchy.get_root()
     module = get_module(section)
 
+    user_profile = get_or_create_profile(user=request.user,section=section)
+    can_access = _unlocked(user_profile,section)
+    if can_access:
+        user_profile.save_visit(section)
+    else:
+        return HttpResponseRedirect(user_profile.last_location)
+
     can_edit = False
     if not request.user.is_anonymous():
         can_edit = request.user.is_staff
@@ -87,6 +134,7 @@ def page(request,path):
                     instructor_link=instructor_link,
                     can_edit=can_edit,
                     allow_redo=allow_redo(section),
+                    next_unlocked = _unlocked(user_profile,section.get_next())
                     )
 @login_required
 @rendered_with("main/instructor_page.html")

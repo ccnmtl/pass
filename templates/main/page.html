@@ -79,7 +79,11 @@
 
 {% if section.get_next %}
 {% with section.get_next as next_section %}
+{% if next_unlocked %}
 <a href="{{section.get_next.get_absolute_url}}" id="next">{{section.get_next.label}} »</a>
+{% else %}
+<span id="next">{{section.get_next.label}} »</span>
+{% endif %}
 {% endwith %}
 {% endif %}
 </div><!-- div id="content-nav" -->
