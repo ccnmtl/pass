@@ -25,7 +25,6 @@
 
 <div id="container">
 
-
 {% block masthead %}
 	<!-- ###### Site banner ###### -->
 	<div id="header">
@@ -87,7 +86,11 @@ logged in as {% if request.user.first_name or request.user.last_name %}{{request
 
 
 	<!-- ###### Page: Sidebars and Content ###### -->
+	
+	
+
 	<div id="pagebody">
+
 	  {% block sidenav %}{% endblock %}
 
 		<!-- ###### Page Content ###### -->
@@ -108,6 +111,7 @@ logged in as {% if request.user.first_name or request.user.last_name %}{{request
 	</div><!-- id="pagebody" -->
 
 
+
 {% block footer %}
 	<!-- ###### Footer ###### -->
 	<div id="footer">
@@ -125,7 +129,6 @@ logged in as {% if request.user.first_name or request.user.last_name %}{{request
 	<p class="printonly"><br /><img src="/site_media/img/logo_ccnmtl_sidebar.gif" class="printonly" /></p>
 	</div><!-- id="footer" -->
 {% endblock %}
-
 
 </div><!-- id="container" -->
 </body>
