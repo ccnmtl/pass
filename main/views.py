@@ -127,15 +127,14 @@ def page(request,path):
             section.reset(request.user)
             return HttpResponseRedirect(section.get_absolute_url())
         proceed = section.submit(request.POST,request.user)
-        if proceed:
-            return HttpResponseRedirect(section.get_next().get_absolute_url())
-        else:
-            # giving them feedback before they proceed
-            return HttpResponseRedirect(section.get_absolute_url())
+        # ignoring proceed and always pushing them along. see PMT #77454
+        return HttpResponseRedirect(section.get_next().get_absolute_url())
     else:
         instructor_link = has_responses(section)
+        allow_next_link = not needs_submit(section) or submitted(section,request.user)
         return dict(section=section,
                     module=module,
+                    allow_next_link=allow_next_link,
                     needs_submit=needs_submit(section),
                     is_submitted=submitted(section,request.user),
                     modules=root.get_children(),
