@@ -20,6 +20,8 @@ import csv
 import django.core.exceptions
 
 def get_or_create_profile(user,section):
+    if user.is_anonymous():
+        return None
     try:
         user_profile,created = UserProfile.objects.get_or_create(user=user)
     except django.core.exceptions.MultipleObjectsReturned:
@@ -34,6 +36,8 @@ def get_or_create_profile(user,section):
 
 def _unlocked(profile,section):
     """ if the user can proceed past this section """
+    if profile is None:
+        return False
     if not section:
         return True
     if section.is_root():
@@ -88,6 +92,7 @@ def allow_redo(section):
 def intro(request):
     return dict()
 
+@login_required
 @rendered_with('main/page.html')
 def page(request,path):
     hierarchy = request.get_host()
@@ -101,7 +106,10 @@ def page(request,path):
     if can_access:
         user_profile.save_visit(section)
     else:
-        return HttpResponseRedirect(user_profile.last_location)
+        if request.user.is_anonymous():
+            return HttpResponseRedirect("/")
+        else:
+            return HttpResponseRedirect(user_profile.last_location)
 
     can_edit = False
     if not request.user.is_anonymous():
