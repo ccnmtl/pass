@@ -17,6 +17,7 @@ from quizblock.models import Submission, Response
 from main.models import UserProfile, UserVisited
 import os
 import csv
+import django.core.exceptions
 
 def get_or_create_profile(user,section):
     try:
