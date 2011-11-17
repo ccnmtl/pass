@@ -598,6 +598,13 @@ a:visited
 	text-align: right;
 }
 
+.pageblock, .block {
+
+    margin: 0 0 1em 0;
+    display: block;
+
+}
+
 /* Login page */
 
 .loginbox
