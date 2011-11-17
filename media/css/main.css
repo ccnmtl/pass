@@ -308,10 +308,11 @@ a:visited
 {
 	display: block;
 	float: left;
-    margin: 155px 0 0 0;
+    margin: 130px 0 0 0;
 	padding: 0;
 	border: 0;
 	list-style: none;
+	width: 100%
 }
 
 #primarynav ul.globalnav li
@@ -369,6 +370,7 @@ a:visited
 #primarynav ul.usernav li a
 {
 	display: block;
+	float: right;
 }
 
 
