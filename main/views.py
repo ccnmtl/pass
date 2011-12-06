@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpRequest
 from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.encoding import smart_str
 from pagetree.helpers import get_hierarchy, get_section_from_path, get_module, needs_submit, submitted
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -247,7 +248,7 @@ def all_results(request):
         writer.writerow(headers)
         for r in all_responses:
             rd = [r['user'].username] + r['row']
-            writer.writerow(rd)
+            writer.writerow(smart_str(rd))
         return response
     else:
         return dict(all_columns=columns,all_responses=all_responses)
