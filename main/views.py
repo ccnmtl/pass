@@ -241,6 +241,11 @@ def all_results(request):
         all_responses.append(dict(user=u,row=row))
 
     def clean_header(s):
+        s = s.replace('<div class=\'question-sub\'>','')
+        s = s.replace('<div class=\'question\'>','')
+        s = s.replace('<p>','')
+        s = s.replace('</p>','')
+        s = s.replace('</div>','')
         s = s.replace('\n','')
         s = s.replace('\r','')
         s = s.replace('<','')
