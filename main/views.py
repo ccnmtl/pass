@@ -242,6 +242,7 @@ def all_results(request):
 
     def clean_header(s):
         s = s.replace('\n','')
+        s = s.replace('\r','')
         s = s.replace('<','')
         s = s.replace('>','')
         s = s.replace('\'','')
