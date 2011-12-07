@@ -263,6 +263,7 @@ def all_results(request):
         writer.writerow(headers)
         for r in all_responses:
             rd = [smart_str(c) for c in [r['user'].username] + r['row']]
+            assert len(rd) == len(headers)
             writer.writerow(rd)
         return response
     else:
