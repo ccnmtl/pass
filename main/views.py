@@ -242,7 +242,7 @@ def all_results(request):
 
     if request.GET.get('format','html') == 'csv':
         response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=match_responses.csv'
+        response['Content-Disposition'] = 'attachment; filename=pass_responses.csv'
         writer = csv.writer(response)
         headers = ['user'] + ["%s" % c.label().encode('utf-8') for c in columns]
         writer.writerow(headers)
