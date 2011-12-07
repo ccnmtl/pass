@@ -247,8 +247,8 @@ def all_results(request):
         headers = ['user'] + ["%s" % c.label().encode('utf-8') for c in columns]
         writer.writerow(headers)
         for r in all_responses:
-            rd = [r['user'].username] + r['row']
-            writer.writerow(smart_str(rd))
+            rd = [smart_str(c) for c in [r['user'].username] + r['row']]
+            writer.writerow(rd)
         return response
     else:
         return dict(all_columns=columns,all_responses=all_responses)
