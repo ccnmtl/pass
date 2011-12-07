@@ -240,11 +240,20 @@ def all_results(request):
             row.append(v)
         all_responses.append(dict(user=u,row=row))
 
+    def clean_header(s):
+        s = s.replace('\n','')
+        s = s.replace('<','')
+        s = s.replace('>','')
+        s = s.replace('\'','')
+        s = s.replace('\"','')
+        s = s.replace(',','')
+        return s
+
     if request.GET.get('format','html') == 'csv':
         response = HttpResponse(mimetype='text/csv')
         response['Content-Disposition'] = 'attachment; filename=pass_responses.csv'
         writer = csv.writer(response)
-        headers = ['user'] + ["%s" % c.label().encode('utf-8') for c in columns]
+        headers = ['user'] + ["%s" % clean_header(c.label().encode('utf-8')) for c in columns]
         writer.writerow(headers)
         for r in all_responses:
             rd = [smart_str(c) for c in [r['user'].username] + r['row']]
