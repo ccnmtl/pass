@@ -20,3 +20,4 @@ requirements/src/django-registration-0.7.tar.gz
 requirements/src/django-responseblock-0.1.4.tar.gz
 requirements/src/django-proxyblock-0.1.2.tar.gz
 requirements/src/South-0.7.3.tar.gz
+requirements/src/django-statsd-mozilla-0.3.3.tar.gz

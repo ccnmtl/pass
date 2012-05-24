@@ -36,6 +36,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     )
 
 MIDDLEWARE_CLASSES = (
+    'django_statsd.middleware.GraphiteRequestTimingMiddleware',
+    'django_statsd.middleware.GraphiteMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,7 +78,15 @@ INSTALLED_APPS = (
     'responseblock',
     'proxyblock',
     'south',
+    'django_statsd',
 )
+
+STATSD_CLIENT = 'statsd.client'
+STATSD_PREFIX = 'pass'
+STATSD_HOST = 'localhost'
+STATSD_PORT = 8125
+STATSD_PATCHES = ['django_statsd.patches.db', ]
+
 SOUTH_AUTO_FREEZE_APP = True
 ACCOUNT_ACTIVATION_DAYS = 7
 AUTH_PROFILE_MODULE = 'main.UserProfile'
