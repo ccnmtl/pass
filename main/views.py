@@ -4,13 +4,14 @@ from django.utils.encoding import smart_str
 from pagetree.helpers import get_hierarchy, get_section_from_path, get_module, needs_submit, submitted
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from models import *
 from restclient import GET
 import httplib2
 import simplejson
 from django.conf import settings
 from munin.helpers import muninview
-from pagetree.models import Section
+from pagetree.models import Section, Hierarchy
 from pagetree_export.exportimport import export_zip, import_zip
 from pageblocks.exportimport import *
 from quizblock.exportimport import *
@@ -91,15 +92,40 @@ def allow_redo(section):
 
 @rendered_with('main/intro.html')
 def intro(request):
-    return dict()
+    return { 'demographic_survey_complete': demographic_survey_complete(request) }
 
 @login_required
 @rendered_with('main/page.html')
-def page(request,path):
-    hierarchy = request.get_host()
+def demographic(request,path):
+    hierarchy = get_hierarchy('Demographic')
+    return process_page(request,path,hierarchy)
+
+@login_required
+@rendered_with('main/page.html')
+def module_one(request,path):
+    if not demographic_survey_complete(request):
+        hierarchy = get_hierarchy('Demographic')
+        return HttpResponseRedirect(hierarchy.get_root().get_absolute_url())
+
+    hierarchy = get_hierarchy('Module One')
+    return process_page(request,path,hierarchy)
+
+@login_required
+@rendered_with('main/page.html')
+def module_two(request,path):
+    if not demographic_survey_complete(request):
+        hierarchy = get_hierarchy('Demographic')
+        return HttpResponseRedirect(hierarchy.get_root().get_absolute_url())
+
+    hierarchy = get_hierarchy('Module Two')
+    return process_page(request,path,hierarchy)
+
+@login_required
+@rendered_with('main/page.html')
+def process_page(request,path,hierarchy):
     section = get_section_from_path(path,hierarchy=hierarchy)
 
-    root = section.hierarchy.get_root()
+    root = hierarchy.get_root()
     module = get_module(section)
 
     user_profile = get_or_create_profile(user=request.user,section=section)
@@ -118,21 +144,28 @@ def page(request,path):
 
     if section.id == root.id:
         # trying to visit the root page
-        if section.get_next():
+        if section.get_first_leaf():
             # just send them to the first child
-            return HttpResponseRedirect(section.get_next().get_absolute_url())
+            return HttpResponseRedirect(section.get_first_leaf().get_absolute_url())
 
     if request.method == "POST":
         # user has submitted a form. deal with it
         if request.POST.get('action','') == 'reset':
             section.reset(request.user)
             return HttpResponseRedirect(section.get_absolute_url())
-        proceed = section.submit(request.POST,request.user)
-        # ignoring proceed and always pushing them along. see PMT #77454
-        return HttpResponseRedirect(section.get_next().get_absolute_url())
+
+        section.submit(request.POST,request.user)
+
+        next = section.get_next();
+        if next:
+            # ignoring proceed and always pushing them along. see PMT #77454
+            return HttpResponseRedirect(section.get_next().get_absolute_url())
+        else:
+            return HttpResponseRedirect("/")
     else:
         instructor_link = has_responses(section)
         allow_next_link = not needs_submit(section) or submitted(section,request.user)
+        end_section = section.get_next()
         return dict(section=section,
                     module=module,
                     allow_next_link=allow_next_link,
@@ -143,7 +176,7 @@ def page(request,path):
                     instructor_link=instructor_link,
                     can_edit=can_edit,
                     allow_redo=allow_redo(section),
-                    next_unlocked = _unlocked(user_profile,section.get_next())
+                    next_unlocked = _unlocked(user_profile,section.get_next()),
                     )
 @login_required
 @rendered_with("main/instructor_page.html")
@@ -318,3 +351,19 @@ def importer(request):
     return HttpResponseRedirect(url)
 
 
+def demographic_survey_complete(request):
+    if request.user.is_anonymous():
+        return False
+
+    # Show the demographic survey if the user has not yet completed
+    hierarchy = Hierarchy.objects.get(name='Demographic')
+    section = hierarchy.get_section_from_path('survey')
+    content_type = ContentType.objects.filter(name='quiz')
+    registration_quiz = section.pageblock_set.filter(content_type=content_type)
+
+    if len(registration_quiz) > 0:
+        submission = Submission.objects.filter(quiz=registration_quiz[0], user=request.user)
+        if len(submission) > 0:
+            return True
+
+    return False

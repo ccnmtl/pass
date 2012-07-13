@@ -71,24 +71,27 @@
 
 {% block content-nav %}
 
-<div class="content-nav">
+    <div class="content-nav">
 
-{% if section.get_previous %}
-<a href="{{section.get_previous.get_absolute_url}}" id="previous">« {{section.get_previous.label}}</a>
-{% endif %}
+    {% if section.get_previous %}
+        <a href="{{section.get_previous.get_absolute_url}}" id="previous">« {{section.get_previous.label}}</a>
+    {% endif %}
 
-{% if section.get_next %}
-{% with section.get_next as next_section %}
-{% if next_unlocked %}
-{% if allow_next_link %}
-<a href="{{section.get_next.get_absolute_url}}" id="next">{{section.get_next.label}} »</a>
-{% else %}
-<span id="next">{{section.get_next.label}} »</span>
-{% endif %}
-{% else %}
-<span id="next">{{section.get_next.label}} »</span>
-{% endif %}
-{% endwith %}
-{% endif %}
+    {% if section.get_next %}
+        {% with section.get_next as next_section %}
+            {% if next_unlocked %}
+                {%  ifequal section.hierarchy section.get_next.hierarchy %}
+                    {% if allow_next_link %}
+                        <a href="{{section.get_next.get_absolute_url}}" id="next"> {{section.get_next.label}} »</a>
+                    {% else %}
+                        <span id="next">{{section.get_next.label}} »</span>
+                    {% endif %}
+                {%  endifequal %}
+            {% else %}
+                <span id="next">{{section.get_next.label}} »</span>
+            {% endif %}
+        {% endwith %}
+    {% endif %}
+
 </div><!-- div id="content-nav" -->
 {% endblock %}
