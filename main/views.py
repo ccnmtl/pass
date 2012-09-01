@@ -153,6 +153,9 @@ def process_page(request,path,hierarchy):
 
         section.submit(request.POST,request.user)
 
+        if hierarchy.name == 'Demographic' and path.startswith("survey"):
+            return HttpResponseRedirect("/")
+
         next = section.get_next()
         if next:
             # ignoring proceed and always pushing them along. see PMT #77454
