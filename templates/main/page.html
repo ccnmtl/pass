@@ -2,9 +2,49 @@
 {% load render %}
 
 {% block js %}
-{% for block in section.pageblock_set.all %}
-{% renderjs block %}
-{% endfor %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
+
+
+    {% for block in section.pageblock_set.all %}
+        {% renderjs block %}
+    {% endfor %}
+
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            jQuery("form").submit(function() {
+                var valid = true;
+
+                var children = jQuery(this).find("input,textarea,select");
+                jQuery.each(children, function() {
+                    if (valid) {
+                        if (this.tagName === 'INPUT' && this.type === 'text' ||
+                                this.tagName === 'TEXTAREA') {
+                            valid = jQuery(this).val().trim().length > 0;
+                        }
+
+                        if (this.tagName === 'SELECT') {
+                            var value = jQuery(this).val()
+                            valid = value !== undefined && value.length > 0 && jQuery(this).val().trim() !== '-----';
+                        }
+
+                        if (this.type === 'checkbox' || this.type === 'radio') {
+                            // one in the group needs to be checked
+                            var selector = 'input[name=' + jQuery(this).attr("name") + ']';
+                            valid = jQuery(selector).is(":checked");
+                        }
+                    }
+                });
+
+                if (!valid) {
+                    alert("Please complete all form fields before continuing.");
+                }
+
+                return valid;
+            });
+        });
+    </script>
+
 {% endblock %}
 
 {% block css %}

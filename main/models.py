@@ -18,6 +18,10 @@ class UserProfile(models.Model):
         self.save()
         uv,created = UserVisited.objects.get_or_create(user=self,section=section)
 
+    def save_visits(self, sections):
+        for s in sections:
+            self.save_visit(s)
+
     def has_visited(self,section):
         return UserVisited.objects.filter(user=self,section=section).count() > 0
         

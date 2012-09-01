@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpRequest
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.encoding import smart_str
 from pagetree.helpers import get_hierarchy, get_section_from_path, get_module, needs_submit, submitted
@@ -6,17 +6,10 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from models import *
-from restclient import GET
-import httplib2
-import simplejson
-from django.conf import settings
-from munin.helpers import muninview
-from pagetree.models import Section, Hierarchy
+from pagetree.models import Hierarchy
 from pagetree_export.exportimport import export_zip, import_zip
-from pageblocks.exportimport import *
-from quizblock.exportimport import *
 from quizblock.models import Submission, Response
-from main.models import UserProfile, UserVisited
+from main.models import UserProfile
 import os
 import csv
 import django.core.exceptions
@@ -42,7 +35,7 @@ def _unlocked(profile,section):
         return False
     if not section:
         return True
-    if section.is_root():
+    if section.is_root() or not section.is_leaf():
         return True
     if profile.has_visited(section):
         return True
@@ -58,7 +51,7 @@ def _unlocked(profile,section):
     # we only let them by if they submitted
     for p in previous.pageblock_set.all():
         if hasattr(p.block(),'unlocked'):
-            if p.block().unlocked(profile.user) == False:
+            if not p.block().unlocked(profile.user):
                 return False
           
     return profile.has_visited(previous)
@@ -145,8 +138,12 @@ def process_page(request,path,hierarchy):
     if section.id == root.id:
         # trying to visit the root page
         if section.get_first_leaf():
-            # just send them to the first child
-            return HttpResponseRedirect(section.get_first_leaf().get_absolute_url())
+            # just send them to the first child, but save
+            # the ancestors first
+            first_leaf = section.get_first_leaf()
+            ancestors = first_leaf.get_ancestors()
+            user_profile.save_visits(ancestors)
+            return HttpResponseRedirect(first_leaf.get_absolute_url())
 
     if request.method == "POST":
         # user has submitted a form. deal with it
@@ -156,7 +153,7 @@ def process_page(request,path,hierarchy):
 
         section.submit(request.POST,request.user)
 
-        next = section.get_next();
+        next = section.get_next()
         if next:
             # ignoring proceed and always pushing them along. see PMT #77454
             return HttpResponseRedirect(section.get_next().get_absolute_url())
@@ -203,6 +200,10 @@ def instructor_page(request,path):
 @login_required
 @rendered_with("main/all_results.html")
 def all_results(request):
+
+    if not request.user.is_superuser():
+        return HttpResponseForbidden()
+
     h = get_hierarchy(request.get_host())
     all_users = User.objects.all()
     quizzes = []
@@ -305,15 +306,16 @@ def all_results(request):
 @login_required
 @rendered_with('main/edit_page.html')
 def edit_page(request,path):
-    hierarchy = request.get_host()
-    section = get_section_from_path(path,hierarchy=hierarchy)
+    hierarchy_name,slash,section_path = path.partition('/')
+    section = get_section_from_path(section_path,hierarchy=hierarchy_name)
+
     root = section.hierarchy.get_root()
     module = get_module(section)
 
     return dict(section=section,
-                module=get_module(section),
-                modules=root.get_children(),
-                root=section.hierarchy.get_root())
+        module=get_module(section),
+        modules=root.get_children(),
+        root=section.hierarchy.get_root())
 
 
 @login_required
@@ -362,7 +364,7 @@ def demographic_survey_complete(request):
     registration_quiz = section.pageblock_set.filter(content_type=content_type)
 
     if len(registration_quiz) > 0:
-        submission = Submission.objects.filter(quiz=registration_quiz[0], user=request.user)
+        submission = Submission.objects.filter(quiz=registration_quiz[0].content_object, user=request.user)
         if len(submission) > 0:
             return True
 
