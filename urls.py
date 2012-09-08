@@ -5,7 +5,6 @@ import os.path
 from django.views.generic.simple import direct_to_template
 admin.autodiscover()
 
-
 site_media_root = os.path.join(os.path.dirname(__file__),"media")
 
 urlpatterns = patterns('',
@@ -16,7 +15,8 @@ urlpatterns = patterns('',
           
                        (r'^export/$','main.views.exporter'),
                        (r'^import/$','main.views.importer'),
-                       ('^_allresults/$','main.views.all_results'),
+                       ('^admin/allresults/$','main.views.all_results'),
+                       ('^admin/allresultskey/$','main.views.all_results_key'),
                        (r'^registration/', include('registration.urls')),
                        ('^accounts/',include('djangowind.urls')),
                        (r'^admin/pagetree/',include('pagetree.urls')),

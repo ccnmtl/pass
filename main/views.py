@@ -90,27 +90,27 @@ def intro(request):
 @login_required
 @rendered_with('main/page.html')
 def demographic(request,path):
-    hierarchy = get_hierarchy('Demographic')
+    hierarchy = get_hierarchy('demographic')
     return process_page(request,path,hierarchy)
 
 @login_required
 @rendered_with('main/page.html')
 def module_one(request,path):
     if not demographic_survey_complete(request):
-        hierarchy = get_hierarchy('Demographic')
+        hierarchy = get_hierarchy('demographic')
         return HttpResponseRedirect(hierarchy.get_root().get_absolute_url())
 
-    hierarchy = get_hierarchy('Module One')
+    hierarchy = get_hierarchy('module-one')
     return process_page(request,path,hierarchy)
 
 @login_required
 @rendered_with('main/page.html')
 def module_two(request,path):
     if not demographic_survey_complete(request):
-        hierarchy = get_hierarchy('Demographic')
+        hierarchy = get_hierarchy('demographic')
         return HttpResponseRedirect(hierarchy.get_root().get_absolute_url())
 
-    hierarchy = get_hierarchy('Module Two')
+    hierarchy = get_hierarchy('module-two')
     return process_page(request,path,hierarchy)
 
 @login_required
@@ -153,7 +153,7 @@ def process_page(request,path,hierarchy):
 
         section.submit(request.POST,request.user)
 
-        if hierarchy.name == 'Demographic' and path.startswith("survey"):
+        if hierarchy.name == 'demographic' and path.startswith("survey"):
             return HttpResponseRedirect("/")
 
         next = section.get_next()
@@ -199,121 +199,202 @@ def instructor_page(request,path):
                 modules=root.get_children(),
                 root=h.get_root())
 
+def clean_header(s):
+    s = s.replace('<div class=\'question-sub\'>','')
+    s = s.replace('<div class=\'question\'>','')
+    s = s.replace('<div class=\"mf-question\">','')
+    s = s.replace('<div class=\"sw-question\">','')
+    s = s.replace('<p>','')
+    s = s.replace('</p>','')
+    s = s.replace('</div>','')
+    s = s.replace('\n','')
+    s = s.replace('\r','')
+    s = s.replace('<','')
+    s = s.replace('>','')
+    s = s.replace('\'','')
+    s = s.replace('\"','')
+    s = s.replace(',','')
+    s = s.encode('utf-8')
+    return s
 
-@login_required
-@rendered_with("main/all_results.html")
-def all_results(request):
+class Column(object):
+    def __init__(self, hierarchy, question=None, answer=None):
+        self.hierarchy = hierarchy
+        self.question = question
+        self.answer = answer
+        self.module_name = self.hierarchy.get_top_level()[0].label
 
-    if not request.user.is_superuser():
-        return HttpResponseForbidden()
+        if self.question:
+            self._submission_cache = Submission.objects.filter(quiz=self.question.quiz)
+            self._response_cache = Response.objects.filter(question=self.question)
+            self._answer_cache = self.question.answer_set.all()
 
-    h = get_hierarchy(request.get_host())
-    all_users = User.objects.all()
-    quizzes = []
-    for s in h.get_root().get_descendants():
-        for p in s.pageblock_set.all():
-            if hasattr(p.block(),'needs_submit') and p.block().needs_submit():
-                quizzes.append(p)
+    def question_id(self):
+        return "%s_question_%s" % (self.hierarchy.id, self.question.id)
 
-    questions = []
-    for qz in quizzes:
-        for q in qz.block().question_set.all():
-            questions.append(q)
+    def question_answer_id(self):
+        return "%s_%s" % (self.question_id(), self.answer.id)
 
-    class Column(object):
-        def __init__(self,question=None,answer=None):
-            self.question = question
-            self.answer = answer
-            self._label_cache = None
-
-        def label(self):
-            # don't want to have to recompute the labels on every row
-            if self._label_cache is None:
-                if self.answer is None:
-                    self._label_cache = "%d%s%s/%s" % (self.question.id,self.question.quiz.pageblock().section.get_absolute_url(),
-                                                     self.question.quiz.pageblock().label,
-                                                     self.question.text)
-                else:
-                    self._label_cache = "%d%s%s/%s/%s" % (self.question.id,self.question.quiz.pageblock().section.get_absolute_url(),
-                                                          self.question.quiz.pageblock().label,
-                                                          self.question.text,self.answer.label)
-            return self._label_cache
-
-        def value(self,user):
-            r = Submission.objects.filter(quiz=self.question.quiz,user=user).order_by("-submitted")
+    def user_value(self, user):
+        if self.question:
+            r = self._submission_cache.filter(user=user).order_by("-submitted")
             if r.count() == 0:
                 # user has not submitted this form
                 return ""
             submission = r[0]
-            r = Response.objects.filter(question=self.question,submission=submission)
+            r = self._response_cache.filter(submission=submission)
             if r.count() > 0:
-                if self.answer is None:
-                    # text/short answer type question
+                if self.question.is_short_text() or self.question.is_long_text():
                     return r[0].value
-                else:
-                    # multiple/single choice
-                    if self.answer.value in [res.value for res in self.question.user_responses(user)]:
-                        return "1"
-                    else:
-                        return "0"
-            else:
-                # user submitted this form, but left this question blank somehow
-                return ""
+                elif self.question.is_multiple_choice():
+                    if self.answer.value in [res.value for res in r]:
+                        return self.answer.id
+                else: # single choice
+                    for a in self._answer_cache:
+                        if a.value == r[0].value:
+                            return a.id
+
+        return ''
+
+
+    def key_row(self):
+        if self.question:
+            row = [self.question_id(), self.module_name, self.question.question_type, clean_header(self.question.text)]
+            if self.answer:
+                row.append(self.answer.id);
+                row.append(clean_header(self.answer.label))
+            return row
+
+    def header_column(self):
+        if self.question and self.answer:
+            return [ self.question_answer_id() ]
+        elif self.question:
+            return [ self.question_id() ]
+
+@login_required
+def all_results_key(request):
+
+    """
+        A "key" for all questions and answers in the system.
+        * One row for short/long text questions
+        * Multiple rows for single/multiple-choice questions. Each question/answer pair get a row
+        itemIdentifier - unique system identifier,
+            concatenates hierarchy id, item type string, page block id (if necessary) and item id
+        module - first child label in the hierarchy
+        itemType - [question, discussion topic, referral field]
+        itemText - identifying text for the item
+        answerIdentifier - for single/multiple-choice questions. an answer id
+        answerText
+    """
+
+    if not request.user.is_superuser:
+        return HttpResponseForbidden
+
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=pass_response_key.csv'
+    writer = csv.writer(response)
+    headers = ['itemIdentifier', 'module', 'itemType', 'itemText', 'answerIdentifier', 'answerText']
+    writer.writerow(headers)
+
+    quiz_type = ContentType.objects.filter(name='quiz')
 
     columns = []
-    for q in questions:
-        if q.answerable():
-            # need to make a column for each answer
-            for a in q.answer_set.all():
-                columns.append(Column(question=q,answer=a))
-        else:
-            columns.append(Column(question=q))
+    for h in Hierarchy.objects.all():
+        for s in h.get_root().get_descendants():
+            # quizzes
+            for p in s.pageblock_set.filter(content_type=quiz_type):
+                for q in p.block().question_set.all():
+                    if q.answerable():
+                        # need to make a column for each answer
+                        for a in q.answer_set.all():
+                            columns.append(Column(hierarchy=h, question=q, answer=a))
+                    else:
+                        columns.append(Column(hierarchy=h, question=q))
 
-    all_responses = []
-    for u in all_users:
-        row = []
+    for column in columns:
+        try:
+            writer.writerow(column.key_row())
+        except:
+            pass
+
+    return response
+
+
+@login_required
+@rendered_with("main/all_results.html")
+def all_results(request):
+    """
+        All system results
+        * One or more column for each question in system.
+            ** 1 column for short/long text. label = itemIdentifier from key
+            ** 1 column for single choice. label = itemIdentifier from key
+            ** n columns for multiple choice: one column for each possible answer
+               *** column labeled as itemIdentifer_answer.id
+
+        * One row for each user in the system.
+            1. username
+            2 - n: answers
+                * short/long text. text value
+                * single choice. answer.id
+                * multiple choice.
+                    ** answer id is listed in each question/answer column the user selected
+                * Unanswered fields represented as an empty cell
+    """
+
+    if not request.user.is_superuser:
+        return HttpResponseForbidden
+
+    if not request.GET.get('format','html') == 'csv':
+        return dict()
+
+    quiz_type = ContentType.objects.filter(name='quiz')
+
+    columns = []
+    for h in Hierarchy.objects.all():
+        for s in h.get_root().get_descendants():
+            # quizzes
+            for p in s.pageblock_set.filter(content_type=quiz_type):
+                for q in p.block().question_set.all():
+                    if q.answerable() and q.is_multiple_choice():
+                        # need to make a column for each answer
+                        for a in q.answer_set.all():
+                            columns.append(Column(hierarchy=h, question=q, answer=a))
+                    else:
+                        columns.append(Column(hierarchy=h, question=q))
+
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=pass_responses.csv'
+    writer = csv.writer(response)
+
+    headers = ['userIdentifier']
+    for c in columns:
+        headers += c.header_column()
+    writer.writerow(headers)
+
+    # Only look at users who have submission
+    users =  User.objects.filter(submission__isnull = False).distinct()
+    for u in users:
+        row = [ u.username ]
         for column in columns:
-            v = column.value(u)
+            v = smart_str(column.user_value(u))
             row.append(v)
-        all_responses.append(dict(user=u,row=row))
 
-    def clean_header(s):
-        s = s.replace('<div class=\'question-sub\'>','')
-        s = s.replace('<div class=\'question\'>','')
-        s = s.replace('<p>','')
-        s = s.replace('</p>','')
-        s = s.replace('</div>','')
-        s = s.replace('\n','')
-        s = s.replace('\r','')
-        s = s.replace('<','')
-        s = s.replace('>','')
-        s = s.replace('\'','')
-        s = s.replace('\"','')
-        s = s.replace(',','')
-        return s
+        writer.writerow(row)
 
-    if request.GET.get('format','html') == 'csv':
-        response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=pass_responses.csv'
-        writer = csv.writer(response)
-        headers = ['user'] + ["%s" % clean_header(c.label().encode('utf-8')) for c in columns]
-        writer.writerow(headers)
-        for r in all_responses:
-            rd = [smart_str(c) for c in [r['user'].username] + r['row']]
-            assert len(rd) == len(headers)
-            writer.writerow(rd)
-        return response
-    else:
-        return dict(all_columns=columns,all_responses=all_responses)
+    return response
 
 @login_required
 @rendered_with('main/edit_page.html')
 def edit_page(request,path):
     hierarchy_name,slash,section_path = path.partition('/')
+
+    h = Hierarchy.objects.get(name=hierarchy_name)
+    root = h.get_root()
+    c = root.get_children()
+
     section = get_section_from_path(section_path,hierarchy=hierarchy_name)
 
     root = section.hierarchy.get_root()
-    module = get_module(section)
 
     return dict(section=section,
         module=get_module(section),
@@ -361,7 +442,7 @@ def demographic_survey_complete(request):
         return False
 
     # Show the demographic survey if the user has not yet completed
-    hierarchy = Hierarchy.objects.get(name='Demographic')
+    hierarchy = Hierarchy.objects.get(name='demographic')
     section = hierarchy.get_section_from_path('survey')
     content_type = ContentType.objects.filter(name='quiz')
     registration_quiz = section.pageblock_set.filter(content_type=content_type)

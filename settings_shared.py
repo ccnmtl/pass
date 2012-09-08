@@ -91,7 +91,8 @@ SOUTH_AUTO_FREEZE_APP = True
 ACCOUNT_ACTIVATION_DAYS = 7
 AUTH_PROFILE_MODULE = 'main.UserProfile'
 
-PAGEBLOCKS = ['pageblocks.TextBlock',
+PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
+              'pageblocks.TextBlock',
               'pageblocks.HTMLBlock',
               'pageblocks.PullQuoteBlock',
               'pageblocks.ImageBlock',
