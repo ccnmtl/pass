@@ -197,7 +197,7 @@ def instructor_page(request,path):
                 quizzes=quizzes,
                 module=get_module(section),
                 modules=root.get_children(),
-                root=h.get_root())
+                root=root)
 
 def clean_header(s):
     s = s.replace('<div class=\'question-sub\'>','')
