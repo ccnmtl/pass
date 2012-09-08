@@ -181,10 +181,10 @@ def process_page(request,path,hierarchy):
 @login_required
 @rendered_with("main/instructor_page.html")
 def instructor_page(request,path):
-    h = get_hierarchy(request.get_host())
-    section = get_section_from_path(path,hierarchy=h)
+    hierarchy_name,slash,section_path = path.partition('/')
+    section = get_section_from_path(section_path,hierarchy=hierarchy_name)
+
     root = section.hierarchy.get_root()
-    module = get_module(section)
 
     if request.method == "POST":
         if 'clear' in request.POST.keys():
