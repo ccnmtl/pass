@@ -8,12 +8,17 @@ ADMINS = ( )
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'postgresql_psycopg2' # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'pass' # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pass',
+        'HOST': '',
+        'PORT': '',
+        'USER': '',
+        'PASSWORD': '',
+        }
+}
+
 
 DEFAULT_FROM_EMAIL = 'pass@pass.ccnmtl.columbia.edu'
 TIME_ZONE = 'America/New_York'
@@ -79,6 +84,7 @@ INSTALLED_APPS = (
     'proxyblock',
     'south',
     'django_statsd',
+    'careerlocation',
 )
 
 STATSD_CLIENT = 'statsd.client'
@@ -101,6 +107,7 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'careermapblock.CareerMap',
               'responseblock.Response',
               'proxyblock.ProxyBlock',
+              'careerlocation.CareerLocationBlock'
               ]
 
 
@@ -123,5 +130,4 @@ WIND_PROFILE_HANDLERS = ['djangowind.auth.CDAPProfileHandler']
 WIND_AFFIL_HANDLERS = ['djangowind.auth.AffilGroupMapper','djangowind.auth.StaffMapper','djangowind.auth.SuperuserMapper']
 WIND_STAFF_MAPPER_GROUPS = ['tlc.cunix.local:columbia.edu']
 WIND_SUPERUSER_MAPPER_GROUPS = ['anp8','jb2410','zm4','sbd12','egr2107','kmh2124','sld2131','amm8','mar227','ed2198','cks2120']
-
 

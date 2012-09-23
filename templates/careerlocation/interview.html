@@ -1,0 +1,57 @@
+{% load smartif %}
+{% load careerlocation_state %}
+
+<div class="career_location" style="display: none">
+    <div class="profile" style="display: none"></div>
+
+    <h3>Stakeholder Interview</h3>
+
+    <div class="interview_state">
+        <h5>You've selected <span id="selected_actor_count">0</span> stakeholders. You can select <span id="actors_remaining">4</span> more.</h5>
+        {%  for x in block.max_stakeholders %}
+            <div class="actor_state left empty"></div>
+        {%  endfor %}
+    </div>
+    <div class="visualclear"></div>
+
+
+    <div>
+        <div class="career_location_map left">
+            {%  for actor in block.stakeholders.all %}
+                <img id="actor_{{actor.id}}"
+                     data-id="{{actor.id}}"
+                     class="actor"
+                     style="left: {{actor.left}}px; top: {{actor.top}}px"
+                     src="{{actor.image.url}}"
+                     alt="interview stakeholder"></img>
+            {%  endfor %}
+
+            <img class="career_location_base_layer" src="{{block.base_layer.image.url}}" alt="career location base map" />
+            {% for layer in block.layers %}
+                <img id="map_layer_{{layer.id}}"
+                     data-id="{{layer.id}}"
+                     class="career_location_map_layer"
+                     src="{{layer.image.url}}"
+                     alt="career location base map"
+                     style="display: none"></img>
+            {% endfor %}
+        </div>
+
+        <div class="career_location_layer_selector right">
+            <h3>Map Layers</h3>
+            {% for layer in block.layers %}
+            <div>
+                <input type="checkbox" class="select-layer" data-id="{{layer.id}}" id="select_layer_{{layer.id}}" value="{{layer.name}}"></input>
+                {{ layer.display_name }}
+            </div>
+            {% endfor %}
+            <br />
+            <div>
+                <h3>Notepad</h3>
+                <textarea class="notepad scrollable"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="visualclear"></div>

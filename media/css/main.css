@@ -23,9 +23,9 @@ body
 	margin: auto;
 	padding: 0;
 	border: 0;
-	background-color: #e1f0ef;
-	font: normal 90% "lucida grande", arial, helvetica, sans-serif;
-	color: #333;
+	background-color: #e1f0ef !important;
+	font: normal 90% "lucida grande", arial, helvetica, sans-serif !important;
+	color: #333 !important;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -300,15 +300,24 @@ a:visited
 	margin: 0;
 	padding: 0;
 	border: 0;
-    background: url("../img/children_header.png") no-repeat scroll left top transparent;
-    height: 188px;
+    height: 35px;
+
+    background: rgb(63,176,180); /* Old browsers */
+    background: -moz-linear-gradient(left,  rgba(63,176,180,1) 0%, rgba(254,240,232,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(63,176,180,1)), color-stop(100%,rgba(254,240,232,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left,  rgba(63,176,180,1) 0%,rgba(254,240,232,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left,  rgba(63,176,180,1) 0%,rgba(254,240,232,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left,  rgba(63,176,180,1) 0%,rgba(254,240,232,1) 100%); /* IE10+ */
+    background: linear-gradient(to right,  rgba(63,176,180,1) 0%,rgba(254,240,232,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3fb0b4', endColorstr='#fef0e8',GradientType=1 ); /* IE6-9 */
+
 }
 
 #primarynav ul.globalnav
 {
 	display: block;
 	float: left;
-    margin: 130px 0 0 0;
+    margin: 2px;
 	padding: 0;
 	border: 0;
 	list-style: none;
@@ -345,7 +354,7 @@ a:visited
 	background-color: #8c8;
 }
 
-#primarynav #usernav
+#header #usernav
 {
 	display: block;
 	padding: 0;
@@ -357,7 +366,7 @@ a:visited
     margin: 10px 10px 0;
 }
 
-#primarynav ul.usernav li
+#header ul.usernav li
 {
 	float: left;
 	margin: 0;
@@ -367,20 +376,20 @@ a:visited
 	list-style: 0;
 }
 
-#primarynav ul.usernav li a
+#header ul.usernav li a
 {
 	display: block;
 	float: right;
 }
 
 
-#primarynav ul.usernav li#logout
+#header ul.usernav li#logout
 {
 	padding: 0;
 	background: url('../img/icon_padlock.gif') left bottom no-repeat;
 }
 
-#primarynav ul.usernav li#logout a
+#header ul.usernav li#logout a
 {
 	display: block;
 	padding: 0 15px 0 20px;
@@ -534,7 +543,7 @@ a:visited
 	display: block;
 	float: left;
 	width: 670px;
-	margin: 20px 15px 0 20px;
+	margin: 15px 15px 0 20px;
 	padding: 0;
 	border: 0;
 
@@ -1055,10 +1064,10 @@ margin: 0;
 
 h4#logo_ccnmtl {
 height: 47px;
-width: 151px;
+width: 200px;
 border: none;
-background: url("../img/uncharted_logo.png") no-repeat scroll left top transparent;
-float: right;
+background: url("../img/uncharted_logo.png") no-repeat scroll right top transparent;
+margin: 0;
 }
 
 .maintext {
@@ -1091,7 +1100,6 @@ float: right;
     font-style: italic;
 
 }
-
 
 /** Shield Box **/
 .warningmessage

@@ -54,17 +54,18 @@
 {% block title %}{{section.label}}{% endblock %}
 
 {% block sidenav %}
-        <!-- ###### Secondary Navigation ###### -->
-        <div id="secondary_navigation">
-                <div id="fadetop"></div>
-                <div class="block">
-                  {% if module.get_children %}
-                        <!--<h3>Sections</h3>-->
-                        {% include "main/menu.html" %}
-                  {% endif %}
-                </div><!-- div id="block" -->
-                <div id="fadebottom"></div>
-        </div><!-- div id="secondary_navigation" -->
+    <!-- ###### Secondary Navigation ###### -->
+    <div id="secondary_navigation">
+        <div id="fadetop"></div>
+        <div class="block">
+          {% if module.get_children %}
+                <!--<h3>Sections</h3>-->
+                {% include "main/menu.html" %}
+          {% endif %}
+        </div><!-- div id="block" -->
+        <div id="fadebottom"></div>
+    </div><!-- div id="secondary_navigation" -->
+
 {% endblock %}
 
 {% block content %}
@@ -109,26 +110,26 @@
 {% block content-nav %}
 
     <div class="content-nav">
-
-    {% if section.get_previous %}
-        <a href="{{section.get_previous.get_absolute_url}}" id="previous">« {{section.get_previous.label}}</a>
-    {% endif %}
-
-    {% if section.get_next %}
-        {% with section.get_next as next_section %}
-            {% if next_unlocked %}
-                {%  ifequal section.hierarchy section.get_next.hierarchy %}
-                    {% if allow_next_link %}
-                        <a href="{{section.get_next.get_absolute_url}}" id="next"> {{section.get_next.label}} »</a>
-                    {% else %}
-                        <span id="next">{{section.get_next.label}} »</span>
-                    {% endif %}
-                {%  endifequal %}
-            {% else %}
-                <span id="next">{{section.get_next.label}} »</span>
+        {%  with section.get_previous as previous %}
+            {%  if previous %}
+                {%  ifnotequal previous.depth 2 %}
+                    <a href="{{previous.get_absolute_url}}" id="previous">« {{previous.label}} </a>
+                {% endifnotequal %}
             {% endif %}
         {% endwith %}
-    {% endif %}
 
-</div><!-- div id="content-nav" -->
+        {% with section.get_next as next %}
+            {% if next %}
+                {% if not next.is_root %}
+                    {% if next_unlocked %}
+                        <a href="{{ next.get_absolute_url}}" id="next">{{next.label}} »</a>
+                    {% else %}
+                        <span id="next">{{next.label}} »</span>
+                        <input type="hidden" id="next_url" value="{{next.get_absolute_url}}" />
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endwith %}
+    </div><!-- div id="content-nav" -->
+
 {% endblock %}

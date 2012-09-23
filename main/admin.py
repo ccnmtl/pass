@@ -1,5 +1,7 @@
-from main.models import UserVisited
+from main.models import UserVisited, UserProfile
 from django.contrib import admin
+
+admin.site.register(UserProfile)
 
 class UserVisitedAdmin(admin.ModelAdmin):
     class Meta:
@@ -9,4 +11,3 @@ class UserVisitedAdmin(admin.ModelAdmin):
     list_display = ("user","section","visited_time")
 
 admin.site.register(UserVisited, UserVisitedAdmin)
-

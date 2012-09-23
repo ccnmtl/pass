@@ -3,7 +3,9 @@
 {% block title %}Welcome to PASS{% endblock %}
 
 {% block content %}
-<h3>A Population-Based Approach to Patient Service and Professional Success (PASS)</h3>
+    <img src="/site_media/img/children_header.png"></img>
+
+    <h3>A Population-Based Approach to Patient Service and Professional Success (PASS)</h3>
 
 {% if request.user.is_anonymous %}
 <br />
@@ -24,6 +26,7 @@
     <ul>
     {%  if demographic_survey_complete %}
         <li><a href="/module-one/">Young Children</a></li>
+        <li><a href="/module-two/">Adolescents</a></li>
     {%  else  %}
         <li><a href="/demographic/survey/">Register</a></li>
     {%  endif %}

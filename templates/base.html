@@ -25,6 +25,7 @@
 
 <div id="container">
     <div id="shieldbox"></div>
+
 {% block masthead %}
 	<!-- ###### Site banner ###### -->
 	<div id="header">
@@ -34,8 +35,32 @@
 
 		</ul>
 		{% endblock %}
-		<!-- CCNMTL title/logo --><h4 id="logo_ccnmtl"><span>Produced by the Columbia Center for New Media Teaching and Learning</span></a></h4>
+		<!-- CCNMTL title/logo -->
+
+
+        {% block usernav %}
+            <div id="usernav">{% if request.user.is_anonymous %}
+                <a href="/accounts/login/?next=/">login</a>
+            {% else %}
+                logged in as {% if request.user.first_name or request.user.last_name %}{{request.user.first_name}} {{request.user.last_name}}{% else %}{{ request.user.username }}{% endif %} [<a href="/logout/">logout</a>]
+                {% if can_edit %}
+                    [<a href="/edit{{request.path}}">edit</a>]
+                    {% if instructor_link %}
+                        [<a href="/instructor{{request.path}}">responses</a>]
+                    {% endif %}
+                {% endif %}
+
+
+            {% endif %}
+                <h4 id="logo_ccnmtl"><span>Produced by the Columbia Center for New Media Teaching and Learning</span></a></h4>
+            </div>
+        {% endblock %}
+
+
+
 	</div><!-- id="header" -->
+
+
 {% endblock %}
 
 	<!-- ###### Don't touch this ###### -->
@@ -52,21 +77,6 @@
    rightside :  all tabs aligning to the right, login to the left
 {% endcomment %}
 
-{% block usernav %}
-<div id="usernav">{% if request.user.is_anonymous %}
-<a href="/accounts/login/?next=/">login</a>
-{% else %}
-logged in as {% if request.user.first_name or request.user.last_name %}{{request.user.first_name}} {{request.user.last_name}}{% else %}{{ request.user.username }}{% endif %} [<a href="/logout/">logout</a>]
-{% if can_edit %}
-[<a href="/edit{{request.path}}">edit</a>]
-{% if instructor_link %}
-[<a href="/instructor{{request.path}}">responses</a>]
-{% endif %}
-{% endif %}
-
-
-{% endif %}</div>
-{% endblock %}
 
 
 {% block primarynavtabs %}

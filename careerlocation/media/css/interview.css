@@ -1,0 +1,143 @@
+.career_location_map {
+    position: relative;
+    height: 400px;
+    margin: 0;
+}
+
+.career_location_base_layer,
+.career_location_map_layer {
+    position: absolute;
+}
+
+.actor {
+    position: absolute;
+    z-index: 1000;
+}
+
+div.profile {
+    position: absolute;
+    z-index: 1001;
+    background-color: white;
+    border: 1px solid #708090;
+    width: 650px;
+    min-height: 350px;
+    padding: 10px;
+    background-color: #eaeaea;
+}
+
+.btn.interview, .btn.cancel {
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.btn.ask {
+    float: right;
+}
+
+#x {
+    margin: -7px;
+    float: right;
+    padding: 2px;
+}
+
+div.actor_state {
+    border: 1px solid black;
+    width: 38px;
+    height: 38px;
+    margin: 5px 5px 5px 5px;
+}
+
+div.actor_state.empty {
+    background-image: url('/site_media/img/stakeholder_slot.png');
+    background-repeat: no-repeat;
+}
+
+div.actor_state.inprogress img {
+    opacity:0.50;
+    -moz-opacity:0.50;
+    filter:alpha(opacity=50);
+}
+
+div.complete {
+    border: 1px solid black;
+}
+
+div.interview_state h5 {
+    text-transform: none;
+}
+
+div.interview.left {
+    width: 54%;
+    margin: 5px 10px 5px 5px;
+}
+
+div.interview_notepad.right {
+    margin: 5px 5px 5px 0px;
+    width: 42%;
+}
+
+div.interview_notepad.right textarea {
+    height: 300px;
+    width: 94%;
+}
+
+img.actor {
+    border: 3px solid black;
+}
+
+img.actor:hover {
+    border: 3px solid red;
+}
+
+
+
+
+div.accordion {
+    float: left;
+    width: 40em;
+}
+
+div.accordion-group {
+    margin-bottom: 6px;
+    vertical-align: middle;
+    font-size: .9em;
+}
+
+div.accordion-group.selected {
+    border: 2px black solid;
+}
+
+div.accordion-group {
+    background-color: #F9F9F9;
+}
+
+div.accordion-group:hover {
+    background-color: #f5f5f5;
+}
+
+div.accordion-heading {
+    min-height: 2em;
+    padding: 10px;
+
+}
+
+div.accordion-heading div.question {
+    float: left;
+    width: 60%;
+}
+
+div.accordion-heading .btn.ask {
+    float: right;
+    width: 35%;
+}
+
+div.accordion-body {
+    clear: both;
+}
+
+div.accordion-body button.done {
+    float: right;
+    width: 25%;
+    margin-bottom: 5px;
+}
+
