@@ -29,15 +29,27 @@
 
             <% if (select_stakeholder) { %>
                 <% if (questions.length > 0) { %>
-                    <div>You can select <%= remaining_stakeholders %>  more stakeholders.</div>
-                    <br />
+                    <% if (remaining_stakeholders > 0) { %>
+                        <div>You must select <%= remaining_stakeholders %>  more stakeholders.</div>
+                        <br />
 
-                    <div><b>Do you want to interview <%= name %>?</b></div>
+                        <div><b>Do you want to interview <%= name %>?</b></div>
 
-                    <div><button class="btn interview">Yes</button><button class="btn cancel">Not Right Now</button></div>
+                        <div><button class="btn interview">Yes</button><button class="btn cancel">Not Right Now</button></div>
+                    <% } else { %>
+                        <div>You've already interviewed 4 stakeholders. Make sure you've asked them each 3 questions!</div>
+                        <br />
+                    <% } %>
                 <% } %>
             <% } else { %>
-                <div>You've asked <%= response_count %> questions. You can ask <%= remaining_questions %> more.</div>
+                <% if (remaining_questions > 0) { %>
+                    <div>You've asked <%= response_count %> questions. You must ask <%= remaining_questions %> more.</div>
+                <% } else { %>
+                    <div>You've completed your interview with <%= name %>.
+                        You can review the stakeholder's answers, but you can't ask any more questions.
+                        Make sure you've taken good notes!
+                    </div>
+                <% } %>
                 <br />
 
                 <div>

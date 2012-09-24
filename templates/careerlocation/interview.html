@@ -7,7 +7,7 @@
     <h3>Stakeholder Interview</h3>
 
     <div class="interview_state">
-        <h5>You've selected <span id="selected_actor_count">0</span> stakeholders. You can select <span id="actors_remaining">4</span> more.</h5>
+        <h5 id="selected_actor_state">You've selected <span id="selected_actor_count">0</span> stakeholders. You must select <span id="actors_remaining">4</span> more stakeholders, and ask them each 3 questions.</h5>
         {%  for x in block.max_stakeholders %}
             <div class="actor_state left empty"></div>
         {%  endfor %}

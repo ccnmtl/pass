@@ -269,6 +269,8 @@
             // 1. selected_actor_count == 4
             // 2. each actor has 3 questions asked
             if (this.state.unlock()) {
+                jQuery("#selected_actor_state").html("You've completed the interviews. Continue on to select a practice location.");
+
                 var anchor = jQuery("a#next");
                 if (anchor.length < 1) {
                     // construct an anchor link
