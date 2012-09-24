@@ -182,7 +182,9 @@
             'click .cancel': 'onHideActorProfile',
             'click .ask': 'onAskQuestion',
             'click .done': 'onCloseResponse',
-            'click #toggle_help': 'onToggleHelp'
+            'click #toggle_help': 'onToggleHelp',
+            'click #toggle_map_layers': 'onToggleMapLayers',
+            'click #toggle_notepad': 'onToggleNotepad'
         },
         initialize: function(options) {
             _.bindAll(this,
@@ -403,8 +405,27 @@
             jQuery(".btn.ask").removeAttr("disabled");
         },
         onToggleHelp: function(evt) {
-            jQuery("div.career_location_overlay").show();
+            jQuery("div.career_location_overlay").toggle();
             jQuery('div.help_content').toggle();
+        },
+        onToggleMapLayers: function(evt) {
+            jQuery("div.career_location_overlay").toggle();
+            jQuery('div.map_layer_content').toggle();
+        },
+        onToggleNotepad: function(evt) {
+            jQuery("div.career_location_overlay").toggle();
+            jQuery('div.notepad_content').toggle();
         }
     });
 }(jQuery));
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pass',
+        'HOST': '',
+        'PORT': '',
+        'USER': '',
+        'PASSWORD': '',
+    }
+}

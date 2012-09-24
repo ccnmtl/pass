@@ -40,6 +40,13 @@
     position: absolute;
 }
 
+.career_location_map_layer {
+    opacity: .70;
+    filter: Alpha(Opacity=70);
+    background: transparent;
+
+}
+
 div.toolbar h2.left {
     margin: 0px;
 }
@@ -48,17 +55,41 @@ div.toolbar .right {
     margin: 5px;
 }
 
+div.map_layer_content {
+    position: absolute;
+    z-index: 1003;
+    width: 300px;
+}
+
+div.notepad_content {
+    position: absolute;
+    z-index: 1003;
+    width: 300px;
+}
+
 div.help_content {
     position: absolute;
     z-index: 1003;
-    width: 650px;
+    width: 830px;
 }
 
+div.notepad_content {
+    right: 213px;
+}
+
+div.map_layer_content {
+    right: 94px;
+}
+
+div.help_content {
+    right: 15px;
+}
+
+div.notepad_content .btn.right,
+div.map_layer_content .btn.right,
 div.help_content .btn.right {
-    margin: -33px 7px;
+    margin: -33px 0px;
 }
-
-
 
 .actor {
     position: absolute;
@@ -70,8 +101,8 @@ div.profile {
     z-index: 1001;
     background-color: white;
     border: 1px solid #708090;
-    width: 650px;
-    min-height: 350px;
+    width: 815px;
+    min-height: 430px;
     padding: 10px;
     background-color: #eaeaea;
 }

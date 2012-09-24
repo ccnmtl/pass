@@ -9,20 +9,40 @@
     <div class="toolbar">
         <h2 class="left">Stakeholder Interview</h2>
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
-        <a class="btn right" href="#" id="toggle_layers"><i class="icon-picture"></i> Map Layers</a>
+        <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
         <a class="btn right" href="#" id="toggle_notepad"><i class="icon-th-list"></i> Notepad</a>
     </div>
     <div class="visualclear"></div>
 
     <div class="help_content" style="display: none">
-            <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
-            <div class="arrow"></div>
-            <h3 class="popover-title">Help</h3>
-            <div class="popover-content">
-                <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
-            </div>
+        <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
+        <h3 class="popover-title">Help</h3>
+        <div class="popover-content">
+            <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+        </div>
     </div>
 
+    <div class="map_layer_content" style="display: none">
+        <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
+        <h3 class="popover-title">Select Map Layers</h3>
+        <div class="popover-content">
+            {% for layer in block.layers %}
+                <div>
+                    <input type="checkbox" class="select-layer" data-id="{{layer.id}}" id="select_layer_{{layer.id}}" value="{{layer.name}}"></input>
+                    {{ layer.display_name }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <div class="notepad_content" style="display: none">
+        <a class="btn right" href="#" id="toggle_notepad"><i class="icon-th-list"></i> Notepad</a>
+        <h3 class="popover-title">Notepad</h3>
+        <div class="popover-content">
+            <textarea class="notepad scrollable"></textarea>
+        </div>
+    </div>
 
     <h5 id="selected_actor_state">You've selected <span id="selected_actor_count">0</span> stakeholders. You must select <span id="actors_remaining">4</span> more stakeholders.</h5>
 
@@ -51,23 +71,8 @@
                      class="career_location_map_layer"
                      src="{{layer.image.url}}"
                      alt="career location base map"
-                     style="display: none"></img>
+                     style="display: none; z-index: {{layer.z_index}}; opacity:0.{{layer.transparency}}; -moz-opacity:0.{{layer.transparency}}; filter:alpha(opacity={{layer.transparency}});"></img>
             {% endfor %}
-        </div>
-
-        <div class="career_location_layer_selector right">
-            <h3>Map Layers</h3>
-            {% for layer in block.layers %}
-            <div>
-                <input type="checkbox" class="select-layer" data-id="{{layer.id}}" id="select_layer_{{layer.id}}" value="{{layer.name}}"></input>
-                {{ layer.display_name }}
-            </div>
-            {% endfor %}
-            <br />
-            <div>
-                <h3>Notepad</h3>
-                <textarea class="notepad scrollable"></textarea>
-            </div>
         </div>
     </div>
 </div>

@@ -18,6 +18,8 @@ class MapLayer(models.Model):
     display_name = models.CharField(max_length=255)
     legend = models.TextField(null=True, blank=True)
     image = models.FileField(upload_to="layers/%Y/%m/%d/", null=True, blank=True)
+    z_index = models.IntegerField(default=999);
+    transparency = models.IntegerField(default=50);
 
 class ActorQuestion(models.Model):
     def __unicode__(self):
