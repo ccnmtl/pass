@@ -324,6 +324,19 @@ a:visited
 	width: 100%
 }
 
+#primarynav .icon-chevron-down {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-top: 1px;
+    line-height: 14px;
+    vertical-align: text-top;
+    background-image: url("/site_media/bootstrap/img/glyphicons-halflings.png");
+    background-position: 14px 14px;
+    background-repeat: no-repeat;
+    background-position: -313px -119px;
+}
+
 #primarynav ul.globalnav li
 {
 	float: left;
@@ -350,7 +363,7 @@ a:visited
 
 #primarynav ul.globalnav li.active a
 {
-	color: #000; 
+	color: #333;
 	background-color: #8c8;
 }
 
@@ -410,44 +423,18 @@ a:visited
 }
 
 .visualclear {clear: both;}
+
 /* --- Secondary navigation --- */
 
 #secondary_navigation
 {
+    position: absolute;
 	display: block;
-	float: left;
-	width: 205px;
+	width: 300px;
 	margin: 0;
 	padding: 0 0 20px 0;
 	border: 0;
-}
-
-#secondary_navigation #fadetop
-{
-	width: 201px;
-	height: 30px;
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
-
-#secondary_navigation #fadebottom
-{
-	display: none;
-	width: 201px;
-	height: 30px;
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
-
-#secondary_navigation .block
-{
-	display: block;
-	margin:10px;
-	padding: 0;
-	border: 0;
-	font-size: 0.95em;
+    z-index: 1000;
 }
 
 #secondary_navigation .block h3
@@ -460,10 +447,33 @@ a:visited
 	font-weight: bold;
 }
 
+#secondary_navigation div.selected {
+    width: 100%;
+    background-color: white;
+    margin-left: -4px;
+    padding: 4px;
+    font-weight: normal;
+    color: #35a0a4;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+
+}
+
+#secondary_navigation div.regular a {
+    font-weight: normal;
+    color: white;
+}
+
+#secondary_navigation div.disabled {
+    font-weight: normal;
+    color: #d7d7d7;
+}
+
 #secondary_navigation .block ul
 {
 	display: block;
-	margin: 5px 0 0 0;
+	margin: 0;
 	padding: 0;
 	border: 0;
 	list-style: none;	
@@ -479,7 +489,6 @@ a:visited
 	border: 0;
 	font-weight: normal;
 	color: #fff;
-	font-size: 95%;
 	padding: 1px;
 	border-bottom: 1px dotted #dedede;
 
@@ -487,7 +496,6 @@ a:visited
 
 #secondary_navigation .block ul li a
 {
-    color: #dedede;
     font-size: 100%;
 
 }
@@ -511,13 +519,11 @@ a:visited
 	padding: 0;
 	border: 0;
 	list-style: none;
-	
+
 }
 
 #secondary_navigation .block ul li ul li
 {
-
-	font-size: 88%;
 	margin: 3px 0 0 0;
 	border: none;
 
@@ -529,13 +535,9 @@ a:visited
 	margin: 10px 0 0 10px;
 	padding: 0;
 	border: 0;
-	list-style: none;	
+	list-style: none;
 }
 
-#secondary_navigation .block ul li ul li ul li
-{
-	font-size: 90%;
-}
 /* ***** Content ***** */
 
 #content
@@ -1059,7 +1061,10 @@ width: 510px;
 border: none;
 background: url("../img/pass_logo.png") no-repeat scroll left top transparent;
 margin: 0;
+}
 
+img.logo_project {
+    width: 912px;
 }
 
 h4#logo_ccnmtl {

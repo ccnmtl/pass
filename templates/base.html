@@ -71,25 +71,21 @@
 	<!-- ###### Primary navigation ###### -->
 	<div id="primarynav">
 		<div class="encase" id="{% block navalignment %}leftside{% endblock %}">
-{% comment %}
-###### FOR ALIGNMENT OF TABS on the primary navigation--
-   leftside : all tabs aligning to the left, login to the right
-   rightside :  all tabs aligning to the right, login to the left
-{% endcomment %}
+            {% comment %}
+            ###### FOR ALIGNMENT OF TABS on the primary navigation--
+               leftside : all tabs aligning to the left, login to the right
+               rightside :  all tabs aligning to the right, login to the left
+            {% endcomment %}
 
-
-
-{% block primarynavtabs %}
-
-        <ul class="globalnav">
-          {% for section in modules %}
-          <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_absolute_url}}">{{section.label}}</a></li>
-          {% endfor %}
-        </ul>
-
-{% endblock %}
-
-
+            {% block primarynavtabs %}
+                <ul class="globalnav">
+                  {% for section in modules %}
+                      <li {% ifequal section.id module.id %} class="active section"{% endifequal %}>
+                        <a href="#">{{section.label}} <span class="icon-chevron-down"></span></a>
+                      </li>
+                  {% endfor %}
+                </ul>
+            {% endblock %}
 
 		</div><!-- id="leftside/rightside" -->
 	</div><!-- id="primarynav" -->

@@ -2,18 +2,36 @@
 {% load careerlocation_state %}
 
 <div class="career_location" style="display: none">
+    <div class="career_location_overlay" style="display: none"></div>
+
     <div class="profile" style="display: none"></div>
 
-    <h3>Stakeholder Interview</h3>
-
-    <div class="interview_state">
-        <h5 id="selected_actor_state">You've selected <span id="selected_actor_count">0</span> stakeholders. You must select <span id="actors_remaining">4</span> more stakeholders, and ask them each 3 questions.</h5>
-        {%  for x in block.max_stakeholders %}
-            <div class="actor_state left empty"></div>
-        {%  endfor %}
+    <div class="toolbar">
+        <h2 class="left">Stakeholder Interview</h2>
+        <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
+        <a class="btn right" href="#" id="toggle_layers"><i class="icon-picture"></i> Map Layers</a>
+        <a class="btn right" href="#" id="toggle_notepad"><i class="icon-th-list"></i> Notepad</a>
     </div>
     <div class="visualclear"></div>
 
+    <div class="help_content" style="display: none">
+            <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
+            <div class="arrow"></div>
+            <h3 class="popover-title">Help</h3>
+            <div class="popover-content">
+                <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+            </div>
+    </div>
+
+
+    <h5 id="selected_actor_state">You've selected <span id="selected_actor_count">0</span> stakeholders. You must select <span id="actors_remaining">4</span> more stakeholders.</h5>
+
+    <div class="interview_state">
+        {%  for x in block.max_stakeholders %}
+            <div class="actor_state left empty"><h1>{{ forloop.counter }}</h1></div>
+        {%  endfor %}
+    </div>
+    <div class="visualclear"></div>
 
     <div>
         <div class="career_location_map left">

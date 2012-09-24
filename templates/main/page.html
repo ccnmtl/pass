@@ -7,8 +7,26 @@
         {% renderjs block %}
     {% endfor %}
 
+    {% ifequal module.slug "adolescents" %}
+        <script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
+    {% endifequal %}
+
+
     <script type="text/javascript">
         jQuery(document).ready(function () {
+
+            jQuery("li.section a").click(function(evt) {
+                jQuery(this).parents("div#primarynav").next().slideToggle();
+                evt.stopPropagation();
+            });
+
+            jQuery("body").click(function() {
+                if (jQuery("#secondary_navigation").is(":visible")) {
+                    jQuery("#secondary_navigation").slideToggle();
+                }
+            });
+
+
             jQuery("form").submit(function() {
                 var valid = true;
 
@@ -45,26 +63,34 @@
 {% endblock %}
 
 {% block css %}
-{% for block in section.pageblock_set.all %}
-{% rendercss block %}
-{% endfor %}
+    {% ifequal module.slug "adolescents" %}
+        <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="/site_media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    {% endifequal %}
+
+    {% for block in section.pageblock_set.all %}
+        {% rendercss block %}
+    {% endfor %}
 {% endblock %}
 
 
 {% block title %}{{section.label}}{% endblock %}
 
-{% block sidenav %}
+{% block primarynav %}
+    {{ block.super }}
+
     <!-- ###### Secondary Navigation ###### -->
-    <div id="secondary_navigation">
-        <div id="fadetop"></div>
+    <div id="secondary_navigation" style="display: none">
         <div class="block">
-          {% if module.get_children %}
+            {% if module.get_children %}
                 <!--<h3>Sections</h3>-->
                 {% include "main/menu.html" %}
-          {% endif %}
+            {% endif %}
         </div><!-- div id="block" -->
-        <div id="fadebottom"></div>
     </div><!-- div id="secondary_navigation" -->
+{% endblock %}
+
+{% block sidenav %}
 
 {% endblock %}
 

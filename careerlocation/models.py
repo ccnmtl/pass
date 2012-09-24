@@ -59,6 +59,7 @@ class CareerLocationState(models.Model):
     actors = models.ManyToManyField(Actor, null=True, blank=True)
     responses = models.ManyToManyField(ActorResponse, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
+    #view_stakeholder_help = models.BooleanField(default=False)
     # practice_location - tbd
 
 class CareerLocationBlock(models.Model):

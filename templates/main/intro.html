@@ -2,8 +2,15 @@
 
 {% block title %}Welcome to PASS{% endblock %}
 
+{% block primarynav %}
+    {{ block.super }}
+
+    <img class="logo_project" src="/site_media/img/children_header.png"></img>
+
+{% endblock %}
+
 {% block content %}
-    <img src="/site_media/img/children_header.png"></img>
+
 
     <h3>A Population-Based Approach to Patient Service and Professional Success (PASS)</h3>
 

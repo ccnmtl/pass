@@ -181,7 +181,8 @@
             'click button.interview': 'onShowActorInterview',
             'click .cancel': 'onHideActorProfile',
             'click .ask': 'onAskQuestion',
-            'click .done': 'onCloseResponse'
+            'click .done': 'onCloseResponse',
+            'click #toggle_help': 'onToggleHelp'
         },
         initialize: function(options) {
             _.bindAll(this,
@@ -215,6 +216,7 @@
             jQuery("textarea.notepad").html(this.state.get("notes"));
 
             this.render();
+
             jQuery(this.el).fadeIn();
         },
         render: function() {
@@ -399,6 +401,10 @@
 
             jQuery(srcElement).parents("div.accordion-body").hide('fast');
             jQuery(".btn.ask").removeAttr("disabled");
+        },
+        onToggleHelp: function(evt) {
+            jQuery("div.career_location_overlay").show();
+            jQuery('div.help_content').toggle();
         }
     });
 }(jQuery));

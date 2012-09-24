@@ -35,7 +35,7 @@ def _unlocked(profile,section):
         return False
     if not section:
         return True
-    if section.is_root() or not section.is_leaf():
+    if section.is_root():
         return True
     if profile.has_visited(section):
         return True
