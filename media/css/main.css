@@ -1455,3 +1455,18 @@ body.login #content
 {
 	font-size: 11px;
 }
+
+.errornote {
+	background: url("../img/icon_alert.png") no-repeat 5px 5px #FFEBE8;
+	border: 1px solid #c00;
+	display: block;
+	font-size: 11px !important;
+	margin: 0 0 10px 0;
+	padding: 5px 5px 5px 25px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+
+.errornote span {
+	color: #c00;
+}
