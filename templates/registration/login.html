@@ -1,24 +1,62 @@
 {% extends "base.html" %}
+{% block widthtype %}fixed login{% endblock %}
+{% block title %}Log In{% endblock %}
 {% block content %}
-{% if form.has_errors %}
-<p>Your username and password didn't match. Please try again.</p>
+
+<h3>Welcome to Population-Based Approach To Patient Service And Professional Success (PASS)</h3>
+
+
+<div class="loginbox">
+	<h2>Choose a login option...</h2>
+	<div class="content">
+	
+	
+	<form method="get" action="{{ wind_base }}login">
+	<input type="hidden" name="service" value="{{ wind_service }}" />
+	<input type="hidden" name="destination" value="http://{{ request.get_host }}/accounts/windlogin/?next={{ next }}" />
+	<p>If you have a Columbia University Network ID (UNI)...</p>
+	<input class="regbutton" type="submit" value="LOG IN" />
+	</form>
+
+	<p class="smalltxt"><a href="http://cuit.columbia.edu/cuit/manage-my-uni" title="Learn more about UNI" target="_blank">What is a UNI?</a></p>
+	<!-- End UNI LOG IN -->
+	
+	<hr class="seperator" />
+	
+{% if form.errors%}
+    <p class="errornote"><span><b>ERROR:</b> Invalid username or password.</span> Please try again. Note that both username and password are case-sensitive.</p>
 {% endif %}
-<form method="get" action="{{ wind_base }}login">
-<input type="hidden" name="service" value="{{ wind_service }}" />
-<input type="hidden" name="destination" value="http://{{ request.get_host }}/accounts/windlogin/?next={{ next }}" />
-<p>If you have a Columbia UNI:</p>
-<input type="submit" value="Click Here" />
-</form>
-<br /><br /><p>Otherwise, <a href="/registration/register/">create an account</a>, then use this form: </p>
-<form method="post" action=".">
+
+	<p>If you have a PASS account...</p>
+<form method="post" action="." name="login_local">
+
 {% csrf_token %}
-<table>
-<tr><td><label for="id_username">Username:</label></td><td>{{ form.username }}</td></tr>
-<tr><td><label for="id_password">Password:</label></td><td>{{ form.password }}</td></tr>
-</table>
-<input type="submit" value="login" />
+
+	<div class="fieldwrapper">
+		<label for="id_username">Username:</label>
+		{{ form.username }}
+	</div><!-- fieldwrapper -->
+
+	<div class="fieldwrapper">
+		<label for="id_password">Password:</label>
+		{{ form.password }}
+	</div><!-- fieldwrapper -->
+    
+
+<input class="regbutton" type="submit" value="LOG IN" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
 
-<p>You may also <a href="/registration/register/">create a new account</a></p>
+
+
+	<p class="smalltxt"><a href="/registration/register/" title="Create your new project account">Need a new account?</a></p>
+	</div><!-- content -->
+</div><!-- loginbox -->
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in libero leo, vitae ultrices velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Cras tempus velit vel nunc tincidunt quis luctus nulla porta. Nam mollis est sed ipsum rutrum ac consequat augue auctor. Proin pretium pulvinar placerat. Quisque ultrices arcu nec felis posuere sollicitudin. Etiam rhoncus massa at ligula condimentum convallis. Vivamus sit amet neque justo, et gravida metus.</p>
+
+<p>In ante nisi, egestas id egestas id, aliquam ut eros. Duis pretium dictum luctus. Ut quis nibh turpis, quis auctor eros. Phasellus vitae nisi felis, vitae faucibus lorem. Aenean pellentesque felis a dolor egestas ut bibendum nisi consectetur.</p>
+
+<p><i>Please log in with your UNI or your PASS account ID to access these modules.</b></i>
+
 {% endblock %}
