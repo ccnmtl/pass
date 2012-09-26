@@ -185,7 +185,10 @@
             'click #toggle_help': 'onToggleHelp',
             'click #toggle_map_layers': 'onToggleMapLayers',
             'click #toggle_notepad': 'onToggleNotepad',
-            'click div.popover-close a.btn': 'onTogglePopover'
+            'click div.popover-close a.btn': 'onTogglePopover',
+            'click div.actor_state.inprogress': 'onShowActorProfile',
+            'click div.actor_state.complete': 'onShowActorProfile',
+            'click div.actor_state.empty': 'onShowSelectActorHelp'
         },
         initialize: function(options) {
             _.bindAll(this,
@@ -209,6 +212,8 @@
             this.actors.fetch();
 
             this.profile_template = _.template(jQuery("#profile-template").html());
+            this.actor_state_template = _.template(jQuery("#actor-state-template").html());
+            this.actor_map_template = _.template(jQuery("#actor-map-template").html());
         },
         initialRender: function() {
             this.state.off("change", this.initialRender);
@@ -232,33 +237,50 @@
                     // Check layer box
                     jQuery("#select_layer_" + dataId).attr("checked", "checked");
 
-                    // Display layer
+                    // Display layer & legend
                     jQuery("#map_layer_" + dataId).show();
+                    jQuery("#map_legend_" + dataId).show();
                 } else {
                     // Uncheck layer box
                     jQuery("#select_layer_" + dataId).removeAttr("checked");
 
                     // Hide layer
                     jQuery("#map_layer_" + dataId).hide();
+                    jQuery("#map_legend_" + dataId).hide();
                 }
             });
+
+            var selectedLayers = self.state.get("layers");
+            if (selectedLayers.length > 0) {
+                jQuery("div.map_legend_container h3").show();
+            } else {
+                jQuery("div.map_legend_container h3").hide();
+            }
 
             // update selected actor status
             this.state.get('actors').forEach(function (actor) {
                 var slots = jQuery("#actor_state_" + actor.get("id"));
 
                 // replace an empty actor_state state w/this actor
+                var slot;
                 if (slots.length < 1) {
-                    slots = jQuery("div.actor_state.empty");
-                    var markup = '<img src="' + actor.get("image") + '"></img>';
-                    jQuery(slots[0])
-                        .attr("id", "actor_state_" + actor.get("id"))
-                        .html(markup)
-                        .removeClass("empty");
+                    slot = jQuery("div.actor_state.empty")[0];
+                } else {
+                    slot = slots[0];
                 }
 
-                // always update state
-                jQuery(slots[0]).removeClass("inprogress").addClass(self.state.getActorState(actor));
+                var json = actor.toJSON();
+                json.state = self.state.getActorState(actor);
+                json.asked = self.state.get("responses").getResponsesByActor(actor).length;
+
+                // update the actor state div on top
+                var markup = self.actor_state_template(json);
+                jQuery(slot).replaceWith(markup);
+
+                // update the actor state div within the map
+                json.asked = self.state.get("responses").getResponsesByActor(actor).length;
+                markup = self.actor_map_template(json);
+                jQuery("#actor_map_" + actor.get("id")).html(markup);
             });
 
             jQuery("#selected_actor_count").html(this.state.get("actors").length);
@@ -333,6 +355,8 @@
             json.response_count = json.responses.length;
             json.remaining_questions = QUESTION_LIMIT - json.response_count;
 
+            json.asked = this.state.get("responses").getResponsesByActor(this.current_actor).length;
+
             json.current_question = this.current_question;
 
 
@@ -341,6 +365,10 @@
 
             this.delegateEvents();
         },
+        onShowSelectActorHelp: function(evt) {
+            jQuery("div.career_location_overlay").show();
+            jQuery('div.select_actor_help_content').show();
+        },
         onShowActorProfile: function(evt) {
             var srcElement = evt.srcElement || evt.target || evt.originalTarget;
             var actorId = jQuery(srcElement).data("id");
@@ -348,11 +376,11 @@
 
             this.render();
 
-            var offset = jQuery(srcElement).parent().position();
+            var offset = jQuery("div.interview_state").position();
             jQuery("div.profile")
                 .css({
                     left: offset.left + "px",
-                    top: offset.top - 50 + "px"
+                    top: offset.top + "px"
                 })
                 .fadeIn("slow");
 
@@ -371,6 +399,8 @@
                 self.current_actor = null;
                 self.delegateEvents();
             });
+            jQuery("div.career_location_overlay").hide();
+            jQuery("div.select_actor_help_content").hide();
         },
         onAskQuestion: function(evt) {
             var self = this;
