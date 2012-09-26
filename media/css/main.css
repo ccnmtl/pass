@@ -1331,3 +1331,127 @@ margin: 0;
     background: url('../img/icons_app.png') -18px -506px no-repeat;
 }
 
+/* REGISTRATION - LOGIN */
+
+body.login #content
+{
+	display: block;
+	float: none;
+	width: 850px;
+	margin: 20px 0 0 20px;
+}
+
+.loginbox
+{
+	display: block;
+	float: right;
+	width: 300px;
+	margin: 0 0 0 20px;
+	padding: 0;
+	border: 1px solid #999;
+	background-color: #fff;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+
+.loginbox h2
+{
+	margin: 0 !important;
+	padding: 5px 10px;
+	-moz-border-radius: 10px 10px 0 0;
+	-webkit-border-radius: 10px 10px 0 0;
+	background: #e0e0e0;
+	font-weight: bold;
+	font-size: 14px !important;
+	line-height: 26px;
+	height: 26px;
+}
+
+.loginbox .content
+{
+	margin: 0;
+	padding: 20px 10px 0 10px;
+	border: 0;
+}
+
+.loginbox .seperator
+{
+	margin: 20px 0;
+	padding: 0;
+	border: 0;
+	border-top: 1px dotted #999;
+	background-color: #fff;
+}
+
+.loginbox .fieldwrapper
+{
+	margin: 0 0 10px 10px;
+	padding: 0;
+	border: 0;
+}
+
+.loginbox .fieldwrapper label
+{
+	display: block;
+	font-weight: bold;
+	color: #666;
+	font-size: 12px;
+}
+
+.loginbox .fieldwrapper input
+{
+	width: 200px;
+	margin: 2px 0;
+	padding: 3px;
+	border: 0;
+	border: 1px solid #ccc;
+	background-color: #f4f4f4;
+	font: bold 12px arial, helvetica, verdana, sans-serif;
+}
+
+.loginbox .fieldwrapper input:focus
+{
+	border: 1px solid #06f;
+	background-color: #fff;
+}
+
+.loginbox .regbutton
+{
+	cursor: pointer;
+	padding: 4px 17px;
+	margin: 0 0 10px 10px;
+	color: #000;
+	font-weight: normal;
+	font-size: 14px;
+	border: 1px solid #999;
+	border-bottom: 1px solid #666;
+	border-left-color: #999;
+	border-right-color: #999;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+	text-align: center;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ccc));
+	background: -moz-linear-gradient(top, #fff, #ccc);
+	font: bold 14px arial, helvetica, verdana, sans-serif !important;
+	text-transform: uppercase;
+}
+
+.loginbox .regbutton:hover
+{
+	border: 1px solid #339999;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#99cccc));
+	background: -moz-linear-gradient(top, #fff, #99cccc);
+}
+
+.loginbox .regbutton:active
+{
+	border: 1px solid #006666;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#669999));
+	background: -moz-linear-gradient(top, #fff, #669999);
+}
+
+.loginbox .smalltxt
+{
+	font-size: 11px;
+}
