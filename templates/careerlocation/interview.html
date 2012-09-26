@@ -14,15 +14,17 @@
     </div>
     <div class="visualclear"></div>
 
-    <div class="help_content" style="display: none">
+    <div class="help_content popover-parent" style="display: none">
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
         <h3 class="popover-title">Help</h3>
         <div class="popover-content">
             <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+            <div class="popover-close"><a class="btn" href="#">Close</a></div>
         </div>
+
     </div>
 
-    <div class="map_layer_content" style="display: none">
+    <div class="map_layer_content popover-parent" style="display: none">
         <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
         <h3 class="popover-title">Select Map Layers</h3>
         <div class="popover-content">
@@ -32,15 +34,17 @@
                     {{ layer.display_name }}
                 </div>
             {% endfor %}
+            <div class="popover-close"><a class="btn" href="#">Close</a></div>
         </div>
     </div>
 
 
-    <div class="notepad_content" style="display: none">
+    <div class="notepad_content popover-parent" style="display: none">
         <a class="btn right" href="#" id="toggle_notepad"><i class="icon-th-list"></i> Notepad</a>
         <h3 class="popover-title">Notepad</h3>
         <div class="popover-content">
             <textarea class="notepad scrollable"></textarea>
+            <div class="popover-close"><a class="btn" href="#">Close</a></div>
         </div>
     </div>
 
@@ -54,7 +58,7 @@
     <div class="visualclear"></div>
 
     <div>
-        <div class="career_location_map left">
+        <div class="career_location_map">
             {%  for actor in block.stakeholders.all %}
                 <img id="actor_{{actor.id}}"
                      data-id="{{actor.id}}"

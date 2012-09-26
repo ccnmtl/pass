@@ -33,6 +33,7 @@
     position: relative;
     height: 400px;
     margin: 0;
+    text-align: center;
 }
 
 .career_location_base_layer,
@@ -55,6 +56,10 @@ div.toolbar .right {
     margin: 5px;
 }
 
+div.popover-close {
+    text-align: right;
+}
+
 div.map_layer_content {
     position: absolute;
     z-index: 1003;
@@ -64,17 +69,19 @@ div.map_layer_content {
 div.notepad_content {
     position: absolute;
     z-index: 1003;
+    right: 213px;
+}
+
+div.notepad_content textarea {
     width: 300px;
+    height: 300px;
+    resize: none;
 }
 
 div.help_content {
     position: absolute;
     z-index: 1003;
     width: 830px;
-}
-
-div.notepad_content {
-    right: 213px;
 }
 
 div.map_layer_content {
@@ -148,21 +155,6 @@ div.interview_state h5 {
     text-transform: none;
 }
 
-div.interview.left {
-    width: 54%;
-    margin: 5px 10px 5px 5px;
-}
-
-div.interview_notepad.right {
-    margin: 5px 5px 5px 0px;
-    width: 42%;
-}
-
-div.interview_notepad.right textarea {
-    height: 300px;
-    width: 94%;
-}
-
 img.actor {
     border: 3px solid black;
 }
@@ -170,8 +162,6 @@ img.actor {
 img.actor:hover {
     border: 3px solid red;
 }
-
-
 
 
 div.accordion {
@@ -221,5 +211,20 @@ div.accordion-body button.done {
     float: right;
     width: 25%;
     margin-bottom: 5px;
+}
+
+div.interview.left {
+    width: 54%;
+    margin: 5px 10px 5px 5px;
+}
+
+div.interview_notepad.right {
+    margin: 5px 5px 5px 0px;
+    width: 42%;
+}
+
+div.interview_notepad.right textarea {
+    height: 300px;
+    width: 94%;
 }
 

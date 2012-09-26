@@ -184,7 +184,8 @@
             'click .done': 'onCloseResponse',
             'click #toggle_help': 'onToggleHelp',
             'click #toggle_map_layers': 'onToggleMapLayers',
-            'click #toggle_notepad': 'onToggleNotepad'
+            'click #toggle_notepad': 'onToggleNotepad',
+            'click div.popover-close a.btn': 'onTogglePopover'
         },
         initialize: function(options) {
             _.bindAll(this,
@@ -415,6 +416,12 @@
         onToggleNotepad: function(evt) {
             jQuery("div.career_location_overlay").toggle();
             jQuery('div.notepad_content').toggle();
+        },
+        onTogglePopover: function(evt) {
+            jQuery("div.career_location_overlay").toggle();
+
+            var srcElement = evt.srcElement || evt.target || evt.originalTarget;
+            jQuery(srcElement).parents('div.popover-parent').toggle();
         }
     });
 }(jQuery));
