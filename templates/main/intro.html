@@ -14,31 +14,22 @@
 
     <h3>A Population-Based Approach to Patient Service and Professional Success (PASS)</h3>
 
-{% if request.user.is_anonymous %}
-<br />
-<div class='maintext'><p>If you have a Columbia UNI or have created an account already, <a href="/accounts/login/?next=/">login</a>.</p>
+    <div class="maintext">
+        <p>While your dental education intensely prepares you for understanding and applying biomedical and clinical competencies, there is little opportunity to consider the patient populations you will be able to serve at the completion of your training.</p>
 
-<p>Otherwise, <a href="/registration/register/">create an account</a>.</p>
-</div>
-{% else %}
+        <p>These modules are designed to orient you to populations across the lifespan so that you can consider how your career may align with your professional and personals goals.</p>
 
-<div class='maintext'>
-<p>While your dental education intensely prepares you for understanding and applying biomedical and clinical competencies, there is little opportunity to consider the patient populations you will be able to serve at the completion of your training.</p>
+        <p>The first of five modules focuses on the young children in the United States. </p>
+        <br />
+        <h4>Get started:</h4>
+        <ul>
+        {%  if demographic_survey_complete %}
+            <li><a href="/module-one/">Young Children</a></li>
+            <li><a href="/module-two/">Adolescents</a></li>
+        {%  else  %}
+            <li><a href="/demographic/survey/">Register</a></li>
+        {%  endif %}
+        </ul>
+    </div>
 
-<p>These modules are designed to orient you to populations across the lifespan so that you can consider how your career may align with your professional and personals goals.</p>
-
-<p>The first of five modules focuses on the young children in the United States. </p>
-<br />
-<h4>Get started:</h4>
-    <ul>
-    {%  if demographic_survey_complete %}
-        <li><a href="/module-one/">Young Children</a></li>
-        <li><a href="/module-two/">Adolescents</a></li>
-    {%  else  %}
-        <li><a href="/demographic/survey/">Register</a></li>
-    {%  endif %}
-    </ul>
-
-</div>
-{% endif %}
 {% endblock %}

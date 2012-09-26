@@ -83,6 +83,7 @@ def allow_redo(section):
                 allowed = False
     return allowed
 
+@login_required
 @rendered_with('main/intro.html')
 def intro(request):
     return { 'demographic_survey_complete': demographic_survey_complete(request) }

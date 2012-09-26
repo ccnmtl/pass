@@ -7,7 +7,7 @@
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
-    height: 520px;
+    height: 505px;
 }
 
 .career_location a:visited {
@@ -25,6 +25,8 @@
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
+    left: 0;
+    top: 0;
 }
 
 .career_location_map_container {
@@ -245,6 +247,10 @@ div.interview_notepad.right {
 div.interview_notepad.right textarea {
     height: 300px;
     width: 94%;
+}
+
+div.map_legend_container {
+    margin-top: 5px;
 }
 
 div.map_legend_container .left {
