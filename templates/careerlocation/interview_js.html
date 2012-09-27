@@ -17,8 +17,29 @@
     });
 </script>
 
+
+<script type="text/template" id="actor-state-template">
+    <div class="actor_state left <%= state %>" id="actor_state_<%= id %>">
+        <img src="<%= image %>" data-id="<%= id %>"></img>
+        <div class="question_state">
+            <% for (var i=0; i < 3; i++, asked--) { %><% if (asked > 0) { %><span class="asked">&bull;</span><% } else { %><span>&bull;</span><% } %><% } %>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="actor-map-template">
+    <img class="actor" src="<%= image %>" data-id="<%= id %>"></img>
+    <div class="question_state">
+        <% for (var i=0; i < 3; i++, asked--) { %><% if (asked > 0) { %><span class="asked">&bull;</span><% } else { %><span>&bull;</span><% } %><% } %>
+    </div>
+</script>
+
+
 <script type="text/template" id="profile-template">
     <img id="x" class="btn cancel" src="/site_media/img/close.png"/>
+    <div class="question_state">
+        <% for (var i=0; i < 3; i++, asked--) { %><% if (asked > 0) { %><span class="asked">&bull;</span><% } else { %><span>&bull;</span><% } %><% } %>
+    </div>
     <h3><img src="<%= image %>"></img>&nbsp;&nbsp;<%= name %></h3>
     <div>
         <div class="interview left">
@@ -92,8 +113,10 @@
             <% } %>
         </div>
         <div class="interview_notepad right">
-            <h4>Your Notepad</h4>
-            <textarea class="notepad scrollable"><%= notes %></textarea>
+            <h3 class="popover-title">Notepad</h3>
+            <div class="popover-content">
+                <textarea class="notepad scrollable"><%= notes %></textarea>
+            </div>
         </div>
     </div>
 </script>

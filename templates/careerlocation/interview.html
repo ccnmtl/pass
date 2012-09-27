@@ -1,7 +1,7 @@
 {% load smartif %}
 {% load careerlocation_state %}
 
-<div class="career_location" style="display: none">
+<div class="career_location" style="display: none" xmlns="http://www.w3.org/1999/html">
     <div class="career_location_overlay" style="display: none"></div>
 
     <div class="profile" style="display: none"></div>
@@ -13,6 +13,23 @@
         <a class="btn right" href="#" id="toggle_notepad"><i class="icon-th-list"></i> Notepad</a>
     </div>
     <div class="visualclear"></div>
+
+    <div class="select_actor_help_content popover-parent" style="display: none">
+        <img id="x_actor_help" class="btn cancel" src="/site_media/img/close.png"/>
+        <h3 class="popover-title">Help</h3>
+        <div class="popover-content">
+            <p>
+                <ol>
+                    <li> Click on stakeholder images within the map.</li>
+                    <li> Read the stakeholder profiles.</li>
+                    <li> Select 4 stakeholder to interview.</li>
+                    <li> Ask each stakeholder 3 questions.</li>
+                    <li> Take notes!</li>
+                </ol>
+            </p>
+            <div class="popover-close"><a class="btn" href="#">Close</a></div>
+        </div>
+    </div>
 
     <div class="help_content popover-parent" style="display: none">
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
@@ -38,7 +55,6 @@
         </div>
     </div>
 
-
     <div class="notepad_content popover-parent" style="display: none">
         <a class="btn right" href="#" id="toggle_notepad"><i class="icon-th-list"></i> Notepad</a>
         <h3 class="popover-title">Notepad</h3>
@@ -48,8 +64,6 @@
         </div>
     </div>
 
-    <h5 id="selected_actor_state">You've selected <span id="selected_actor_count">0</span> stakeholders. You must select <span id="actors_remaining">4</span> more stakeholders.</h5>
-
     <div class="interview_state">
         {%  for x in block.max_stakeholders %}
             <div class="actor_state left empty"><h1>{{ forloop.counter }}</h1></div>
@@ -57,15 +71,17 @@
     </div>
     <div class="visualclear"></div>
 
-    <div>
+    <div class="career_location_map_container">
         <div class="career_location_map">
             {%  for actor in block.stakeholders.all %}
-                <img id="actor_{{actor.id}}"
-                     data-id="{{actor.id}}"
+                <div id="actor_map_{{actor.id}}" class="actor_container" style="left: {{actor.left}}px; top: {{actor.top}}px">
+                <img data-id="{{actor.id}}"
                      class="actor"
-                     style="left: {{actor.left}}px; top: {{actor.top}}px"
                      src="{{actor.image.url}}"
                      alt="interview stakeholder"></img>
+                    <div class="question_state"></div>
+
+                </div>
             {%  endfor %}
 
             <img class="career_location_base_layer" src="{{block.base_layer.image.url}}" alt="career location base map" />
@@ -78,6 +94,20 @@
                      style="display: none; z-index: {{layer.z_index}}; opacity:0.{{layer.transparency}}; -moz-opacity:0.{{layer.transparency}}; filter:alpha(opacity={{layer.transparency}});"></img>
             {% endfor %}
         </div>
+    </div>
+    <br />
+    <div class="visualclear"></div>
+    <div class="map_legend_container">
+        <h3>Map Legends</h3>
+        {% for layer in block.layers %}
+            <div id="map_legend_{{layer.id}}"
+                 data-id="{{layer.id}}"
+                 class="map_legend left"
+                 style="display: none">
+                <h5>{{layer.display_name}}</h5>
+                {{layer.legend}}
+             </div>
+        {% endfor %}
     </div>
 </div>
 

@@ -453,11 +453,13 @@ a:visited
     margin-left: -4px;
     padding: 4px;
     font-weight: normal;
-    color: #35a0a4;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
-
+    color: black;
+    font-weight: bold;
+    background-color: #8C8;
+    margin-bottom: 2px;
 }
 
 #secondary_navigation div.regular a {
@@ -503,7 +505,12 @@ a:visited
 #secondary_navigation .block ul li a:hover
 {
     color: #ecd785;
+    text-decoration: none;
 
+}
+
+#secondary_navigation .block ul li div.selected::after {
+    content: " »";
 }
 
 #secondary_navigation .block ul li a:visited
@@ -1070,11 +1077,11 @@ img.logo_project {
 }
 
 h4#logo_ccnmtl {
-height: 47px;
-width: 200px;
-border: none;
-background: url("../img/uncharted_logo.png") no-repeat scroll right top transparent;
-margin: 0;
+    height: 50px;
+    width: 240px;
+    border: none;
+    background: url("../img/uncharted_logo.png") no-repeat scroll right top transparent;
+    margin: 0;
 }
 
 .maintext {
