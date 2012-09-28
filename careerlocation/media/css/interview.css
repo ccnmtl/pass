@@ -63,6 +63,26 @@ div.popover-close {
     text-align: right;
 }
 
+div.interview_state {
+    float: right;
+}
+
+div.unlock_instructions,
+div.basic_instructions {
+    width: 450px;
+    padding: 10px;
+    margin-left: 0;
+    margin-top: 0;
+}
+
+div.unlock_instructions {
+    background-color: #DFF0D8;
+}
+
+div.unlock_instructions b {
+    font-size: 105%;
+}
+
 div.map_layer_content {
     position: absolute;
     z-index: 1003;
@@ -114,13 +134,13 @@ div.actor_container {
 
 div.profile {
     position: absolute;
-    z-index: 1001;
-    background-color: white;
+    z-index: 1003;
     border: 1px solid #708090;
     width: 815px;
     min-height: 430px;
     padding: 10px;
     background-color: #eaeaea;
+    left: 10px;
 }
 
 div.profile div.question_state {
@@ -173,6 +193,7 @@ div.actor_state {
 div.actor_state.empty {
     text-align: center;
     vertical-align: middle;
+    cursor: default;
 }
 
 
@@ -268,3 +289,35 @@ div.map_legend {
     width: 192px;
 }
 
+table.location_grid {
+    margin-left: 50px;
+    position: absolute;
+    border: 1px solid #DDD;
+    width: 742px;
+    height: 400px;
+    z-index: 1001;
+}
+
+table.location_grid tr {
+    height: 50px;
+}
+
+table.location_grid tr td {
+    width: 53px;
+}
+
+table.location_grid tr td:hover {
+    background-color: #c9c9c9;
+    opacity: .70;
+    filter: Alpha(Opacity=70);
+    cursor: pointer;
+    background-image: url('/site_media/img/practice_building.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+table.location_grid tr td.selected {
+    background-image: url('/site_media/img/practice_building.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}

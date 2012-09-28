@@ -2,40 +2,53 @@
 {% load careerlocation_state %}
 
 <div class="career_location" style="display: none" xmlns="http://www.w3.org/1999/html">
+    <div id="view_type" style="display: none">{{block.view}}</div>
     <div class="career_location_overlay" style="display: none"></div>
 
     <div class="profile" style="display: none"></div>
 
     <div class="toolbar">
-        <h2 class="left">Stakeholder Interview</h2>
+        <h2 class="left">
+            {% ifequal block.view "IV" %}
+                Interview Stakeholders
+            {% else %}
+                {% ifequal block.view "LC" %}
+                    Select a Practice Location
+                {% else %}
+                    Complete Your Board Application
+                {% endifequal %}
+            {% endifequal %}
+        </h2>
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
         <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
         <a class="btn right" href="#" id="toggle_notepad"><i class="icon-th-list"></i> Notepad</a>
     </div>
     <div class="visualclear"></div>
 
-    <div class="select_actor_help_content popover-parent" style="display: none">
-        <img id="x_actor_help" class="btn cancel" src="/site_media/img/close.png"/>
-        <h3 class="popover-title">Help</h3>
-        <div class="popover-content">
-            <p>
-                <ol>
-                    <li> Click on stakeholder images within the map.</li>
-                    <li> Read the stakeholder profiles.</li>
-                    <li> Select 4 stakeholder to interview.</li>
-                    <li> Ask each stakeholder 3 questions.</li>
-                    <li> Take notes!</li>
-                </ol>
-            </p>
-            <div class="popover-close"><a class="btn" href="#">Close</a></div>
-        </div>
-    </div>
-
     <div class="help_content popover-parent" style="display: none">
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
         <h3 class="popover-title">Help</h3>
         <div class="popover-content">
-            <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+            <p>
+                {% ifequal block.view "IV" %}
+                    <h4>How to Interview Stakeholders</h4>
+                    <br />
+                    <ol>
+                        <li> Click on stakeholder images within the map.</li>
+                        <li> Read the stakeholder profiles.</li>
+                        <li> Select 4 stakeholder to interview.</li>
+                        <li> Ask each stakeholder 3 questions.</li>
+                        <li> Take notes!</li>
+                    </ol>
+                {% else %}
+                    {% ifequal block.view "LC" %}
+                        <h4>How to Select a Practice Location</h4>
+                    {% else %}
+                        <h4>How to Complete Your Board Application</h4>
+                    {% endifequal %}
+                {% endifequal %}
+
+            </p>
             <div class="popover-close"><a class="btn" href="#">Close</a></div>
         </div>
 
@@ -64,6 +77,31 @@
         </div>
     </div>
 
+    <div class="basic_instructions well left">
+        {% ifequal block.view "IV" %}
+            Click on the stakeholder images in the map to view profiles. Select 4 stakeholders to interview. Ask each person 3 questions.
+        {% else %}
+            {% ifequal block.view "LC" %}
+                Click a grid cell to select your ideal practice location.
+            {% else %}
+                Complete Board Application
+            {% endifequal %}
+        {% endifequal %}
+    </div>
+
+    <div class="unlock_instructions well left success" style="display: none">
+        {% ifequal block.view "IV" %}
+            <b>Great work!</b> You've completed your interviews.<br />Click the "Select Practice Location" link to continue.
+        {% else %}
+            {% ifequal block.view "LC" %}
+                <b>Excellent!</b> You've selected your practice location.<br />
+                Continue on to complete your board application.
+            {% else %}
+                <b>All set!</b> You've answered the boardmembers' questions. Continue on to see how you did.
+            {% endifequal %}
+        {% endifequal %}
+    </div>
+
     <div class="interview_state">
         {%  for x in block.max_stakeholders %}
             <div class="actor_state left empty"><h1>{{ forloop.counter }}</h1></div>
@@ -72,6 +110,18 @@
     <div class="visualclear"></div>
 
     <div class="career_location_map_container">
+        {% ifequal block.view "LC" %}
+            <table class="location_grid">
+                {% for i in block.grid_rows %}
+                    <tr>
+                        {% for j in block.grid_columns %}
+                            <td></td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endifequal %}
+
         <div class="career_location_map">
             {%  for actor in block.stakeholders.all %}
                 <div id="actor_map_{{actor.id}}" class="actor_container" style="left: {{actor.left}}px; top: {{actor.top}}px">

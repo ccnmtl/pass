@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 VIEW_CHOICES = (
     ('IV', 'Interview Stakeholders'),
-    ('LOC', 'Select Practice Location'),
+    ('LC', 'Select Practice Location'),
     ('BD', 'Complete Board Application'),
     )
 
@@ -61,8 +61,8 @@ class CareerLocationState(models.Model):
     actors = models.ManyToManyField(Actor, null=True, blank=True)
     responses = models.ManyToManyField(ActorResponse, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
-    #view_stakeholder_help = models.BooleanField(default=False)
-    # practice_location - tbd
+    practice_location_row = models.IntegerField(null=True, blank=True)
+    practice_location_column = models.IntegerField(null=True, blank=True)
 
 class CareerLocationBlock(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
@@ -75,8 +75,11 @@ class CareerLocationBlock(models.Model):
     view = models.CharField(max_length=2, choices=VIEW_CHOICES)
 
     max_stakeholders = [0] * 4
-    stakeholders = Actor.objects.filter(type="IV");
-    boardmembers = Actor.objects.filter(type="BD");
+    stakeholders = Actor.objects.filter(type="IV")
+    boardmembers = Actor.objects.filter(type="BD")
+
+    grid_columns = [0] * 14
+    grid_rows = [0] * 8
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -115,12 +118,18 @@ class CareerLocationBlock(models.Model):
         if len(a) < 1:
             return False
 
-        if len(a[0].actors.all()) < 4:
+        state = a[0]
+        if len(state.actors.all()) < 4:
             return False
 
-        for actor in a[0].actors.all():
-            r = a[0].responses.filter(actor=actor);
+        for actor in state.actors.all():
+            r = state.responses.filter(actor=actor);
             if len(r) < 3:
+                return False
+
+        if self.view == "LC" or self.view == "BD":
+            if state.practice_location_row == None or \
+               state.practice_location_column == None:
                 return False
 
         return True
