@@ -454,3 +454,30 @@ def demographic_survey_complete(request):
             return True
 
     return False
+
+def clear_state(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden
+
+    try:
+        request.user.get_profile().delete()
+    except UserProfile.DoesNotExist:
+        pass
+
+    UserVisited.objects.filter(user=request.user).delete()
+
+    # clear quiz
+    import quizblock
+    submissions = quizblock.models.Submission.objects.filter(user=request.user)
+    for s in submissions:
+        s.response_set.all().delete()
+    quizblock.models.Submission.objects.filter(user=request.user).delete()
+
+
+    # clear careerlocationstate
+    import careerlocation
+    careerlocation.models.ActorResponse.objects.filter(user=request.user).delete()
+    careerlocation.models.CareerLocationState.objects.filter(user=request.user).delete()
+
+    return HttpResponseRedirect("/")
+

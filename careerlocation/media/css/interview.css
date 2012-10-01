@@ -1,13 +1,7 @@
 .career_location {
     position: relative;
     margin: 0;
-    padding: 10px;
     background-color: white;
-    border: 1px solid #DDD;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    height: 505px;
 }
 
 .career_location a:visited {
@@ -20,13 +14,24 @@
     opacity: .70;
     filter: Alpha(Opacity=70);
     width: 100%;
-    height: 100%;
+    height: 935px;
     z-index: 1002;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
     left: 0;
     top: 0;
+    margin-left: -10px;
+    margin-top: -10px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+}
+
+.career_location_map_container.popover {
+    z-index: 3000;
+    margin-top: 50px;
+    margin-left: 5px;
+    width: 837px;
 }
 
 .career_location_map_container {
@@ -37,6 +42,7 @@
     position: relative;
     height: 400px;
     margin-left: 50px;
+    border: 1px solid #F2F2F2;
 }
 
 .career_location_base_layer,
@@ -59,7 +65,14 @@ div.toolbar .right {
     margin: 5px;
 }
 
-div.popover-close {
+a#toggle_map_layers,
+a#toggle_map {
+    width: 89px;
+    text-align: left;
+}
+
+div.popover-close,
+div.popover-done {
     text-align: right;
 }
 
@@ -92,7 +105,7 @@ div.map_layer_content {
 div.notepad_content {
     position: absolute;
     z-index: 1003;
-    right: 213px;
+    right: 203px;
 }
 
 div.notepad_content textarea {
@@ -114,17 +127,21 @@ div.help_content {
 }
 
 div.map_layer_content {
-    right: 94px;
+    right: 84px;
 }
 
 div.help_content {
-    right: 15px;
+    right: 5px;
 }
 
 div.notepad_content .btn.right,
 div.map_layer_content .btn.right,
 div.help_content .btn.right {
     margin: -33px 0px;
+}
+
+div.career_location_map_container .btn.right {
+    margin: -40px 82px;
 }
 
 div.actor_container {
@@ -271,7 +288,8 @@ div.interview_notepad.right textarea {
 }
 
 div.map_legend_container {
-    margin-top: 5px;
+    padding-top: 20px;
+    background-color: white;
 }
 
 div.map_legend_container .left {
@@ -306,7 +324,7 @@ table.location_grid tr td {
     width: 53px;
 }
 
-table.location_grid tr td:hover {
+table.location_grid.LC tr td:hover {
     background-color: #c9c9c9;
     opacity: .70;
     filter: Alpha(Opacity=70);
@@ -320,4 +338,115 @@ table.location_grid tr td.selected {
     background-image: url('/site_media/img/practice_building.png');
     background-repeat: no-repeat;
     background-position: center center;
+}
+
+div.boardmember_container {
+
+}
+
+div.boardmember_container div.left {
+    margin: 7px;
+}
+
+div.boardmember.disabled {
+    opacity: .50;
+    filter: Alpha(Opacity=50);
+}
+
+div.boardmember.disabled.complete {
+    opacity:0.50;
+    -moz-opacity:0.50;
+    filter:alpha(opacity=50);
+    border-bottom: 5px solid green;
+}
+
+
+div.boardmember.selected {
+    margin-top: -10px !important;
+}
+
+div.boardmember_container {
+    position: relative;
+}
+
+div#boardmember_question {
+    margin: 5px 30px;
+}
+
+.question_container {
+    margin-top: 10px;
+}
+
+.question_container div.q,
+.answer_container div.a {
+    font-size: 3.5em;
+    float: left;
+    font-weight: bold;
+    margin-top: -10px;
+}
+
+div.question_content p {
+    background-color: #F6F6F6;
+    margin-left: 55px;
+}
+
+div.a {
+    margin-left: 5px;
+}
+
+div#boardmember_question div.answer_content {
+    margin: 30px 10px 0 55px;
+}
+
+div#boardmember_question div.answer_content div {
+    margin-bottom: 8px;
+}
+
+div#boardmember_question div.answer_content textarea {
+    width: 680px;
+    height: 100px;
+    resize: none
+}
+
+.callout {
+    position: relative;
+    margin: 0;
+    padding: 18px 20px;
+    background-color: #F6F6F6;
+    /* easy rounded corners for modern browsers */
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+.callout .notch {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    margin: 0;
+    border-top: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #f6f6f6;
+    padding: 0;
+    width: 0;
+    height: 0;
+    /* ie6 height fix */
+    font-size: 0;
+    line-height: 0;
+    /* ie6 transparent fix */
+    _border-right-color: pink;
+    _border-left-color: pink;
+    _filter: chroma(color=pink);
+}
+.border-callout { border: 1px solid darkgrey; padding: 10px 10px; }
+.border-callout .border-notch { border-bottom-color: darkgrey; top: -11px; }
+
+.summary_container {
+    border-bottom: 1px dashed black;
+    margin-bottom: 20px;
+}
+
+.user_answer,
+.recommended_answer {
+    width: 325px;
 }

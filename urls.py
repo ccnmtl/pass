@@ -37,5 +37,6 @@ urlpatterns = patterns('',
                        (r'^demographic/(?P<path>.*)$','pass.main.views.demographic'),
                        (r'^module-one/(?P<path>.*)$','pass.main.views.module_one'),
                        (r'^module-two/(?P<path>.*)$','pass.main.views.module_two'),
+                       (r'^_clear_state/$','pass.main.views.clear_state'),
 ) 
 

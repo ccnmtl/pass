@@ -64,19 +64,24 @@ class CareerLocationState(models.Model):
     practice_location_row = models.IntegerField(null=True, blank=True)
     practice_location_column = models.IntegerField(null=True, blank=True)
 
+    def get_response(self, question):
+        a = self.responses.filter(question=question)
+        if len(a) > 0 and len(a[0].long_response) > 0:
+            return a[0].long_response
+
 class CareerLocationBlock(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
     template_file = "careerlocation/interview.html"
     js_template_file = "careerlocation/interview_js.html"
     css_template_file = "careerlocation/interview_css.html"
-    display_name = "Activity: Interview Local Dentists"
     base_layer = models.ForeignKey(MapLayer)
+    display_name = "Career Location Exercise"
 
     view = models.CharField(max_length=2, choices=VIEW_CHOICES)
 
     max_stakeholders = [0] * 4
     stakeholders = Actor.objects.filter(type="IV")
-    boardmembers = Actor.objects.filter(type="BD")
+    boardmembers = Actor.objects.filter(type="BD").order_by("?")
 
     grid_columns = [0] * 14
     grid_rows = [0] * 8
@@ -119,10 +124,12 @@ class CareerLocationBlock(models.Model):
             return False
 
         state = a[0]
-        if len(state.actors.all()) < 4:
+
+        stakeholders = state.actors.filter(id__in = [s.id for s in self.stakeholders])
+        if len(stakeholders) < 4:
             return False
 
-        for actor in state.actors.all():
+        for actor in stakeholders:
             r = state.responses.filter(actor=actor);
             if len(r) < 3:
                 return False
@@ -131,6 +138,17 @@ class CareerLocationBlock(models.Model):
             if state.practice_location_row == None or \
                state.practice_location_column == None:
                 return False
+
+        if self.view == "BD":
+            boardmembers = state.actors.filter(id__in = [b.id for b in self.boardmembers])
+            if len(boardmembers) < 6:
+                return False
+
+            for actor in boardmembers:
+                r = state.responses.filter(actor=actor);
+
+                if len(r) > 0 and len(r[0].long_response) < 1:
+                    return False
 
         return True
 
@@ -141,4 +159,45 @@ class CareerLocationBlockForm(forms.ModelForm):
     class Meta:
         model = CareerLocationBlock
 
+class CareerLocationSummaryBlock(models.Model):
+    pageblocks = generic.GenericRelation(PageBlock)
+    template_file = "careerlocation/summary.html"
+    css_template_file = "careerlocation/interview_css.html"
+    display_name = "Career Location Summary"
 
+    def boardmembers(self):
+        return Actor.objects.filter(type="BD").order_by("order")
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def needs_submit(self):
+        return False
+
+    @classmethod
+    def add_form(self):
+        return CareerLocationSummaryBlockForm()
+
+    def edit_form(self):
+        return CareerLocationSummaryBlockForm(instance=self)
+
+    @classmethod
+    def create(self, request):
+        form = CareerLocationSummaryBlockForm(request.POST)
+        return form.save()
+
+    def edit(self, vals, files):
+        form = CareerLocationSummaryBlockForm(data=vals, files=files, instance=self)
+        if form.is_valid():
+            form.save()
+
+    def unlocked(self, user):
+        return True
+
+
+class CareerLocationSummaryBlockForm(forms.ModelForm):
+    class Meta:
+        model = CareerLocationSummaryBlock

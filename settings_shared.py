@@ -107,7 +107,8 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'careermapblock.CareerMap',
               'responseblock.Response',
               'proxyblock.ProxyBlock',
-              'careerlocation.CareerLocationBlock'
+              'careerlocation.CareerLocationBlock',
+              'careerlocation.CareerLocationSummaryBlock'
               ]
 
 

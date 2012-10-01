@@ -38,7 +38,9 @@
 <script type="text/template" id="profile-template">
     <img id="x" class="btn cancel" src="/site_media/img/close.png"/>
     <div class="question_state">
-        <% for (var i=0; i < 3; i++, asked--) { %><% if (asked > 0) { %><span class="asked">&bull;</span><% } else { %><span>&bull;</span><% } %><% } %>
+        <% if (!select_stakeholder && questions.length > 0) { %>
+            <% for (var i=0; i < 3; i++, asked--) { %><% if (asked > 0) { %><span class="asked">&bull;</span><% } else { %><span>&bull;</span><% } %><% } %>
+        <% } %>
     </div>
     <h3><img src="<%= image %>"></img>&nbsp;&nbsp;<%= name %></h3>
     <div>
@@ -119,4 +121,26 @@
             </div>
         </div>
     </div>
+</script>
+
+<script type="text/template" id="boardmember-template">
+    <div class="question_container">
+        <div class="q">Q</div>
+        <% _.each(questions, function(q, index) { %>
+            <div class="question_content" data-id="<%=q.id%>">
+                <p><%= q.question %></p>
+            </div>
+        <% }); %>
+    </div>
+    <div class="visualclear"></div>
+    <div class="answer_container">
+        <div class="a">A</div>
+        <div class="answer_content">
+            <div>Answer the boardmember's question, then click Done to continue.</div>
+            <textarea></textarea>
+            <div class="popover-done"><a class="btn disabled" href="#" data-id="<%=id%>">Done</a></div>
+        </div>
+    </div>
+    <b class="border-notch notch"></b>
+    <b class="notch"></b>
 </script>

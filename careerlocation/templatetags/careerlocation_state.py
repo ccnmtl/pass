@@ -22,32 +22,24 @@ def get_user_state_id(parser, token):
     user = token.split_contents()[1:][0]
     return GetUserStateId(user)
 
-class LayerSelectedNode(template.Node):
-    def __init__(self, layer, nodelist_true, nodelist_false=None):
-        self.nodelist_true = nodelist_true
-        self.nodelist_false = nodelist_false
-        self.layer = layer
+class GetUserResponse(template.Node):
+    def __init__(self, user, question):
+        self.user = template.Variable(user)
+        self.question = template.Variable(question)
 
     def render(self, context):
-        l = context[self.layer]
-        r = context['request']
+        u = self.user.resolve(context)
+        q = self.question.resolve(context)
 
-        state, create = CareerLocationState.objects.get_or_create(user=r.user)
-        qs = state.selected_layers.filter(name=l.name)
-        if len(qs) > 0:
-            return self.nodelist_true.render(context)
-        else:
-            return self.nodelist_false.render(context)
+        obj, create = CareerLocationState.objects.get_or_create(user=u)
 
-@register.tag('if_layer_selected')
-def if_layer_selected(parser, token):
-    layer = token.split_contents()[1:][0]
-    nodelist_true = parser.parse(('else','endif_layer_selected'))
-    token = parser.next_token()
-    if token.contents == 'else':
-        nodelist_false = parser.parse(('endif_layer_selected',))
-        parser.delete_first_token()
-    else:
-        nodelist_false = None
-    return LayerSelectedNode(layer, nodelist_true, nodelist_false)
+        response = obj.get_response(q)
+        return response
+
+@register.tag('get_user_response')
+def get_user_response(parser, token):
+    user = token.split_contents()[1:][0]
+    question = token.split_contents()[1:][1]
+
+    return GetUserResponse(user, question)
 

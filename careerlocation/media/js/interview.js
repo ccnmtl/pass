@@ -2,6 +2,7 @@
 
     var QUESTION_LIMIT = 3;
     var STAKEHOLDER_LIMIT = 4;
+    var BOARDMEMBER_LIMIT = 6;
 
     var User = Backbone.Model.extend({
         urlRoot: '/_careerlocation/api/v1/user/'
@@ -155,19 +156,24 @@
             return answered;
         },
         unlock: function() {
-            if (this.get("actors").length < 4) {
-                return false;
-            }
-
-            var unlock = true;
             var allResponses = this.get("responses");
+            var stakeholders = [];
+            var boardmembers = [];
 
             this.get("actors").forEach(function(actor) {
                 var responses = allResponses.getResponsesByActor(actor);
-                if (responses.length < 3) {
-                    unlock = false;
+                if (actor.get("type") === "IV" && responses.length >= QUESTION_LIMIT) {
+                    stakeholders.push(actor);
+                } else if (actor.get("type") === "BD" && responses.length > 0) {
+                    if (responses[0].get("long_response").length > 0) {
+                        boardmembers.push(actor);
+                    }
                 }
             });
+
+            if (stakeholders.length < STAKEHOLDER_LIMIT) {
+                return false;
+            }
 
             if (this.get("view_type") === "LC" ||
                 this.get("view_type") === "BD") {
@@ -175,10 +181,14 @@
                     this.get("practice_location_row") === null ||
                     this.get("practice_location_column") === undefined ||
                     this.get("practice_location_column") === null) {
-                    unlock = false;
+                    return false;
                 }
             }
-            return unlock;
+
+            if (this.get("view_type") === "BD" && boardmembers.length < BOARDMEMBER_LIMIT) {
+                return false;
+            }
+            return true;
         }
 
     });
@@ -187,6 +197,7 @@
         events: {
             'click .select-layer': 'onSelectLayer',
             'keyup textarea.notepad': 'onChangeNotes',
+            'keyup div.answer_content textarea': 'onChangeAnswer',
             'click img.actor': 'onShowActorProfile',
             'click button.interview': 'onShowActorInterview',
             'click .cancel': 'onHideActorProfile',
@@ -194,16 +205,21 @@
             'click .done': 'onCloseResponse',
             'click #toggle_help': 'onToggleHelp',
             'click #toggle_map_layers': 'onToggleMapLayers',
+            'click #toggle_map': 'onToggleMap',
             'click #toggle_notepad': 'onToggleNotepad',
             'click div.popover-close a.btn': 'onTogglePopover',
+            'click div.popover-done a.btn': 'onSubmitBoardQuestion',
             'click div.actor_state.inprogress': 'onShowActorProfile',
             'click div.actor_state.complete': 'onShowActorProfile',
-            'click table.location_grid tr td': 'onSelectLocation'
+            'click table.location_grid.LC tr td': 'onSelectLocation'
         },
         initialize: function(options) {
             _.bindAll(this,
                 "initialRender",
                 "render",
+                "renderStakeholderInterview",
+                "renderSelectLocation",
+                "renderBoardView",
                 "onSelectLayer",
                 "onChangeNotes",
                 "onShowActorProfile",
@@ -221,11 +237,13 @@
             this.layers.fetch();
 
             this.actors = new ActorList();
+            this.actors.on('reset', this.renderBoardView);
             this.actors.fetch();
 
             this.profile_template = _.template(jQuery("#profile-template").html());
             this.actor_state_template = _.template(jQuery("#actor-state-template").html());
             this.actor_map_template = _.template(jQuery("#actor-map-template").html());
+            this.boardmember_template = _.template(jQuery("#boardmember-template").html());
         },
         initialRender: function() {
             this.state.off("change", this.initialRender);
@@ -247,7 +265,7 @@
             // toggle map layers on/off
             jQuery(".career_location_map_layer").each(function() {
                 var dataId = jQuery(this).data("id");
-                if (self.state.get("layers").getByDataId(dataId)) {
+                if (self.state.get("layers").getByDataId(dataId) || self.state.get("view_type") === "BD") {
                     // Check layer box
                     jQuery("#select_layer_" + dataId).attr("checked", "checked");
 
@@ -270,6 +288,19 @@
             } else {
                 jQuery("div.map_legend_container h3").hide();
             }
+
+            if (this.state.get("view_type") === "IV" || this.state.get("view_type") === "LC") {
+                this.renderStakeholderInterview();
+            }
+            if (this.state.get("view_type") === "LC" || this.state.get("view_type") === "BD") {
+                this.renderSelectLocation();
+            }
+            if (this.state.get("view_type") === "BD") {
+                this.renderBoardView();
+            }
+        },
+        renderStakeholderInterview: function() {
+            var self = this;
 
             // update selected actor status
             this.state.get('actors').forEach(function (actor) {
@@ -304,17 +335,65 @@
             if (this.current_actor) {
                 this._updateProfile();
             }
-
+            this.maybeUnlock();
+        },
+        renderSelectLocation: function() {
             jQuery("table.location_grid tr td").removeClass("selected");
             if (this.state.get("practice_location_row") !== undefined) {
                 var selector = "table.location_grid tr:eq(" + this.state.get("practice_location_row") +
                     ") td:eq(" + this.state.get("practice_location_column") + ")";
                 jQuery(selector).addClass("selected");
             }
+            this.maybeUnlock();
+        },
+        renderBoardView: function() {
+            var boardmembers = jQuery('div.boardmember').sort(function (a, b) {
+                var contentA =parseInt( jQuery(a).attr('data-sort'));
+                var contentB =parseInt( jQuery(b).attr('data-sort'));
+                return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+            });
 
+            var complete = 0;
+
+            for (var i = 0; i < boardmembers.length; i++) {
+                var b = boardmembers[i];
+                var actor = this.actors.getByDataId(jQuery(b).data("id"));
+                if (actor !== undefined) {
+                    var response = this.state.get("responses").getResponsesByActor(actor);
+                    if (response.length > 0) {
+                        jQuery(b).removeClass("selected", "fast").addClass("complete disabled");
+                        complete++;
+                    } else {
+                        jQuery(b).addClass("selected", "fast", function() {
+                            jQuery(this).removeClass("disabled");
+                        });
+
+                        var json = actor.toJSON();
+                        var markup = this.boardmember_template(json);
+                        jQuery("#boardmember_question").html(markup);
+
+                        var left = jQuery(b).position().left + jQuery(b).width() / 2 - 30;
+                        jQuery("#boardmember_question b.notch").css("left", left + "px");
+
+                        jQuery("#boardmember_question .answer_content textarea").focus();
+
+                        break;
+                    }
+                }
+            }
+
+            if (complete === BOARDMEMBER_LIMIT) {
+                jQuery("#boardmember_question").fadeOut(function() {
+                    jQuery("#boardmember_question").html("");
+                });
+            }
+
+            this.maybeUnlock();
+        },
+        maybeUnlock: function() {
             // Enable the "next" links if
-            // 1. selected_actor_count == 4
-            // 2. each actor has 3 questions asked
+            // 1. selected_actor_count == STAKEHOLDER_LIMIT
+            // 2. each actor has QUESTION_LIMIT questions asked
             if (this.state.unlock()) {
                 jQuery("div.basic_instructions").hide();
                 jQuery("div.unlock_instructions").show();
@@ -392,6 +471,7 @@
 
             this.render();
 
+            jQuery("div.career_location_overlay").toggle();
             var offset = jQuery("div.interview_state").position();
             jQuery("div.profile")
                 .css({
@@ -409,6 +489,7 @@
         },
         onHideActorProfile: function(evt) {
             var self = this;
+            jQuery("div.career_location_overlay").toggle();
             jQuery("div.profile").fadeOut("slow", function() {
                 jQuery(this).html("");
                 self.current_actor = null;
@@ -456,6 +537,10 @@
             jQuery("div.career_location_overlay").toggle();
             jQuery('div.map_layer_content').toggle();
         },
+        onToggleMap: function(evt) {
+            jQuery("div.career_location_overlay").toggle();
+            jQuery('div.career_location_map_container').toggle();
+        },
         onToggleNotepad: function(evt) {
             jQuery("div.career_location_overlay").toggle();
             jQuery('div.notepad_content').toggle();
@@ -464,7 +549,12 @@
             jQuery("div.career_location_overlay").toggle();
 
             var srcElement = evt.srcElement || evt.target || evt.originalTarget;
-            jQuery(srcElement).parents('div.popover-parent').toggle();
+            if (jQuery(srcElement).parents('div.popover-parent').length) {
+                jQuery(srcElement).parents('div.popover-parent').toggle();
+            } else {
+                jQuery(srcElement).parents('div.popover').toggle();
+            }
+
         },
         onSelectLocation: function(evt) {
             var srcElement = evt.srcElement || evt.target || evt.originalTarget;
@@ -476,6 +566,39 @@
                 "practice_location_column": col_index
             });
             this.state.save();
+        },
+        onChangeAnswer: function(evt) {
+            var answer = jQuery("#boardmember_question").find("div.answer_content textarea").val();
+            if (answer.length > 0) {
+                jQuery("#boardmember_question div.popover-done .btn").removeClass("disabled");
+            } else {
+                jQuery("#boardmember_question div.popover-done .btn").addClass("disabled");
+            }
+        },
+        onSubmitBoardQuestion: function(evt) {
+            var self = this;
+            var srcElement = evt.srcElement || evt.target || evt.originalTarget;
+
+            var answer = jQuery("#boardmember_question").find("div.answer_content textarea").val();
+            if (answer.length > 0) {
+                var actor = this.actors.getByDataId(jQuery(srcElement).data("id"));
+                var questionId = jQuery("#boardmember_question").find("div.question_content").data("id");
+                var question = actor.get("questions").getByDataId(questionId);
+
+                var response = new ActorResponse();
+                response.set("user", this.state.get("user"));
+                response.set("actor", actor);
+                response.set("question", question);
+                response.set("long_response", answer);
+
+                response.save({}, {
+                    success: function() {
+                        self.state.get("responses").add(response);
+                        self.state.selectActor(actor);
+                        self.state.save();
+                    }
+                });
+            }
         }
     });
 }(jQuery));

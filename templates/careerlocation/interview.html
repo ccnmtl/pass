@@ -1,7 +1,7 @@
 {% load smartif %}
-{% load careerlocation_state %}
 
-<div class="career_location" style="display: none" xmlns="http://www.w3.org/1999/html">
+
+<div class="career_location" style="display: none">
     <div id="view_type" style="display: none">{{block.view}}</div>
     <div class="career_location_overlay" style="display: none"></div>
 
@@ -20,7 +20,11 @@
             {% endifequal %}
         </h2>
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
-        <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
+        {% ifequal block.view "BD" %}
+            <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
+        {% else %}
+            <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
+        {% endifequal %}
         <a class="btn right" href="#" id="toggle_notepad"><i class="icon-th-list"></i> Notepad</a>
     </div>
     <div class="visualclear"></div>
@@ -84,7 +88,7 @@
             {% ifequal block.view "LC" %}
                 Click a grid cell to select your ideal practice location.
             {% else %}
-                Complete Board Application
+                Answer all questions from the board members. You may consult your notes and the map for reference.
             {% endifequal %}
         {% endifequal %}
     </div>
@@ -97,21 +101,42 @@
                 <b>Excellent!</b> You've selected your practice location.<br />
                 Continue on to complete your board application.
             {% else %}
-                <b>All set!</b> You've answered the boardmembers' questions. Continue on to see how you did.
+                <b>All set!</b> You've answered ALL the boardmembers' questions. Continue on to see how you did.
             {% endifequal %}
         {% endifequal %}
     </div>
 
-    <div class="interview_state">
+    <div class="interview_state" {% ifequal block.view "BD" %} style="display: none" {% endifequal %}>
         {%  for x in block.max_stakeholders %}
             <div class="actor_state left empty"><h1>{{ forloop.counter }}</h1></div>
         {%  endfor %}
     </div>
     <div class="visualclear"></div>
 
-    <div class="career_location_map_container">
-        {% ifequal block.view "LC" %}
-            <table class="location_grid">
+    <div class="boardmember_container" {% ifnotequal block.view "BD" %} style="display: none" {% endifnotequal %}>
+        {%  for actor in block.boardmembers.all %}
+            <div class="boardmember left disabled" data-sort="{{actor.order}}" data-id="{{actor.id}}">
+                <img src="{{actor.image.url}}"
+                     alt="interview boardmember"></img>
+            </div>
+        {%  endfor %}
+
+        <div class="visualclear"></div>
+
+        <div id="boardmember_question" class="callout border-callout">
+
+        </div>
+    </div>
+
+
+    <div {% ifequal block.view "BD" %} style="display: none" class="career_location_map_container popover" {% else %} class="career_location_map_container" {% endifequal %}>
+        {% ifequal block.view "BD" %}
+            <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
+            <h3 class="popover-title">Map View</h3>
+        {% endifequal %}
+
+        {% ifnotequal block.view "IV" %}
+            <table class="location_grid {{block.view}}">
                 {% for i in block.grid_rows %}
                     <tr>
                         {% for j in block.grid_columns %}
@@ -120,7 +145,7 @@
                     </tr>
                 {% endfor %}
             </table>
-        {% endifequal %}
+        {% endifnotequal %}
 
         <div class="career_location_map">
             {%  for actor in block.stakeholders.all %}
@@ -130,7 +155,6 @@
                      src="{{actor.image.url}}"
                      alt="interview stakeholder"></img>
                     <div class="question_state"></div>
-
                 </div>
             {%  endfor %}
 
@@ -144,20 +168,25 @@
                      style="display: none; z-index: {{layer.z_index}}; opacity:0.{{layer.transparency}}; -moz-opacity:0.{{layer.transparency}}; filter:alpha(opacity={{layer.transparency}});"></img>
             {% endfor %}
         </div>
-    </div>
-    <br />
-    <div class="visualclear"></div>
-    <div class="map_legend_container">
-        <h3>Map Legends</h3>
-        {% for layer in block.layers %}
-            <div id="map_legend_{{layer.id}}"
-                 data-id="{{layer.id}}"
-                 class="map_legend left"
-                 style="display: none">
-                <h5>{{layer.display_name}}</h5>
-                {{layer.legend}}
-             </div>
-        {% endfor %}
+        <div class="visualclear"></div>
+        <div class="map_legend_container">
+            <h3>Map Legends</h3>
+            {% for layer in block.layers %}
+                <div id="map_legend_{{layer.id}}"
+                     data-id="{{layer.id}}"
+                     class="map_legend left"
+                     style="display: none">
+                    <h5>{{layer.display_name}}</h5>
+                    {{layer.legend}}
+                </div>
+            {% endfor %}
+        </div>
+
+        {% ifequal block.view "BD" %}
+            <div class="visualclear"></div>
+            <div class="popover-close"><a class="btn" href="#">Close</a></div>
+        {% endifequal %}
+
     </div>
 </div>
 
