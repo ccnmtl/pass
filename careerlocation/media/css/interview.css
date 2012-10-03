@@ -164,6 +164,10 @@ div.profile {
     left: 10px;
 }
 
+div.profile h3 {
+    padding-top: 0px;
+}
+
 div.profile div.question_state {
     position: absolute;
     margin-top: 40px;
