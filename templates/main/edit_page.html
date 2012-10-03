@@ -1,82 +1,100 @@
 {% extends "base.html" %}
 {% block title %}{{section.label}} (edit){% endblock %}
-{% block js %}
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" /> 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"
-        type="text/javascript" ></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/jquery-ui.min.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-var saveOrderOfChildren = function() {
-    var url = "{% url reorder-section-children section.id %}?";
-    var worktodo = 0;
-    jQuery("#children-order-list li").each(function(index,element) {
-       worktodo = 1;
-       var id = jQuery(element).attr('id').split("-")[1];
-       url += "section_id_" + index + "=" + id + ";";
-    });
-    if (worktodo == 1) {
-        var req = new XMLHttpRequest();
-        req.open("POST",url,true);
-        req.send(null);
-    }
-};
-
-var saveOrderOfPageBlocks = function() {
-    var url = "{% url reorder-pageblocks section.id %}?";
-    var worktodo = 0;
-    jQuery("#edit-blocks-tab div").each(function(index,element) {
-      worktodo = 1;
-      var id = jQuery(element).attr('id').split("-")[1];
-      url += "pageblock_id_" + index + "=" + id + ";";
-    });
-    if (worktodo == 1) {
-        /* only bother submitting if there are elements to be sorted */
-        var req = new XMLHttpRequest();
-        req.open("POST",url,true);
-        req.send(null);
-    }
-
-}
-
-</script>
-
-<style type="text/css">
-	#edit-blocks-tab .draggable { background-color: #ddd; }
-	.draghandle {float: left;}
-	#children-order-list {list-style-type: none; margin: 0; padding: 0;}
-	#children li { margin: 0 3px 3px 3px; padding: 0.4em;
-	padding-left: 1.5em; 
-          background-color: #ddd;
-	}
-	#children li span { position: absolute; margin-left: -1.3em; }
-	.dragging {border: #f60 solid 1px;}
-	</style>
+{% block css %}
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" />
+    <style type="text/css">
+        #edit-blocks-tab .draggable { background-color: #ddd; }
+        .draghandle {float: left;}
+        #children-order-list {list-style-type: none; margin: 0; padding: 0;}
+        #children li { margin: 0 3px 3px 3px; padding: 0.4em;
+            padding-left: 1.5em;
+            background-color: #ddd;
+        }
+        #children li span { position: absolute; margin-left: -1.3em; }
+        .dragging {border: #f60 solid 1px;}
+    </style>
 {% endblock %}
 
-{% block primarynavtabs %}
+{% block js %}
+    <script type="text/javascript">
+        var saveOrderOfChildren = function() {
+            var url = "{% url reorder-section-children section.id %}?";
+            var worktodo = 0;
+            jQuery("#children-order-list li").each(function(index,element) {
+               worktodo = 1;
+               var id = jQuery(element).attr('id').split("-")[1];
+               url += "section_id_" + index + "=" + id + ";";
+            });
+            if (worktodo == 1) {
+                var req = new XMLHttpRequest();
+                req.open("POST",url,true);
+                req.send(null);
+            }
+        };
 
-<ul class="globalnav">
-  {% for section in modules %}
-  <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="/edit{{section.get_absolute_url}}">{{section.label}}</a></li>
-  {% endfor %}
-</ul>
+        var saveOrderOfPageBlocks = function() {
+            var url = "{% url reorder-pageblocks section.id %}?";
+            var worktodo = 0;
+            jQuery("#edit-blocks-tab div").each(function(index,element) {
+              worktodo = 1;
+              var id = jQuery(element).attr('id').split("-")[1];
+              url += "pageblock_id_" + index + "=" + id + ";";
+            });
+            if (worktodo == 1) {
+                /* only bother submitting if there are elements to be sorted */
+                var req = new XMLHttpRequest();
+                req.open("POST",url,true);
+                req.send(null);
+            }
 
+        }
+
+        jQuery(document).ready(function () {
+            jQuery("#children-order-list").sortable({
+                containment : 'parent'
+                ,axis : 'y'
+                ,tolerance: 'pointer'
+                ,activeClass: 'dragging'
+                ,handle: '.draghandle'
+                ,stop: function (event,ui) { saveOrderOfChildren();}
+            });
+            jQuery("#children-order-list").disableSelection();
+
+            jQuery("#edit-blocks-tab").sortable({
+                items : 'div'
+                ,axis: 'y'
+                ,containment: 'parent'
+                ,handle: '.draghandle'
+                ,activeClass: 'dragging'
+                ,tolerance: 'pointer'
+                ,stop: function (event,ui) { saveOrderOfPageBlocks();}
+            });
+            jQuery("#tabber").tabs();
+            jQuery("#edit-blocks-tab").disableSelection();
+        });
+    </script>
+
+
+{% endblock %}
+
+{% block primarynav %}
+    {{ block.super }}
+
+    <!-- ###### Secondary Navigation ###### -->
+    <div id="secondary_navigation" style="display: none">
+        <div class="block">
+            {% if module.get_children %}
+                {% with "/edit" as menu_base %}
+                    {% include "main/menu.html" %}
+                {% endwith %}
+            {% endif %}
+        </div><!-- div id="block" -->
+    </div><!-- div id="secondary_navigation" -->
 {% endblock %}
 
 
 {% block sidenav %}
-	<!-- ###### Secondary Navigation ###### -->
-	<div id="secondary_navigation">
-		<div id="fadetop"></div>
-		<div class="block">
-			<h3>Sections</h3>
-{% with "/edit" as menu_base %}
-{% include "main/menu.html" %}
-{% endwith %}
-		</div><!-- div id="block" -->
-		<div id="fadebottom"></div>
-	</div><!-- div id="secondary_navigation" -->
 {% endblock %}
 
 
@@ -202,38 +220,12 @@ method="post">
 
 {% block content-nav %}
 
-{% if section.get_previous %}
-<a href="{% url edit-page section.get_previous.get_path %}" id="previous">« {{section.get_previous.label}}</a>
-{% endif %}
+    {% if section.get_previous %}
+    <a href="{% url edit-page section.get_previous.get_path %}" id="previous">« {{section.get_previous.label}}</a>
+    {% endif %}
 
-{% if section.get_next %}
-<a href="{% url edit-page section.get_next.get_path %}" id="next">{{section.get_next.label}} »</a>
-{% endif %}
-
-<script type="text/javascript">
-jQuery(function() {
-  jQuery("#children-order-list").sortable({
-    containment : 'parent'
-    ,axis : 'y'
-    ,tolerance: 'pointer'
-    ,activeClass: 'dragging'
-    ,handle: '.draghandle'
-    ,stop: function (event,ui) { saveOrderOfChildren();}
-  });
-  jQuery("#children-order-list").disableSelection();
-  jQuery("#edit-blocks-tab").sortable({
-    items : 'div'
-    ,axis: 'y'
-    ,containment: 'parent'
-    ,handle: '.draghandle'
-    ,activeClass: 'dragging'
-    ,tolerance: 'pointer'
-    ,stop: function (event,ui) { saveOrderOfPageBlocks();}
-  });
-  jQuery("#tabber").tabs();
-
-  jQuery("#edit-blocks-tab").disableSelect();
-});
-</script>
+    {% if section.get_next %}
+    <a href="{% url edit-page section.get_next.get_path %}" id="next">{{section.get_next.label}} »</a>
+    {% endif %}
 
 {% endblock %}
