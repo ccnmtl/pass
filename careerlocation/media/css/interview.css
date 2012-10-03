@@ -57,6 +57,7 @@
 
 }
 
+div.career_location_summary h2,
 div.toolbar h2.left {
     margin: 0px !important;
 }
@@ -450,6 +451,7 @@ div#boardmember_question div.answer_content textarea {
 .summary_container {
     border-bottom: 1px dashed black;
     margin-bottom: 20px;
+    padding-top: 20px;
 }
 
 .user_answer,
