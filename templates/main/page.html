@@ -87,6 +87,10 @@
 
 {% block content %}
 
+{% ifnotequal section.label 'Interview Stakeholders' %}
+<h2>{{section.label}}</h2>
+{% endifnotequal %}
+
 {% if needs_submit %}
 {% if is_submitted %}
 {% else %}
