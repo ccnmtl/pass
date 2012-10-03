@@ -165,6 +165,17 @@
     jQuery(document).ready(function() {
         /* Select from list: Chrome, Firefox, Safari, MSIE */
         shieldbrowser({"Chrome": 1, "Firefox": 3.6, "Safari": 4, "MSIE": 7 });
+
+        jQuery("li.section a").click(function(evt) {
+            jQuery(this).parents("div#primarynav").next().slideToggle();
+            evt.stopPropagation();
+        });
+
+        jQuery("body").click(function() {
+            if (jQuery("#secondary_navigation").is(":visible")) {
+                jQuery("#secondary_navigation").slideToggle();
+            }
+        });
     });
 </script>
 
