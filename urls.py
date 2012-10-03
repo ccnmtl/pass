@@ -15,6 +15,7 @@ urlpatterns = patterns('',
           
                        (r'^export/$','main.views.exporter'),
                        (r'^import/$','main.views.importer'),
+                       (r'^admin/_clear_state/$','pass.main.views.clear_state'),
                        ('^admin/allresults/$','main.views.all_results'),
                        ('^admin/allresultskey/$','main.views.all_results_key'),
                        (r'^registration/', include('registration.urls')),
@@ -37,6 +38,5 @@ urlpatterns = patterns('',
                        (r'^demographic/(?P<path>.*)$','pass.main.views.demographic'),
                        (r'^module-one/(?P<path>.*)$','pass.main.views.module_one'),
                        (r'^module-two/(?P<path>.*)$','pass.main.views.module_two'),
-                       (r'^_clear_state/$','pass.main.views.clear_state'),
-) 
+)
 

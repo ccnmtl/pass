@@ -16,4 +16,5 @@ v1_api.register(CareerLocationStateResource())
 urlpatterns = patterns('',
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': media_root}),
     (r'^api/', include(v1_api.urls)),
+    (r'^_clear_state/$','pass.careerlocation.views.clear_state'),
 )

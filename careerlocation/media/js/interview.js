@@ -259,6 +259,10 @@
 
             jQuery(this.el).fadeIn();
         },
+        toggleOverlay: function() {
+            var height = jQuery("div.career_location").outerHeight();
+            jQuery("div.career_location_overlay").css("height", height + "px").toggle();
+        },
         render: function() {
             var self = this;
 
@@ -304,28 +308,30 @@
 
             // update selected actor status
             this.state.get('actors').forEach(function (actor) {
-                var slots = jQuery("#actor_state_" + actor.get("id"));
+                if (actor.get("type") == "IV") {
+                    var slots = jQuery("#actor_state_" + actor.get("id"));
 
-                // replace an empty actor_state state w/this actor
-                var slot;
-                if (slots.length < 1) {
-                    slot = jQuery("div.actor_state.empty")[0];
-                } else {
-                    slot = slots[0];
+                    // replace an empty actor_state state w/this actor
+                    var slot;
+                    if (slots.length < 1) {
+                        slot = jQuery("div.actor_state.empty")[0];
+                    } else {
+                        slot = slots[0];
+                    }
+
+                    var json = actor.toJSON();
+                    json.state = self.state.getActorState(actor);
+                    json.asked = self.state.get("responses").getResponsesByActor(actor).length;
+
+                    // update the actor state div on top
+                    var markup = self.actor_state_template(json);
+                    jQuery(slot).replaceWith(markup);
+
+                    // update the actor state div within the map
+                    json.asked = self.state.get("responses").getResponsesByActor(actor).length;
+                    markup = self.actor_map_template(json);
+                    jQuery("#actor_map_" + actor.get("id")).html(markup);
                 }
-
-                var json = actor.toJSON();
-                json.state = self.state.getActorState(actor);
-                json.asked = self.state.get("responses").getResponsesByActor(actor).length;
-
-                // update the actor state div on top
-                var markup = self.actor_state_template(json);
-                jQuery(slot).replaceWith(markup);
-
-                // update the actor state div within the map
-                json.asked = self.state.get("responses").getResponsesByActor(actor).length;
-                markup = self.actor_map_template(json);
-                jQuery("#actor_map_" + actor.get("id")).html(markup);
             });
 
             jQuery("#selected_actor_count").html(this.state.get("actors").length);
@@ -471,7 +477,7 @@
 
             this.render();
 
-            jQuery("div.career_location_overlay").toggle();
+            this.toggleOverlay();
             var offset = jQuery("div.interview_state").position();
             jQuery("div.profile")
                 .css({
@@ -489,7 +495,7 @@
         },
         onHideActorProfile: function(evt) {
             var self = this;
-            jQuery("div.career_location_overlay").toggle();
+            this.toggleOverlay();
             jQuery("div.profile").fadeOut("slow", function() {
                 jQuery(this).html("");
                 self.current_actor = null;
@@ -530,23 +536,23 @@
             jQuery(".btn.ask").removeAttr("disabled");
         },
         onToggleHelp: function(evt) {
-            jQuery("div.career_location_overlay").toggle();
+            this.toggleOverlay();
             jQuery('div.help_content').toggle();
         },
         onToggleMapLayers: function(evt) {
-            jQuery("div.career_location_overlay").toggle();
+            this.toggleOverlay();
             jQuery('div.map_layer_content').toggle();
         },
         onToggleMap: function(evt) {
-            jQuery("div.career_location_overlay").toggle();
+            this.toggleOverlay();
             jQuery('div.career_location_map_container').toggle();
         },
         onToggleNotepad: function(evt) {
-            jQuery("div.career_location_overlay").toggle();
+            this.toggleOverlay();
             jQuery('div.notepad_content').toggle();
         },
         onTogglePopover: function(evt) {
-            jQuery("div.career_location_overlay").toggle();
+            this.toggleOverlay();
 
             var srcElement = evt.srcElement || evt.target || evt.originalTarget;
             if (jQuery(srcElement).parents('div.popover-parent').length) {
