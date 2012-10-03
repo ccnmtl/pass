@@ -312,6 +312,15 @@ def all_results_key(request):
                     else:
                         columns.append(Column(hierarchy=h, question=q))
 
+
+            for p in s.pageblock_set.filter(content_type=counseling_type):
+                for t in p.block().topics.all():
+                    columns.append(Column(hierarchy=h, session=p.content_object, topic=t))
+
+            for p in s.pageblock_set.filter(content_type=referral_type):
+                for f in p.block().form_fields:
+                    columns.append(Column(hierarchy=h, session=p.content_object, field=f))
+
     for column in columns:
         try:
             writer.writerow(column.key_row())

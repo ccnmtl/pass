@@ -29,9 +29,12 @@
 
 .career_location_map_container.popover {
     z-index: 3000;
-    margin-top: 50px;
-    margin-left: 5px;
-    width: 837px;
+    margin-top: 40px;
+    margin-left: 20px;
+    width: 836px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 
 .career_location_map_container {
@@ -381,7 +384,8 @@ div#boardmember_question {
 }
 
 .question_container {
-    margin-top: 10px;
+    margin-top: 20px;
+    padding-bottom: 2px;
 }
 
 .question_container div.q,
@@ -389,7 +393,6 @@ div#boardmember_question {
     font-size: 3.5em;
     float: left;
     font-weight: bold;
-    margin-top: -10px;
 }
 
 div.question_content p {
@@ -410,7 +413,7 @@ div#boardmember_question div.answer_content div {
 }
 
 div#boardmember_question div.answer_content textarea {
-    width: 680px;
+    width: 703px;
     height: 100px;
     resize: none
 }
