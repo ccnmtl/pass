@@ -7,7 +7,7 @@
         {% renderjs block %}
     {% endfor %}
 
-    {% ifequal module.slug "adolescents" %}
+    {% ifequal module.slug 'adolescents' %}
         <script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
     {% endifequal %}
 
@@ -63,9 +63,9 @@
 {% endblock %}
 
 {% block css %}
-    {% ifequal module.slug "adolescents" %}
+    {% ifequal module.slug 'adolescents' %}
         <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
-        <link href="/site_media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        {% comment %}<link href="/site_media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">{% endcomment %}
     {% endifequal %}
 
     {% for block in section.pageblock_set.all %}
@@ -74,7 +74,10 @@
 {% endblock %}
 
 
-{% block title %}{{section.label}}{% endblock %}
+{% block title %}{{module.label}}&mdash;{{section.label}}{% endblock %}
+
+{% block projectbanner %}
+{% endblock %}
 
 {% block primarynav %}
     {{ block.super }}

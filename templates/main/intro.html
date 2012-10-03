@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
+{% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
 
 {% block title %}Welcome to PASS{% endblock %}
 
-{% block primarynav %}
-    {{ block.super }}
-
-    <img class="logo_project" src="/site_media/img/children_header.png"></img>
-
+{% block js %}
+{{ block.super }}
+<script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
 {% endblock %}
 
+{% block css %}
+{{ block.super }}
+<link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+{% endblock %}
+
+{% block primarynav %}{% endblock %}
+
 {% block content %}
-
-
-    <h3>A Population-Based Approach to Patient Service and Professional Success (PASS)</h3>
+<h2>Welcome to Multidisciplinary Approaches to Children's Oral Health (MATCH)</h2>
 
     <div class="maintext">
         <p>While your dental education intensely prepares you for understanding and applying biomedical and clinical competencies, there is little opportunity to consider the patient populations you will be able to serve at the completion of your training.</p>
@@ -20,12 +24,12 @@
         <p>These modules are designed to orient you to populations across the lifespan so that you can consider how your career may align with your professional and personals goals.</p>
 
         <p>The first of five modules focuses on the young children in the United States. </p>
-        <br />
-        <h4>Get started:</h4>
+
+        <h3>Let's get started:</h3>
         <ul>
         {%  if demographic_survey_complete %}
-            <li><a href="/module-one/">Young Children</a></li>
-            <li><a href="/module-two/">Adolescents</a></li>
+            <li>Module 1: <a href="/module-one/">Young Children</a></li>
+            <li>Module 1: <a href="/module-two/">Adolescents</a></li>
         {%  else  %}
             <li><a href="/demographic/survey/">Register</a></li>
         {%  endif %}

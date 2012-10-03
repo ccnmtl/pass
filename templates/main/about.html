@@ -1,8 +1,24 @@
 {% extends 'base.html' %}
+{% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
+{% block title %}About PASS{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block css %}
+{{ block.super }}
+<link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+{% endblock %}
+
+{% block loginbutton %}<a href="/" class="btn btn-mini btn-danger">Log in</a>{% endblock %}
+
+{% block projectbanner %}{% endblock %}
 
 {% block content %}
 
-<h3>About Population Based Approaches to Patient Service and Professional Success (PASS)</h3>
+<h2>About Population Based Approaches to Patient Service and Professional Success (PASS)</h2>
 
 <p>While your dental education intensely prepares you for understanding and applying biomedical and chemical competencies, there is little opportunity to consider the patient populations you will be able to serve at the completion of your training.
 </p>
@@ -10,7 +26,8 @@
 </p>
 
 
-<h4>Credits</h4>
+<h3>Credits</h3>
+
 <h6>Faculty Partners</h6>
 <ul>
 <li>Burton L. Edelstein, DDS, MPH</li>
@@ -26,6 +43,7 @@
 <li>Sarah Lu, MSW</li>
 </ul>
 
+<p>&nbsp;</p>
 <h5>CCNMTL Production Team</h5>
 <h6>Executive Producers</h6>
 <ul>

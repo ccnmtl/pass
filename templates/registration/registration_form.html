@@ -1,10 +1,39 @@
 {% extends "registration/registration_base.html" %}
+{% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
 {% block title %}Register for an account{% endblock %}
+{% block projectbanner %}{% endblock %}
 {% block content %}
-<table>
+
+<h3>Create a new PASS account</h3>
+
+<p>Use the following form to create a new account to access PASS modules.</p>
+
+<div class="loginbox" style="float: none;">
+	<div class="content">
+
     <form method='post' action=''>{% csrf_token %}
-        {{ form }}
-        <tr><td></td><td><input type="submit" value="Send activation email" /></td>
+	<div class="fieldwrapper">
+		<label for="id_email">Your email address:</label>
+		{{ form.email }}
+	</div><!-- fieldwrapper -->
+	<div class="fieldwrapper">
+		<label for="id_username">Create your username:</label>
+		{{ form.username }}
+	</div><!-- fieldwrapper -->
+	<div class="fieldwrapper">
+		<label for="id_password1">Create a password:</label>
+		{{ form.password1 }}
+	</div><!-- fieldwrapper -->
+	<div class="fieldwrapper">
+		<label for="id_password2">Confirm your password:</label>
+		{{ form.password2 }}
+	</div><!-- fieldwrapper -->
+	<div class="fieldwrapper">
+        <input type="submit" class="regbutton" value="Send activation email" /></td>
+	</div><!-- fieldwrapper -->
     </form>
+
+	</div><!-- content -->
+</div><!-- loginbox -->
 </table>
 {% endblock %}
