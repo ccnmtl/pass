@@ -58,7 +58,7 @@
 }
 
 div.toolbar h2.left {
-    margin: 0px;
+    margin: 0px !important;
 }
 
 div.toolbar .right {
@@ -171,6 +171,12 @@ div.profile div.question_state {
 .btn.interview, .btn.cancel {
     margin-right: 10px;
     margin-top: 10px;
+}
+
+.btn.close_profile {
+    float: right;
+    margin-right: 0px;
+    margin-top: 0px;
 }
 
 .btn.ask {
