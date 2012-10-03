@@ -378,11 +378,12 @@
                         var markup = this.boardmember_template(json);
                         jQuery("#boardmember_question").html(markup);
 
-                        var left = jQuery(b).position().left + jQuery(b).width() / 2 - 30;
-                        jQuery("#boardmember_question b.notch").css("left", left + "px");
+                        setTimeout(function() {
+                            var left = jQuery(b).position().left + jQuery(b).width() / 2 - 35;
+                            jQuery("#boardmember_question b.notch").css("left", left + "px");
 
-                        jQuery("#boardmember_question .answer_content textarea").focus();
-
+                            jQuery("#boardmember_question .answer_content textarea").focus();
+                        }, 100);
                         break;
                     }
                 }
