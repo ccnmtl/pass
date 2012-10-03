@@ -39,7 +39,7 @@ body
 
 body.no_bootstrap
 {
-	font: normal 90% "lucida grande", arial, helvetica, sans-serif !important;
+	font: normal 12px "lucida grande", arial, helvetica, sans-serif !important;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -1626,7 +1626,8 @@ body.login #content
 
 .nav > li > a:hover {
   text-decoration: none;
-  background-color: #cccccc !important;
+  color: #339999 !important;
+  background-color: #d0e1db !important;
 }
 
 .pmode_title {
@@ -1675,6 +1676,6 @@ body.login #content
 .nav-pills > .active > a,
 .nav-pills > .active > a:hover {
   color: #ffffff;
-  background-color: #666666 !important;
+  background-color: #339999 !important;
 }
 
