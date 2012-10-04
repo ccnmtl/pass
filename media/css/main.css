@@ -743,7 +743,7 @@ a:visited
 	margin: 10px 0;
 	padding: 38px 45px 10px;
 	background-color: #fff;
-	background: url("../img/quotes.png") no-repeat scroll left top transparent;
+	background: url("/site_media/img/quotes.png") no-repeat scroll left top transparent;
 }
 
 .pullquote .source, .source
@@ -857,7 +857,7 @@ body#poctools a#poctools
 	display: block;
 	height: 120px;
 	width: 400px;
-	background: url('../img/flashicon.jpg') top left no-repeat;
+	background: url('/site_media/img/flashicon.jpg') top left no-repeat;
 }
 
 #getFlash h3
@@ -995,7 +995,7 @@ h1#logo_project {
 height: 80px;
 width: 510px;
 border: none;
-background: url("../img/pass_logo.png") no-repeat scroll left top transparent;
+background: url("/site_media/img/pass_logo.png") no-repeat scroll left top transparent;
 margin: 0;
 }
 
@@ -1007,7 +1007,7 @@ h4#logo_uncharted {
     height: 50px;
     width: 153px;
     border: 0;
-    background: url("../img/uncharted_logo.png") no-repeat scroll right top transparent;
+    background: url("/site_media/img/uncharted_logo.png") no-repeat scroll right top transparent;
     margin: 0;
 }
 
@@ -1079,7 +1079,7 @@ h4#logo_uncharted {
     width: 50px;
     height: 65px;
     float: left;
-    background: url('../img/icons_app.png') 0px -433px no-repeat;
+    background: url('/site_media/img/icons_app.png') 0px -433px no-repeat;
 }
 
 #shieldbox .alert .content
@@ -1209,37 +1209,37 @@ h4#logo_uncharted {
 
 #shieldbox #chrome .icon
 {
-    background: url('../img/icons_app.png') 5px 0 no-repeat;
+    background: url('/site_media/img/icons_app.png') 5px 0 no-repeat;
 }
 
 #shieldbox #firefox .icon
 {
-    background: url('../img/icons_app.png') 5px -60px no-repeat;
+    background: url('/site_media/img/icons_app.png') 5px -60px no-repeat;
 }
 
 #shieldbox #safari .icon
 {
-    background: url('../img/icons_app.png') 5px -122px no-repeat;
+    background: url('/site_media/img/icons_app.png') 5px -122px no-repeat;
 }
 
 #shieldbox #msie .icon
 {
-    background: url('../img/icons_app.png') 5px -183px no-repeat;
+    background: url('/site_media/img/icons_app.png') 5px -183px no-repeat;
 }
 
 #shieldbox #flash .icon
 {
-    background: url('../img/icons_app.png') 5px -243px no-repeat;
+    background: url('/site_media/img/icons_app.png') 5px -243px no-repeat;
 }
 
 #shieldbox #quicktime .icon
 {
-    background: url('../img/icons_app.png') 5px -303px no-repeat;
+    background: url('/site_media/img/icons_app.png') 5px -303px no-repeat;
 }
 
 #shieldbox #acrobat .icon
 {
-    background: url('../img/icons_app.png') 5px -363px no-repeat;
+    background: url('/site_media/img/icons_app.png') 5px -363px no-repeat;
 }
 
 #shieldbox .nosupport_close
@@ -1262,7 +1262,7 @@ h4#logo_uncharted {
     display: block;
     height: 16px;
     width: 16px;
-    background: url('../img/icons_app.png') -18px -506px no-repeat;
+    background: url('/site_media/img/icons_app.png') -18px -506px no-repeat;
 }
 
 /* REGISTRATION - LOGIN */
