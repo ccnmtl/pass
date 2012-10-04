@@ -92,6 +92,14 @@ div.basic_instructions {
     margin-top: 0;
 }
 
+div.basic_instructions
+{
+    padding-left: 50px;
+	background-image: url('/site_media/img/icon_info.png');
+	background-repeat: no-repeat;
+	background-position: 5px center;
+}
+
 div.unlock_instructions {
     background-color: #DFF0D8;
 }
@@ -150,7 +158,7 @@ div.career_location_map_container .btn.right {
 
 div.actor_container {
     position: absolute;
-    z-index: 1000;
+    z-index: 900;
 }
 
 div.profile {
