@@ -188,7 +188,7 @@ cascadesquare li,
 
 a
 {
-	color: #f46b08;
+	color: #339999;
 	text-decoration: none;
 }
 
@@ -209,6 +209,31 @@ a:visited
 	color: #f46b08;
 	text-decoration: none;
 }
+
+#content a
+{
+	color: #339999;
+	text-decoration: none;
+}
+
+#content a:hover
+{
+	color: #35a0a4;
+	text-decoration: none;
+}
+
+#content a:active
+{
+	color: #35a0a4;
+	text-decoration: none;
+}
+
+#content a:visited
+{
+	color: #f46b08;
+	text-decoration: none;
+}
+
 
 /* ***** Principal Blocks ***** */
 
@@ -617,7 +642,17 @@ a:visited
 	text-align: right;
 }
 
-#content .content-nav a.pager_button
+#content .content-nav div#next
+{
+	display: block;
+	float: right;
+	width: auto;
+	text-align: right;
+}
+
+
+#content .content-nav a.pager_button,
+#content .content-nav div.pager_button
 {
   padding: 5px 14px;
   background-color: #fff;
@@ -627,9 +662,21 @@ a:visited
           border-radius: 15px;
 }
 
+#content .content-nav div.pager_button {
+    color: #999 !important;
+}
+
+
 #content .content-nav a.pager_button:hover {
   text-decoration: none;
   background-color: #d0e1db;
+  color: #006666  !important;
+}
+
+
+#content .content-nav div.pager_button:hover {
+  text-decoration: none;
+  background-color: #efefef;
 }
 
 .pageblock, .block {
@@ -1536,4 +1583,8 @@ body.editmode .mceEditor
 	color: #333 !important;
 	font-size: 14px !important;
 	line-height: 150% !important;
+}
+
+#content a.btn {
+    color: #000;
 }
