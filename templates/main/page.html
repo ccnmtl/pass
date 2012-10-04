@@ -86,9 +86,16 @@
 
 {% block content %}
 
-{% ifnotequal section.label 'Interview Stakeholders' %}
+{% ifequal section.label 'Interview Stakeholders' %}
+{% else %}
+{% ifequal section.label 'Board Interview' %}
+{% else %}
+{% ifequal section.label 'Select Practice Location' %}
+{% else %}
 <h2>{{section.label}}</h2>
-{% endifnotequal %}
+{% endifequal %}
+{% endifequal %}
+{% endifequal %}
 
 {% if needs_submit %}
 {% if is_submitted %}

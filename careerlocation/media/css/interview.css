@@ -87,21 +87,27 @@ div.interview_state {
 div.unlock_instructions,
 div.basic_instructions {
     width: 450px;
+    min-height: 20px;
     padding: 10px;
     margin-left: 0;
     margin-top: 0;
+    vertical-align: middle;
 }
 
 div.basic_instructions
 {
-    padding-left: 50px;
+    padding-left: 60px;
 	background-image: url('/site_media/img/icon_info.png');
 	background-repeat: no-repeat;
-	background-position: 5px center;
+	background-position: 10px center;
 }
 
-div.unlock_instructions {
-    background-color: #DFF0D8;
+div.unlock_instructions
+{
+    padding-left: 60px;
+	background-image: url('/site_media/img/icon_check.png');
+	background-repeat: no-repeat;
+	background-position: 10px center;
 }
 
 div.unlock_instructions b {
@@ -180,7 +186,7 @@ div.profile div.question_state {
     position: absolute;
     margin-top: 40px;
     margin-left: 9px;
-    color: gray;
+    color: #ccc;
 }
 
 
@@ -218,7 +224,8 @@ div.question_state {
 }
 
 div.question_state span.asked {
-    color: green;
+    /*color: green;*/
+    color: #ff6600;
 }
 
 div.actor_state {
@@ -332,10 +339,15 @@ div.map_legend {
 table.location_grid {
     margin-left: 50px;
     position: absolute;
-    border: 1px solid #DDD;
+    border: 1px solid #339999; /*ddd*/
     width: 742px;
     height: 400px;
     z-index: 1001;
+}
+
+table.location_grid td {
+    border: 1px solid #339999; /*ddd*/
+    border-collapse: collapse;
 }
 
 table.location_grid tr {
@@ -405,6 +417,10 @@ div#boardmember_question {
     font-size: 3.5em;
     float: left;
     font-weight: bold;
+}
+
+div.question_content {
+    padding-left: 55px;
 }
 
 div.question_content p {
