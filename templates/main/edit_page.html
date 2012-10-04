@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}{{section.label}} (edit){% endblock %}
-
+{% block title %}{{module.label}}&mdash;{{section.label}} [EDIT]{% endblock %}
+{% block widthtype %}fixed editmode no_bootstrap{% endblock %}
 {% block css %}
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" />
     <style type="text/css">
@@ -78,6 +78,8 @@
 
 {% endblock %}
 
+{% block projectbanner %}{% endblock %}
+
 {% block primarynav %}
     {{ block.super }}
 
@@ -100,7 +102,7 @@
 
 {% block content %}
 <a href="{{section.get_absolute_url}}">view page</a>
-<h1>{{ section.label }}</h1>
+<h2>{{ section.label }}</h2>
 
 <div id="tabber">
 
@@ -120,7 +122,7 @@
 <table width="100%" border="0"><tr><td><span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span></td>
 <td align="right">
 <form action="{% url delete-pageblock block.id %}" method="post">
-<input type="submit" value="delete block {{block.ordinality}}" />
+<input type="submit" value="Delete block {{block.ordinality}}" />
 </form></td></tr>
 <tr>
 <th colspan="2">{{block.edit_label}}</th>
@@ -151,7 +153,7 @@
 {% endif %}
 {% endwith %}
 </table>
-<input type="submit" value="save" />
+<input type="submit" value="Save" />
 </form>
 </div>
 {% endfor %}
@@ -161,7 +163,7 @@
 <ul id="children-order-list">
 {% for child in section.get_children %}
 <li class="draggable"
-    id="child-{{child.id}}"><span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>[<a href="/pagetree/delete_section/{{child.id}}/">delete</a>]
+    id="child-{{child.id}}"><span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>[<a href="/pagetree/delete_section/{{child.id}}/">Delete</a>]
   {{child.label}}
 </li>
 {% endfor %}
@@ -201,7 +203,7 @@ method="post">
 
 <div id="edit-page-tab">
 <form action="{% url delete-section section.id %}" method="post">
-<input type="submit" value="delete this page" />
+<input type="submit" value="Delete this page" />
 </form>
 
 <form action="{% url edit-section section.id %}" method="post">
@@ -209,7 +211,7 @@ method="post">
 <table>
 {{ section.edit_form.as_table }}
 </table>
-<input type="submit" value="save" />
+<input type="submit" value="Save" />
 </fieldset>
 </form>
 </div>
@@ -218,8 +220,10 @@ method="post">
 
 {% endblock %}
 
+        <div class="visualclear"></div>
 {% block content-nav %}
 
+    <div class="content-nav">
     {% if section.get_previous %}
     <a href="{% url edit-page section.get_previous.get_path %}" id="previous">« {{section.get_previous.label}}</a>
     {% endif %}
@@ -227,5 +231,6 @@ method="post">
     {% if section.get_next %}
     <a href="{% url edit-page section.get_next.get_path %}" id="next">{{section.get_next.label}} »</a>
     {% endif %}
+    </div><!-- div id="content-nav" -->
 
 {% endblock %}
