@@ -182,6 +182,9 @@ def process_page(request,path,hierarchy):
 @login_required
 @rendered_with("main/instructor_page.html")
 def instructor_page(request,path):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden
+
     hierarchy_name,slash,section_path = path.partition('/')
     section = get_section_from_path(section_path,hierarchy=hierarchy_name)
 
@@ -396,6 +399,9 @@ def all_results(request):
 @login_required
 @rendered_with('main/edit_page.html')
 def edit_page(request,path):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden
+
     hierarchy_name,slash,section_path = path.partition('/')
 
     h = Hierarchy.objects.get(name=hierarchy_name)
@@ -414,6 +420,9 @@ def edit_page(request,path):
 
 @login_required
 def exporter(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden
+
     hierarchy = request.get_host()
     section = get_section_from_path('/', hierarchy=hierarchy)
     zip_filename = export_zip(section.hierarchy)
@@ -430,6 +439,9 @@ from zipfile import ZipFile
 @rendered_with("main/import.html")
 @login_required
 def importer(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden
+
     if request.method == "GET":
         return {}
     file = request.FILES['file']

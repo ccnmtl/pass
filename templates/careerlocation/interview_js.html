@@ -42,38 +42,28 @@
             <% for (var i=0; i < 3; i++, asked--) { %><% if (asked > 0) { %><span class="asked">&bull;</span><% } else { %><span>&bull;</span><% } %><% } %>
         <% } %>
     </div>
-    <h3><img src="<%= image %>"></img>&nbsp;&nbsp;<%= name %></h3>
+    <div class="title-container">
+        <img class="left" src="<%= image %>"></img>&nbsp;&nbsp;
+        <div class="left">
+            <div class="name"><%= name %></div>
+            <div class="title"><%= title %></div>
+        </div>
+        <div class="visualclear"></div>
+    </div>
+    <div class="actor-profile-container"><%= profile %></div>
     <div>
         <div class="interview left">
-
-            <div><%= profile %></div>
-            <br />
-
             <% if (select_stakeholder) { %>
                 <% if (questions.length > 0) { %>
                     <% if (remaining_stakeholders > 0) { %>
-                        <div>You must select <%= remaining_stakeholders %>  more stakeholders.</div>
-                        <br />
+                        <div class="select-actor-container">
+                            <div><b>Do you want to interview <%= name %>?</b></div>
 
-                        <div><b>Do you want to interview <%= name %>?</b></div>
-
-                        <div><button class="btn interview">Yes</button><button class="btn cancel">Not Right Now</button></div>
-                    <% } else { %>
-                        <div>You've already interviewed 4 stakeholders. Make sure you've asked them each 3 questions!</div>
-                        <br />
+                            <div><button class="btn interview">Yes</button><button class="btn cancel">Not Right Now</button></div>
+                        </div>
                     <% } %>
                 <% } %>
             <% } else { %>
-                <% if (remaining_questions > 0) { %>
-                    <div>You've asked <%= response_count %> questions. You must ask <%= remaining_questions %> more.</div>
-                <% } else { %>
-                    <div>You've completed your interview with <%= name %>.
-                        You can review the stakeholder's answers, but you can't ask any more questions.
-                        Make sure you've taken good notes!
-                    </div>
-                <% } %>
-                <br />
-
                 <div>
                     <% _.each(questions, function(q, index) { %>
                         <% var asked = false; %>
@@ -119,9 +109,9 @@
             <div class="popover-content">
                 <textarea class="notepad scrollable"><%= notes %></textarea>
             </div>
+            <div><button class="btn cancel close_profile">Done</button></div>
+            <div class="visualclear"></div>
         </div>
-        <div class="visualclear"></div>
-        <div><button class="btn cancel close_profile">Done</button></div>
         <div class="visualclear"></div>
     </div>
 </script>
@@ -134,6 +124,7 @@
                 <p><%= q.question %></p>
             </div>
         <% }); %>
+        <div class="visualclear"></div>
     </div>
     <div class="visualclear"></div>
     <div class="answer_container">
@@ -143,6 +134,7 @@
             <textarea></textarea>
             <div class="popover-done"><a class="btn disabled" href="#" data-id="<%=id%>">Done</a></div>
         </div>
+        <div class="visualclear"></div>
     </div>
     <b class="border-notch notch"></b>
     <b class="notch"></b>

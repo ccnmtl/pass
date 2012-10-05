@@ -34,6 +34,7 @@ class Actor(models.Model):
         return d[self.type] + ': ' + self.name
 
     name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, null=True, blank=True)
     type = models.CharField(max_length=2, choices=VIEW_CHOICES)
     profile = models.TextField(null=True, blank=True)
     questions = models.ManyToManyField(ActorQuestion, null=True, blank=True)

@@ -480,11 +480,7 @@
 
             this.toggleOverlay();
             var offset = jQuery("div.interview_state").position();
-            jQuery("div.profile")
-                .css({
-                    top: offset.top + "px"
-                })
-                .fadeIn("slow");
+            jQuery("div.profile").fadeIn("slow");
 
             this.delegateEvents();
         },

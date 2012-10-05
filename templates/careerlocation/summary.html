@@ -2,8 +2,6 @@
 {% load careerlocation_state %}
 
 <div class="career_location_summary">
-    <h2>Exercise Summary </h2>
-
     {% for actor in block.boardmembers.all %}
         <div class="summary_container">
         {% with forloop.counter as idx %}
