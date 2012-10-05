@@ -88,6 +88,7 @@
                 </li>
                 {% endfor %}
             </ul>
+            {% endblock %}
                 {% if request.user.is_superuser %}
                     {% if can_edit %}
                         {% ifequal section.get_absolute_url NONE  %}
@@ -103,7 +104,6 @@
                         {% endifequal %}
                     {% endif %}                   
                 {% endif %} <!-- superuser -->
-            {% endblock %}
         </div><!-- id="leftside/rightside" -->
     </div><!-- id="primarynav" -->
 {% endblock %}
