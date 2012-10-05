@@ -86,11 +86,11 @@
 
 {% block content %}
 
-{% ifequal section.label 'Interview Stakeholders' %}
+{% ifequal section.slug 'interview-stakeholders' %}
 {% else %}
-{% ifequal section.label 'Board Interview' %}
+{% ifequal section.slug 'board-interview' %}
 {% else %}
-{% ifequal section.label 'Select Practice Location' %}
+{% ifequal section.slug 'select-practice-location' %}
 {% else %}
 <h2>{{section.label}}</h2>
 {% endifequal %}
