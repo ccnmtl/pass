@@ -33,11 +33,9 @@
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
         <h3 class="popover-title">Help</h3>
         <div class="popover-content">
-            <p>
                 {% ifequal block.view "IV" %}
                     <h4>How to Interview Stakeholders</h4>
-                    <br />
-                    <ol>
+                     <ol>
                         <li> Click on stakeholder images within the map.</li>
                         <li> Read the stakeholder profiles.</li>
                         <li> Select 4 stakeholder to interview.</li>
@@ -47,7 +45,6 @@
                 {% else %}
                     {% ifequal block.view "LC" %}
                         <h4>How to Select a Practice Location</h4>
-                        <br />
                         <ol>
                             <li> Move your mouse over the map</li>
                             <li> Individual cells will highlight with your practice location icon</li>
@@ -59,7 +56,6 @@
                         </ol>
                     {% else %}
                         <h4>How to Complete Your Board Application</h4>
-                        <br />
                         <ol>
                             <li> Each boardmember question will queue up automatically</li>
                             <li> Read the boardmembers' questions carefully.</li>
@@ -70,7 +66,6 @@
                     {% endifequal %}
                 {% endifequal %}
 
-            </p>
             <div class="popover-close"><a class="btn" href="#">Close</a></div>
         </div>
 

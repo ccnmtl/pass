@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load render %}
+{% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
 
 {% block js %}
 
@@ -88,7 +89,7 @@
 
 {% ifequal section.slug 'interview-stakeholders' %}
 {% else %}
-{% ifequal section.slug 'board-interview' %}
+{% ifequal section.slug 'complete-board-application' %}
 {% else %}
 {% ifequal section.slug 'select-practice-location' %}
 {% else %}

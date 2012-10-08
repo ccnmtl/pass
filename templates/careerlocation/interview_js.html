@@ -59,7 +59,7 @@
                         <div class="select-actor-container">
                             <div><b>Do you want to interview <%= name %>?</b></div>
 
-                            <div><button class="btn interview">Yes</button><button class="btn cancel">Not Right Now</button></div>
+                            <div><button class="btn interview btn-info">Yes</button><button class="btn cancel btn-danger">Not Right Now</button></div>
                         </div>
                     <% } %>
                 <% } %>
@@ -72,7 +72,7 @@
                             <div class="accordion-heading">
                                 <div class="question"><%= q.question %></div>
                                 <% if (asked) { %>
-                                    <button class="btn ask" data-id="<%= q.id %>" <% if (current_question) { %> disabled="disabled" <% } %> >
+                                    <button class="btn btn-warning ask" data-id="<%= q.id %>" <% if (current_question) { %> disabled="disabled" <% } %> >
                                         Asked
                                     </button>
                                 <% } else if (remaining_questions <= 0) { %>
@@ -80,7 +80,7 @@
                                         No more questions
                                     </button>
                                 <% } else { %>
-                                    <button class="btn ask" data-id="<%= q.id %>" <% if (current_question) { %> disabled="disabled" <% } %>>
+                                    <button class="btn ask btn-info" data-id="<%= q.id %>" <% if (current_question) { %> disabled="disabled" <% } %>>
                                         Ask
                                     </button>
                                 <% } %>
