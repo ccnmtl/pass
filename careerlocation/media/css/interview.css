@@ -155,11 +155,11 @@ div.help_content {
 div.notepad_content .btn.right,
 div.map_layer_content .btn.right,
 div.help_content .btn.right {
-    margin: -43px 0px -43px 0px;
+    margin: -45px 0px -45px 0px;
 }
 
 div.map_layer_content .btn.right {
-    margin: -43px -2px -43px 0;
+    margin: -45px -2px -45px 0;
 }
 
 div.career_location_map_container .btn.right {
