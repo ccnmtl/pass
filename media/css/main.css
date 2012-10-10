@@ -1074,6 +1074,7 @@ h4#logo_uncharted {
     border: 0;
     background: url("/site_media/img/uncharted_logo.png") no-repeat scroll right top transparent;
     margin: 0;
+	padding: 0 !important;
 }
 
 .maintext {
