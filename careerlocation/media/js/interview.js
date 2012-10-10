@@ -211,7 +211,9 @@
             'click div.popover-done a.btn': 'onSubmitBoardQuestion',
             'click div.actor_state.inprogress': 'onShowActorProfile',
             'click div.actor_state.complete': 'onShowActorProfile',
-            'click table.location_grid.LC tr td': 'onSelectLocation'
+            'click table.location_grid.LC tr td': 'onSelectLocation',
+            'mouseover table.location_grid.LC tr td': 'onMouseOverLocation',
+            'mouseout table.location_grid.LC tr td': 'onMouseOutLocation'
         },
         initialize: function(options) {
             _.bindAll(this,
@@ -226,7 +228,9 @@
                 "onShowActorInterview",
                 "onHideActorProfile",
                 "onAskQuestion",
-                "onSelectLocation");
+                "onSelectLocation",
+                "onMouseOverLocation",
+                "onMouseOutLocation");
 
             this.state = new UserState({id: options.current_state_id});
             this.state.set("view_type", jQuery("#view_type").html());
@@ -558,6 +562,14 @@
                 jQuery(srcElement).parents('div.popover').toggle();
             }
 
+        },
+        onMouseOverLocation: function(evt) {
+            var srcElement = evt.srcElement || evt.target || evt.originalTarget;
+            jQuery(srcElement).addClass("hovered");
+        },
+        onMouseOutLocation: function(evt) {
+            var srcElement = evt.srcElement || evt.target || evt.originalTarget;
+            jQuery(srcElement).removeClass("hovered");
         },
         onSelectLocation: function(evt) {
             var srcElement = evt.srcElement || evt.target || evt.originalTarget;

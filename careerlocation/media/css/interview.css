@@ -387,7 +387,7 @@ table.location_grid tr td {
     width: 53px;
 }
 
-table.location_grid.LC tr td:hover {
+table.location_grid.LC tr td.hovered {
     background-color: #c9c9c9;
     opacity: .70;
     filter: Alpha(Opacity=70);
