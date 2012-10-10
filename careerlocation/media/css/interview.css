@@ -418,9 +418,9 @@ table.location_grid tr td.selected {
     background-repeat: no-repeat;
     background-position: center center;
     z-index: 1002;
-    opacity: 1;
-    -moz-opacity: 1;
-    filter: Alpha(Opacity=1);
+    opacity: 1.0;
+    -moz-opacity: 1.0;
+    filter: -;
     color: #e5e2df;
 }
 

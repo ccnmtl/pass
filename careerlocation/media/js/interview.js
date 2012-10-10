@@ -576,6 +576,12 @@
             var row_index = jQuery(srcElement).parent().index('tr');
             var col_index = jQuery(srcElement).index('tr:eq('+row_index+') td');
 
+            // Do this immediately. The whole save state trigger is slow in IE.
+            jQuery("table.location_grid tr td").removeClass("selected");
+            var selector = "table.location_grid tr:eq(" + row_index +
+                ") td:eq(" + col_index + ")";
+            jQuery(selector).addClass("selected");
+
             this.state.set({
                 "practice_location_row": row_index,
                 "practice_location_column": col_index
