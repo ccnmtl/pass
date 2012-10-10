@@ -247,7 +247,7 @@ div.profile div.question_state {
 
 div.question_state {
     margin-top: -15px;
-    margin-left: 9px;
+    margin-left: 11px;
     color: #a9a9a9;
 }
 
@@ -456,8 +456,11 @@ div.question_content {
     width: 90%;
 }
 
+div.question_content {
+    min-height: 40px;
+}
+
 div.question_content p {
-    background-color: #F6F6F6;
     margin: 0 0 0 0 !important;
 }
 
@@ -516,6 +519,11 @@ div#boardmember_question div.answer_content textarea {
 .user_answer,
 .recommended_answer {
     width: 325px;
+}
+
+.answer_container  h4 {
+    font-size: 16px;
+    padding: 0 0 10px !important;
 }
 
 h3.popover-title

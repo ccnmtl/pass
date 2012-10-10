@@ -408,9 +408,9 @@
                 var anchor = jQuery("a#next");
                 if (anchor.length < 1) {
                     // construct an anchor link
-                    var label = jQuery("span#next").html();
+                    var label = jQuery("#next").html();
                     var url = jQuery("#next_url").attr("value");
-                    jQuery("span#next").replaceWith('<a id="next" href="' + url + '">' + label + '</a>');
+                    jQuery("#next").replaceWith('<a id="next" href="' + url + '">' + label + '</a>');
 
                     // enable the subnav link too
                     var elts = jQuery('#secondary_navigation ul li div.disabled');
