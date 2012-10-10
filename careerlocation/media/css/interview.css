@@ -384,17 +384,20 @@ table.location_grid td {
 table.location_grid tr {
     height: 50px;
     z-index: 1001;
+    padding: 0;
+    margin: 0;
 }
 
 table.location_grid tr td {
     width: 53px;
     z-index: 1001;
-}
-
-table.location_grid tr td img.empty {
-    background-image: url('/site_media/img/empty.png');
-    background-repeat: no-repeat;
-    background-position: center center;
+    padding: 0;
+    margin: 0;
+    vertical-align: top;
+    line-height: 1em;
+    opacity: 0;
+    -moz-opacity: 0;
+    filter: Alpha(Opacity=0);
 }
 
 table.location_grid.LC tr td.hovered {
@@ -407,6 +410,7 @@ table.location_grid.LC tr td.hovered {
     background-repeat: no-repeat;
     background-position: center center;
     z-index: 1002;
+    color: #d1d0cf;
 }
 
 table.location_grid tr td.selected {
@@ -414,6 +418,10 @@ table.location_grid tr td.selected {
     background-repeat: no-repeat;
     background-position: center center;
     z-index: 1002;
+    opacity: 1;
+    -moz-opacity: 1;
+    filter: Alpha(Opacity=1);
+    color: #e5e2df;
 }
 
 div.boardmember_container {
