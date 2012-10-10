@@ -12,6 +12,7 @@
     position: absolute;
     background: #AAA;
     opacity: .70;
+    -moz-opacity:0.70;
     filter: Alpha(Opacity=70);
     width: 100%;
     height: 935px;
@@ -55,6 +56,7 @@
 
 .career_location_map_layer {
     opacity: .70;
+    -moz-opacity:0.70;
     filter: Alpha(Opacity=70);
     background: transparent;
 
@@ -381,26 +383,37 @@ table.location_grid td {
 
 table.location_grid tr {
     height: 50px;
+    z-index: 1001;
 }
 
 table.location_grid tr td {
     width: 53px;
+    z-index: 1001;
+}
+
+table.location_grid tr td img.empty {
+    background-image: url('/site_media/img/empty.png');
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 table.location_grid.LC tr td.hovered {
     background-color: #c9c9c9;
     opacity: .70;
+    -moz-opacity:0.70;
     filter: Alpha(Opacity=70);
     cursor: pointer;
     background-image: url('/site_media/img/practice_building.png');
     background-repeat: no-repeat;
     background-position: center center;
+    z-index: 1002;
 }
 
 table.location_grid tr td.selected {
     background-image: url('/site_media/img/practice_building.png');
     background-repeat: no-repeat;
     background-position: center center;
+    z-index: 1002;
 }
 
 div.boardmember_container {
@@ -414,6 +427,7 @@ div.boardmember_container div.left {
 div.boardmember.disabled {
     opacity: .50;
     filter: Alpha(Opacity=50);
+    -moz-opacity:0.50;
 }
 
 div.boardmember.disabled.complete {
