@@ -170,7 +170,7 @@ div.career_location_map_container .btn.right {
 
 div.actor_container {
     position: absolute;
-    z-index: 900;
+    z-index: 1000;
 }
 
 div.profile {

@@ -419,7 +419,10 @@
                     // enable the subnav link too
                     var elts = jQuery('#secondary_navigation ul li div.disabled');
                     for (var i = 0; i < elts.length; i++) {
-                        var text = jQuery(elts[i]).html().replace(/(\r\n|\n|\r)/gm,"").trim();
+                        var text = jQuery(elts[i]).html().replace(/(\r\n|\n|\r)/gm,"");
+			if (text.trim !== undefined) {
+			    text = text.trim();
+			}
                         if (label.search(text) === 0) {
                             jQuery(elts[i]).replaceWith('<div class="regular"><a href="' + url + '">' + text + '</a></div>');
                         }
@@ -623,14 +626,3 @@
         }
     });
 }(jQuery));
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pass',
-        'HOST': '',
-        'PORT': '',
-        'USER': '',
-        'PASSWORD': '',
-    }
-}

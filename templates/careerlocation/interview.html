@@ -184,13 +184,15 @@
         <div class="visualclear"></div>
         <div class="map_legend_container">
             <h3>Map Legends</h3>
+	    <div id="base_map_layer">{{block.base_layer.legend|safe}}</div>
+
             {% for layer in block.layers %}
                 <div id="map_legend_{{layer.id}}"
                      data-id="{{layer.id}}"
                      class="map_legend left"
                      style="display: none">
                     <h5>{{layer.display_name}}</h5>
-                    {{layer.legend}}
+                    {{layer.legend|safe}}
                 </div>
             {% endfor %}
             <div class="visualclear"></div>
