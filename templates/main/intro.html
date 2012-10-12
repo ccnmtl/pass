@@ -23,17 +23,18 @@
 
         <p>These modules are designed to orient you to populations across the lifespan so that you can consider how your career may align with your professional and personals goals.</p>
 
-        <p>The first of five modules focuses on the young children in the United States. </p>
+        <p>The first of five modules focuses on the young children in the United States.</p>
 
+        {%  if demographic_survey_complete %}
         <h3>Let's get started:</h3>
         <ul>
-        {%  if demographic_survey_complete %}
             <li>Module 1: <a href="/module-one/">Young Children</a></li>
             <li>Module 2: <a href="/module-two/">Adolescents</a></li>
-        {%  else  %}
-            <li><a href="/demographic/survey/">Register</a></li>
-        {%  endif %}
         </ul>
+        {%  else  %}
+        <p>Since this is your first time using this site, please fill out some information about yourself before you can access the modules.</p>
+        <p><a href="/demographic/survey/" class="btn btn-info btn-register">Register</a></p>
+        {%  endif %}
     </div>
 
 {% endblock %}

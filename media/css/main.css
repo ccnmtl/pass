@@ -253,7 +253,7 @@ a:visited
 	text-decoration: none;
 }
 
-#content a
+/*#content a
 {
 	color: #339999;
 	text-decoration: none;
@@ -276,7 +276,7 @@ a:visited
 	color: #f46b08;
 	text-decoration: none;
 }
-
+*/
 
 /* ***** Principal Blocks ***** */
 
@@ -1650,7 +1650,7 @@ body.editmode .mceEditor
 	line-height: 150% !important;
 }
 
-#content a.btn {
+#content .career_location a.btn {
     color: #000;
 }
 
@@ -1661,4 +1661,8 @@ body.editmode .mceEditor
 
 .outermost_pageblock_on_current_careermap_page .map-on {
     color: #F46B08 !important;
+}
+
+.btn-register {
+    color: #fff !important;
 }
