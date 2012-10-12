@@ -224,18 +224,10 @@
                 "renderBoardView",
                 "onSelectLayer",
                 "onChangeNotes",
-                "onChangeAnswer",
                 "onShowActorProfile",
                 "onShowActorInterview",
                 "onHideActorProfile",
                 "onAskQuestion",
-                "onCloseResponse",
-                "onToggleHelp",
-                "onToggleMapLayers",
-                "onToggleMap",
-                "onToggleNotepad",
-                "onTogglePopover",
-                "onSubmitBoardQuestion",
                 "onSelectLocation",
                 "onMouseOverLocation",
                 "onMouseOutLocation");
@@ -508,10 +500,9 @@
         onHideActorProfile: function(evt) {
             var self = this;
             this.toggleOverlay();
-            this.current_actor = null;
-            this.current_question = null;
             jQuery("div.profile").fadeOut("slow", function() {
                 jQuery(this).html("");
+                self.current_actor = null;
                 self.delegateEvents();
             });
         },
