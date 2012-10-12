@@ -422,15 +422,15 @@
                     // construct an anchor link
                     var label = jQuery("#next").html();
                     var url = jQuery("#next_url").attr("value");
-                    jQuery("#next").replaceWith('<a id="next" href="' + url + '">' + label + '</a>');
+                    jQuery("#next").replaceWith('<a id="next" class="pager_button" href="' + url + '">' + label + '</a>');
 
                     // enable the subnav link too
                     var elts = jQuery('#secondary_navigation ul li div.disabled');
                     for (var i = 0; i < elts.length; i++) {
                         var text = jQuery(elts[i]).html().replace(/(\r\n|\n|\r)/gm,"");
-			if (text.trim !== undefined) {
-			    text = text.trim();
-			}
+                        if (text.trim !== undefined) {
+                            text = text.trim();
+                        }
                         if (label.search(text) === 0) {
                             jQuery(elts[i]).replaceWith('<div class="regular"><a href="' + url + '">' + text + '</a></div>');
                         }

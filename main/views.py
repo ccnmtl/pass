@@ -9,6 +9,7 @@ from models import *
 from pagetree.models import Hierarchy
 from pagetree_export.exportimport import export_zip, import_zip
 from quizblock.models import Submission, Response
+from careerlocation.models import Actor, CareerLocationState, CareerLocationBlock
 from main.models import UserProfile
 import os
 import csv
@@ -222,11 +223,15 @@ def clean_header(s):
     return s
 
 class Column(object):
-    def __init__(self, hierarchy, question=None, answer=None):
+    def __init__(self, hierarchy, question=None, answer=None, actor=None, actor_question=None, location=None, notes=None):
         self.hierarchy = hierarchy
         self.question = question
         self.answer = answer
         self.module_name = self.hierarchy.get_top_level()[0].label
+        self.actor = actor
+        self.actor_question = actor_question
+        self.location = location
+        self.notes = notes
 
         if self.question:
             self._submission_cache = Submission.objects.filter(quiz=self.question.quiz)
@@ -238,6 +243,12 @@ class Column(object):
 
     def question_answer_id(self):
         return "%s_%s" % (self.question_id(), self.answer.id)
+
+    def actor_question_id(self):
+        return "%s_question_%s" % (self.hierarchy.id, self.actor_question.id)
+
+    def actor_answer_id(self):
+        return "_answer" % (self.actor_question_id())
 
     def user_value(self, user):
         if self.question:
@@ -258,16 +269,38 @@ class Column(object):
                         if a.value == r[0].value:
                             return a.id
 
-        return ''
+        a = CareerLocationState.objects.filter(user=self.user)
+        if len(a) > 0:
+            state = a[0]
 
+            if self.actor:
+                responses = state.responses.filter(actor=self.actor, question=self.actor_question)
+                if len(responses) > 0:
+                    return self.actor_question.id
+
+            if self.location:
+                columns = len(CareerLocationBlock.grid_columns)
+                return (state.practice_location_row * columns) + (state.practice_location_col + 1)
+
+        return ""
 
     def key_row(self):
         if self.question:
             row = [self.question_id(), self.module_name, self.question.question_type, clean_header(self.question.text)]
             if self.answer:
-                row.append(self.answer.id);
+                row.append(self.answer.id)
                 row.append(clean_header(self.answer.label))
-            return row
+        elif self.actor:
+            type = "single choice" if len(self.actor.questions) > 1 else "multiple choice"
+            row = [self.actor_id(), self.module_name, type, clean_header(self.actor_question.question)]
+            row.append = (self.actor_question.id)
+            row.append(clean_header(self.actor_question.answer))
+        elif self.location:
+            row = [ "location", self.module_name, "short text", self.location ]
+        elif self.notes:
+            row = [ "notes", self.module_name, "long text", self.notes ]
+
+        return row
 
     def header_column(self):
         if self.question and self.answer:
@@ -315,14 +348,21 @@ def all_results_key(request):
                     else:
                         columns.append(Column(hierarchy=h, question=q))
 
+            # stakeholders
+            for a in Actor.objects.filter(type="IV"):
+                for q in a.questions.all():
+                    columns.append(Column(hierarchy=h, actor=a, actor_question=q))
 
-            for p in s.pageblock_set.filter(content_type=counseling_type):
-                for t in p.block().topics.all():
-                    columns.append(Column(hierarchy=h, session=p.content_object, topic=t))
+            # practice location - cell number
+            columns.append(Column(hierarchy=h, location="Practice Location Grid Number"))
 
-            for p in s.pageblock_set.filter(content_type=referral_type):
-                for f in p.block().form_fields:
-                    columns.append(Column(hierarchy=h, session=p.content_object, field=f))
+            # boardmembers
+            for a in Actor.objects.filter(type="BD"):
+                for q in a.questions.all():
+                    columns.append(Column(hierarchy=h, actor=a, actor_question=q))
+
+            # notes
+            columns.append(Column(hierarchy=h, notes="Notes"))
 
     for column in columns:
         try:

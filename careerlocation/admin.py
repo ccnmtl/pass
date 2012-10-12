@@ -2,8 +2,17 @@ from careerlocation.models import *
 from django.contrib import admin
 
 admin.site.register(MapLayer)
-admin.site.register(ActorQuestion)
 admin.site.register(Actor)
+
+class ActorQuestionAdmin(admin.ModelAdmin):
+    class Meta:
+        model = ActorQuestion
+
+    search_fields = ["question", "answer"]
+    list_display = ("question", "answer")
+
+admin.site.register(ActorQuestion, ActorQuestionAdmin)
+
 
 class ActorResponseAdmin(admin.ModelAdmin):
     class Meta:
