@@ -11,6 +11,9 @@ VIEW_CHOICES = (
     ('RP', 'Practice Location Report'),
     )
 
+GRID_COLUMNS = 14
+GRID_ROWS = 8
+
 class MapLayer(models.Model):
     def __unicode__(self):
         return self.display_name
@@ -19,8 +22,8 @@ class MapLayer(models.Model):
     display_name = models.CharField(max_length=255)
     legend = models.TextField(null=True, blank=True)
     image = models.FileField(upload_to="layers/%Y/%m/%d/", null=True, blank=True)
-    z_index = models.IntegerField(default=999);
-    transparency = models.IntegerField(default=50);
+    z_index = models.IntegerField(default=999)
+    transparency = models.IntegerField(default=50)
 
 class ActorQuestion(models.Model):
     def __unicode__(self):
@@ -39,9 +42,9 @@ class Actor(models.Model):
     type = models.CharField(max_length=2, choices=VIEW_CHOICES)
     profile = models.TextField(null=True, blank=True)
     questions = models.ManyToManyField(ActorQuestion, null=True, blank=True)
-    left = models.IntegerField(null=True, blank=True);
-    top = models.IntegerField(null=True, blank=True);
-    order = models.IntegerField(null=True, blank=True);
+    left = models.IntegerField(null=True, blank=True)
+    top = models.IntegerField(null=True, blank=True)
+    order = models.IntegerField(null=True, blank=True)
     image = models.FileField(upload_to="layers/%Y/%m/%d/", null=True, blank=True)
 
 class ActorResponse(models.Model):
@@ -52,6 +55,30 @@ class ActorResponse(models.Model):
     actor = models.ForeignKey(Actor)
     question = models.ForeignKey(ActorQuestion)
     long_response = models.TextField(null=True, blank=True)
+
+
+class CareerLocationState(models.Model):
+    def __unicode__(self):
+        return self.user.username
+
+    user = models.ForeignKey(User, related_name="career_location_state")
+    layers = models.ManyToManyField(MapLayer, null=True, blank=True)
+    actors = models.ManyToManyField(Actor, null=True, blank=True)
+    responses = models.ManyToManyField(ActorResponse, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+    practice_location_row = models.IntegerField(null=True, blank=True)
+    practice_location_column = models.IntegerField(null=True, blank=True)
+
+    def get_response(self, question):
+        a = self.responses.filter(question=question)
+        if len(a) > 0 and len(a[0].long_response) > 0:
+            return a[0].long_response
+
+    def grid_cell(self):
+        if self.practice_location_row == None or self.practice_location_column == None:
+            return None
+
+        return (self.practice_location_row * GRID_COLUMNS) + (self.practice_location_column + 1)
 
 class CareerLocationBlock(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
@@ -67,8 +94,8 @@ class CareerLocationBlock(models.Model):
     stakeholders = Actor.objects.filter(type="IV")
     boardmembers = Actor.objects.filter(type="BD").order_by("?")
 
-    grid_columns = [0] * 14
-    grid_rows = [0] * 8
+    grid_columns = [0] * GRID_COLUMNS
+    grid_rows = [0] * GRID_ROWS
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -114,7 +141,7 @@ class CareerLocationBlock(models.Model):
             return False
 
         for actor in stakeholders:
-            r = state.responses.filter(actor=actor);
+            r = state.responses.filter(actor=actor)
             if len(r) < 3:
                 return False
 
@@ -129,7 +156,7 @@ class CareerLocationBlock(models.Model):
                 return False
 
             for actor in boardmembers:
-                r = state.responses.filter(actor=actor);
+                r = state.responses.filter(actor=actor)
 
                 if len(r) > 0 and len(r[0].long_response) < 1:
                     return False
@@ -137,7 +164,7 @@ class CareerLocationBlock(models.Model):
         return True
 
     def layers(self):
-        return MapLayer.objects.exclude(name="base");
+        return MapLayer.objects.exclude(name="base")
 
     def practice_location_report(self):
         cells = [0] * (len(self.grid_columns) * len(self.grid_rows))
@@ -152,31 +179,6 @@ class CareerLocationBlock(models.Model):
 class CareerLocationBlockForm(forms.ModelForm):
     class Meta:
         model = CareerLocationBlock
-
-class CareerLocationState(models.Model):
-    def __unicode__(self):
-        return self.user.username
-
-    user = models.ForeignKey(User, related_name="career_location_state")
-    layers = models.ManyToManyField(MapLayer, null=True, blank=True)
-    actors = models.ManyToManyField(Actor, null=True, blank=True)
-    responses = models.ManyToManyField(ActorResponse, null=True, blank=True)
-    notes = models.TextField(null=True, blank=True)
-    practice_location_row = models.IntegerField(null=True, blank=True)
-    practice_location_column = models.IntegerField(null=True, blank=True)
-
-    def get_response(self, question):
-        a = self.responses.filter(question=question)
-        if len(a) > 0 and len(a[0].long_response) > 0:
-            return a[0].long_response
-
-    def grid_cell(self):
-        if self.practice_location_row == None or self.practice_location_column == None:
-            return None
-
-        columns = len(CareerLocationBlock.grid_columns)
-        return (self.practice_location_row * columns) + (self.practice_location_column + 1)
-
 
 class CareerLocationSummaryBlock(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)

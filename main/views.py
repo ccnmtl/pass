@@ -9,7 +9,7 @@ from models import *
 from pagetree.models import Hierarchy
 from pagetree_export.exportimport import export_zip, import_zip
 from quizblock.models import Submission, Response
-from careerlocation.models import Actor, CareerLocationState, CareerLocationBlock
+from careerlocation.models import Actor, CareerLocationState
 from main.models import UserProfile
 import os
 import csv
