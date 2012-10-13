@@ -626,24 +626,26 @@ h4
 	font-weight: bold !important;
 }
 
-/*h2
-{
-	margin: 0 0 24px 0 !important;
-	font-size: 18px !important;
-	line-height: 22px !important;
-	font-weight: bold !important;
+.career_location.RP a#toggle_notepad,
+.career_location.RP a#toggle_help,
+.career_location.RP div.basic_instructions,
+.career_location.RP div.unlock_instructions,
+.career_location.RP div.interview_state,
+.career_location.RP div.boardmember_container,
+.career_location.RP div.actor_container {
+    display: none;
 }
 
-h5
-{
-	font-size: 14px !important;
+.career_location.RP div.map_layer_content {
+    right: 4px;
 }
 
-h6
-{
-	padding: 12px 0 0 0 !important;
-	font-size: 14px !important;
-	font-style: italic;
+.career_location.RP table.location_grid tr td {
+    opacity: 1.0;
+    -moz-opacity: 1.0;
+    filter: -;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 18px;
+    font-weight: bold;
 }
-
-*/

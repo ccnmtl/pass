@@ -1,7 +1,8 @@
 {% load smartif %}
+{% load careerlocation_state %}
 
 
-<div class="career_location" style="display: none">
+<div class="career_location {{block.view}}" style="display: none">
     <div id="view_type" style="display: none">{{block.view}}</div>
     <div class="career_location_overlay" style="display: none"></div>
 
@@ -11,13 +12,13 @@
         <h2 class="left">
             {% ifequal block.view "IV" %}
                 Interview Stakeholders
-            {% else %}
-                {% ifequal block.view "LC" %}
-                    Select a Practice Location
-                {% else %}
-                    Complete Your Board Application
-                {% endifequal %}
-            {% endifequal %}
+            {% else %}{% ifequal block.view "LC" %}
+                Select a Practice Location
+            {% else %}{% ifequal block.view "BD" %}
+                Complete Your Board Application
+            {% else %}{% ifequal block.view "RP" %}
+                Practice Location Report
+            {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
         </h2>
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
         {% ifequal block.view "BD" %}
@@ -106,6 +107,7 @@
         {% endifequal %}
     </div>
 
+    {% ifnotequal block.view "RP" %}
     <div class="unlock_instructions well left alert-success" style="display: none">
         {% ifequal block.view "IV" %}
             <b>Great work!</b> You've completed your interviews.<br />Click the "Select Practice Location" link to continue.
@@ -118,6 +120,7 @@
             {% endifequal %}
         {% endifequal %}
     </div>
+    {% endifnotequal %}
 
     <div class="interview_state" {% ifequal block.view "BD" %} style="display: none" {% endifequal %}>
         {%  for x in block.max_stakeholders %}
@@ -149,15 +152,35 @@
         {% endifequal %}
 
         {% ifnotequal block.view "IV" %}
-            <table class="location_grid {{block.view}}">
-                {% for i in block.grid_rows %}
-                    <tr>
-                        {% for j in block.grid_columns %}
-                            <td>............<br/><br/>............</td>
+            {% ifequal block.view "RP" %}
+                {% with block.practice_location_report as cells %}
+                    <table class="location_grid {{block.view}}">
+                        {% for i in block.grid_rows %}
+                            {% with forloop.counter0 as outerloop %}
+                                <tr>
+                                    {% for j in block.grid_columns %}
+                                        <td>
+                                            {% get_location_count block cells outerloop forloop.counter0 %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endwith %}
                         {% endfor %}
-                    </tr>
-                {% endfor %}
-            </table>
+                    </table>
+                {% endwith %}
+            {% else %}
+                <table class="location_grid {{block.view}}">
+                    {% for i in block.grid_rows %}
+                        {% with forloop.counter0 as outerloop %}
+                            <tr>
+                                {% for j in block.grid_columns %}
+                                    <td>............<br/><br/>............</td>
+                                {% endfor %}
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                </table>
+            {% endifequal %}
         {% endifnotequal %}
 
         <div class="career_location_map">

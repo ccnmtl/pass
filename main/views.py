@@ -116,7 +116,15 @@ def module_two(request,path):
     return process_page(request,path,hierarchy)
 
 @login_required
-@rendered_with('main/page.html')
+@rendered_with('main/admin_page.html')
+def reports(request,path):
+    if not request.user.is_staff:
+        return HttpResponseForbidden
+
+    hierarchy = get_hierarchy('reports')
+    return process_page(request,path,hierarchy)
+
+@login_required
 def process_page(request,path,hierarchy):
     section = get_section_from_path(path,hierarchy=hierarchy)
 
@@ -238,17 +246,27 @@ class Column(object):
             self._response_cache = Response.objects.filter(question=self.question)
             self._answer_cache = self.question.answer_set.all()
 
+        if self.actor or self.location or self.notes:
+            self._state_cache = CareerLocationState.objects.all()
+
     def question_id(self):
         return "%s_question_%s" % (self.hierarchy.id, self.question.id)
 
     def question_answer_id(self):
         return "%s_%s" % (self.question_id(), self.answer.id)
 
-    def actor_question_id(self):
-        return "%s_question_%s" % (self.hierarchy.id, self.actor_question.id)
+    def actor_id(self):
+        type = "stakeholder" if self.actor.type == "IV" else "boardmember"
+        return "%s_%s_%s" % (self.hierarchy.id, type, self.actor.id)
 
     def actor_answer_id(self):
-        return "_answer" % (self.actor_question_id())
+        return "%s_%s" % (self.actor_id(), self.actor_question.id)
+
+    def location_id(self):
+        return "%s_careerlocation_location" % (self.hierarchy.id)
+
+    def notes_id(self):
+        return "%s_careerlocation_notes" % (self.hierarchy.id)
 
     def user_value(self, user):
         if self.question:
@@ -269,18 +287,23 @@ class Column(object):
                         if a.value == r[0].value:
                             return a.id
 
-        a = CareerLocationState.objects.filter(user=self.user)
-        if len(a) > 0:
-            state = a[0]
+        else:
+            a = self._state_cache.filter(user=user)
+            if len(a) > 0:
+                state = a[0]
 
-            if self.actor:
-                responses = state.responses.filter(actor=self.actor, question=self.actor_question)
-                if len(responses) > 0:
-                    return self.actor_question.id
-
-            if self.location:
-                columns = len(CareerLocationBlock.grid_columns)
-                return (state.practice_location_row * columns) + (state.practice_location_col + 1)
+                if self.actor and self.actor_question:
+                    responses = state.responses.filter(actor=self.actor, question=self.actor_question)
+                    if len(responses) > 0:
+                        return self.actor_question.id
+                elif self.actor:
+                    responses = state.responses.filter(actor=self.actor)
+                    if len(responses) > 0:
+                        return responses[0].long_response
+                elif self.location:
+                    return state.grid_cell()
+                elif self.notes:
+                    return state.notes
 
         return ""
 
@@ -291,14 +314,16 @@ class Column(object):
                 row.append(self.answer.id)
                 row.append(clean_header(self.answer.label))
         elif self.actor:
-            type = "single choice" if len(self.actor.questions) > 1 else "multiple choice"
-            row = [self.actor_id(), self.module_name, type, clean_header(self.actor_question.question)]
-            row.append = (self.actor_question.id)
-            row.append(clean_header(self.actor_question.answer))
+            if len(self.actor.questions.all()) > 1:
+                row = [self.actor_id(), self.module_name, "multiple choice", clean_header(self.actor.name)]
+                row.append(self.actor_question.id)
+                row.append(clean_header(self.actor_question.question))
+            else:
+                row = [self.actor_id(), self.module_name, "short text", clean_header(self.actor_question.question)]
         elif self.location:
-            row = [ "location", self.module_name, "short text", self.location ]
+            row = [ self.location_id(), self.module_name, "grid cell", self.location ]
         elif self.notes:
-            row = [ "notes", self.module_name, "long text", self.notes ]
+            row = [ self.notes_id(), self.module_name, "long text", self.notes ]
 
         return row
 
@@ -307,6 +332,14 @@ class Column(object):
             return [ self.question_answer_id() ]
         elif self.question:
             return [ self.question_id() ]
+        elif self.actor and self.actor_question:
+            return [ self.actor_answer_id() ]
+        elif self.actor:
+            return [ self.actor_id() ]
+        elif self.location:
+            return [ self.location_id() ]
+        elif self.notes:
+            return [ self.notes_id() ]
 
 @login_required
 def all_results_key(request):
@@ -334,6 +367,7 @@ def all_results_key(request):
     writer.writerow(headers)
 
     quiz_type = ContentType.objects.filter(name='quiz')
+    careerlocation_type = ContentType.objects.filter(name='career location block')
 
     columns = []
     for h in Hierarchy.objects.all():
@@ -348,21 +382,24 @@ def all_results_key(request):
                     else:
                         columns.append(Column(hierarchy=h, question=q))
 
-            # stakeholders
-            for a in Actor.objects.filter(type="IV"):
-                for q in a.questions.all():
-                    columns.append(Column(hierarchy=h, actor=a, actor_question=q))
 
-            # practice location - cell number
-            columns.append(Column(hierarchy=h, location="Practice Location Grid Number"))
+            for p in s.pageblock_set.filter(content_type=careerlocation_type):
+                if p.block().view == "IV":
+                    # career location state
+                    for a in p.block().stakeholders:
+                        for q in a.questions.all():
+                            columns.append(Column(hierarchy=h, actor=a, actor_question=q))
+                elif p.block().view == "LC":
+                    # practice location - cell number
+                    columns.append(Column(hierarchy=h, location="Practice Location Grid Number"))
+                elif p.block().view == "BD":
+                    # boardmembers
+                    for a in Actor.objects.filter(type="BD").order_by("order"):
+                        for q in a.questions.all():
+                            columns.append(Column(hierarchy=h, actor=a, actor_question=q))
 
-            # boardmembers
-            for a in Actor.objects.filter(type="BD"):
-                for q in a.questions.all():
-                    columns.append(Column(hierarchy=h, actor=a, actor_question=q))
-
-            # notes
-            columns.append(Column(hierarchy=h, notes="Notes"))
+                    # notes
+                    columns.append(Column(hierarchy=h, notes="Interview Notes"))
 
     for column in columns:
         try:
@@ -401,6 +438,7 @@ def all_results(request):
         return dict()
 
     quiz_type = ContentType.objects.filter(name='quiz')
+    careerlocation_type = ContentType.objects.filter(name='career location block')
 
     columns = []
     for h in Hierarchy.objects.all():
@@ -414,6 +452,24 @@ def all_results(request):
                             columns.append(Column(hierarchy=h, question=q, answer=a))
                     else:
                         columns.append(Column(hierarchy=h, question=q))
+
+            for p in s.pageblock_set.filter(content_type=careerlocation_type):
+                if p.block().view == "IV":
+                    # career location state
+                    for a in p.block().stakeholders:
+                        for q in a.questions.all():
+                            columns.append(Column(hierarchy=h, actor=a, actor_question=q))
+                elif p.block().view == "LC":
+                    # practice location - cell number
+                    columns.append(Column(hierarchy=h, location="Practice Location Grid Number"))
+                elif p.block().view == "BD":
+                    # boardmembers
+                    for a in Actor.objects.filter(type="BD").order_by("order"):
+                        columns.append(Column(hierarchy=h, actor=a))
+
+                    # notes
+                    columns.append(Column(hierarchy=h, notes="Interview Notes"))
+
 
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=pass_responses.csv'
@@ -541,4 +597,3 @@ def clear_state(request):
     careerlocation.models.CareerLocationState.objects.filter(user=request.user).delete()
 
     return HttpResponseRedirect("/")
-

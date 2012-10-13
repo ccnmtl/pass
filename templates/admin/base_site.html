@@ -7,8 +7,11 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="/media/css/base.css" />
 
+
     <link rel="stylesheet" href="/site_media/css/admin.css" type="text/css" media="all" />
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" />
+
+    {% block css %}{% endblock %}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
@@ -66,6 +69,8 @@
         });
     </script>
 
+    {% block js %}{% endblock %}
+
 {% endblock %}
 
 {% block branding %}
@@ -73,3 +78,4 @@
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
+

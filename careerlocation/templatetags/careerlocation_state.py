@@ -1,5 +1,5 @@
 from django import template
-from careerlocation.models import CareerLocationState
+from careerlocation.models import CareerLocationState, CareerLocationBlock
 register = template.Library()
 
 @register.filter('notepad')
@@ -43,3 +43,30 @@ def get_user_response(parser, token):
 
     return GetUserResponse(user, question)
 
+
+class GetLocationCount(template.Node):
+    def __init__(self, block, cells, row, column):
+        self.block = template.Variable(block)
+        self.cells = template.Variable(cells)
+        self.row = template.Variable(row)
+        self.column = template.Variable(column)
+
+
+    def render(self, context):
+        b = self.block.resolve(context)
+        c = self.cells.resolve(context)
+        x = self.column.resolve(context)
+        y = self.row.resolve(context)
+
+        columns = len(CareerLocationBlock.grid_columns)
+        idx = (y * columns) + x
+        return c[idx] if c[idx] else ""
+
+@register.tag('get_location_count')
+def get_location_count(parser, token):
+    block = token.split_contents()[1:][0]
+    cells = token.split_contents()[1:][1]
+    row = token.split_contents()[1:][2]
+    column = token.split_contents()[1:][3]
+
+    return GetLocationCount(block, cells, row, column)

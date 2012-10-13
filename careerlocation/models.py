@@ -8,6 +8,7 @@ VIEW_CHOICES = (
     ('IV', 'Interview Stakeholders'),
     ('LC', 'Select Practice Location'),
     ('BD', 'Complete Board Application'),
+    ('RP', 'Practice Location Report'),
     )
 
 class MapLayer(models.Model):
@@ -51,24 +52,6 @@ class ActorResponse(models.Model):
     actor = models.ForeignKey(Actor)
     question = models.ForeignKey(ActorQuestion)
     long_response = models.TextField(null=True, blank=True)
-
-
-class CareerLocationState(models.Model):
-    def __unicode__(self):
-        return self.user.username
-
-    user = models.ForeignKey(User, related_name="career_location_state")
-    layers = models.ManyToManyField(MapLayer, null=True, blank=True)
-    actors = models.ManyToManyField(Actor, null=True, blank=True)
-    responses = models.ManyToManyField(ActorResponse, null=True, blank=True)
-    notes = models.TextField(null=True, blank=True)
-    practice_location_row = models.IntegerField(null=True, blank=True)
-    practice_location_column = models.IntegerField(null=True, blank=True)
-
-    def get_response(self, question):
-        a = self.responses.filter(question=question)
-        if len(a) > 0 and len(a[0].long_response) > 0:
-            return a[0].long_response
 
 class CareerLocationBlock(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
@@ -156,9 +139,44 @@ class CareerLocationBlock(models.Model):
     def layers(self):
         return MapLayer.objects.exclude(name="base");
 
+    def practice_location_report(self):
+        cells = [0] * (len(self.grid_columns) * len(self.grid_rows))
+
+        for state in CareerLocationState.objects.all():
+            grid_cell = state.grid_cell()
+            if grid_cell:
+                cells[grid_cell - 1] += 1
+
+        return cells
+
 class CareerLocationBlockForm(forms.ModelForm):
     class Meta:
         model = CareerLocationBlock
+
+class CareerLocationState(models.Model):
+    def __unicode__(self):
+        return self.user.username
+
+    user = models.ForeignKey(User, related_name="career_location_state")
+    layers = models.ManyToManyField(MapLayer, null=True, blank=True)
+    actors = models.ManyToManyField(Actor, null=True, blank=True)
+    responses = models.ManyToManyField(ActorResponse, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+    practice_location_row = models.IntegerField(null=True, blank=True)
+    practice_location_column = models.IntegerField(null=True, blank=True)
+
+    def get_response(self, question):
+        a = self.responses.filter(question=question)
+        if len(a) > 0 and len(a[0].long_response) > 0:
+            return a[0].long_response
+
+    def grid_cell(self):
+        if self.practice_location_row == None or self.practice_location_column == None:
+            return None
+
+        columns = len(CareerLocationBlock.grid_columns)
+        return (self.practice_location_row * columns) + (self.practice_location_column + 1)
+
 
 class CareerLocationSummaryBlock(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
