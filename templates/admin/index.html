@@ -12,6 +12,18 @@
 {% block content %}
     <div id="content-main">
 
+        <div class="module">
+            <h2>{% trans 'Reports' %}</h2>
+            <table>
+                <tr>
+                    <th scope="row"><a href="/admin/allresults/">All Activity Results</a></th>
+                </tr>
+                <tr>
+                    <th scope="row"><a href="/admin/reports/career-location-report/">Practice Location Visualization</a></th>
+                </tr>
+            </table>
+        </div>
+
         {% if app_list %}
             {% for app in app_list %}
                 <div class="module">
@@ -42,19 +54,13 @@
                 </div>
             {% endfor %}
         {% else %}
-            <p>{% trans "You don't have permission to edit anything." %}</p>
+
         {% endif %}
     </div>
 {% endblock %}
 
 {% block sidebar %}
     <div id="content-related">
-        <div class="module">
-            <h2>{% trans 'Reports' %}</h2>
-            <h3><a href="/admin/allresults/">All Results</a></h3>
-            <h3><a href="/admin/reports/career-location-report/">Practice Location</a></h3>
-        </div>
-        <br />
         <div class="module" id="recent-actions-module">
 
 
