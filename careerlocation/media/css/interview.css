@@ -330,6 +330,7 @@ div.accordion-body button.done {
     float: right;
     width: 25%;
     margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 div.interview.left {
@@ -559,7 +560,7 @@ div#boardmember_question div.answer_content div {
 }
 
 div#boardmember_question div.answer_content textarea {
-    width: 703px;
+    width: 690px;
     height: 100px;
     resize: none
 }

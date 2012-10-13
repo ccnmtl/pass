@@ -208,7 +208,7 @@
             'click #toggle_map': 'onToggleMap',
             'click #toggle_notepad': 'onToggleNotepad',
             'click div.popover-close a.btn': 'onTogglePopover',
-            'click div.popover-done a.btn': 'onSubmitBoardQuestion',
+            'click div.popover-done button.btn': 'onSubmitBoardQuestion',
             'click div.actor_state.inprogress': 'onShowActorProfile',
             'click div.actor_state.complete': 'onShowActorProfile',
             'click table.location_grid.LC tr td': 'onSelectLocation',
@@ -379,7 +379,9 @@
                 if (actor !== undefined) {
                     var response = this.state.get("responses").getResponsesByActor(actor);
                     if (response.length > 0) {
-                        jQuery(b).removeClass("selected", "fast").addClass("complete disabled");
+                        jQuery(b).removeClass("selected", "fast", function() {
+                            jQuery(this).addClass("complete disabled");
+                        });
                         complete++;
                     } else {
                         jQuery(b).addClass("selected", "fast", function() {
@@ -395,6 +397,8 @@
                             jQuery("#boardmember_question b.notch").css("left", left + "px");
 
                             jQuery("#boardmember_question .answer_content textarea").focus();
+
+                            jQuery("div.popover-done button.btn").button();
                         }, 100);
                         break;
                     }
@@ -611,6 +615,7 @@
         onSubmitBoardQuestion: function(evt) {
             var self = this;
             var srcElement = evt.srcElement || evt.target || evt.originalTarget;
+            jQuery(srcElement).button('loading');
 
             var answer = jQuery("#boardmember_question").find("div.answer_content textarea").val();
             if (answer.length > 0) {

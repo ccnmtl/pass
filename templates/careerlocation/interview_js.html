@@ -61,6 +61,8 @@
 
                             <div><button class="btn interview btn-info">Yes</button><button class="btn cancel btn-danger">Not Right Now</button></div>
                         </div>
+                    <% } else { %>
+                        <div><br /><b>You've already selected four stakeholders.</b></div>
                     <% } %>
                 <% } %>
             <% } else { %>
@@ -132,7 +134,9 @@
         <div class="answer_content">
             <div>Answer the boardmember's question, then click Done to continue.</div>
             <textarea></textarea>
-            <div class="popover-done"><a class="btn disabled" href="#" data-id="<%=id%>">Done</a></div>
+            <div class="popover-done">
+                <button data-id="<%=id%>" type="button" class="btn btn-info disabled" data-complete-text="Done" data-loading-text="Saving...">Done</button>
+            </div>
         </div>
         <div class="visualclear"></div>
     </div>
