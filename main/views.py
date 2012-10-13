@@ -357,7 +357,7 @@ def all_results_key(request):
         answerText
     """
 
-    if not request.user.is_superuser:
+    if not request.user.is_staff:
         return HttpResponseForbidden
 
     response = HttpResponse(mimetype='text/csv')
@@ -431,7 +431,7 @@ def all_results(request):
                 * Unanswered fields represented as an empty cell
     """
 
-    if not request.user.is_superuser:
+    if not request.user.is_staff:
         return HttpResponseForbidden
 
     if not request.GET.get('format','html') == 'csv':
