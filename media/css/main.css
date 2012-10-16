@@ -753,11 +753,15 @@ a:visited
 
 /* Case quizzes */
 
-.cases
-{
-	margin: 1em 0;
-	padding: 0;
-	border: 1px solid #999;
+.cases {
+  min-height: 20px;
+  padding: 3px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
 }
 
 .casetitle
@@ -767,6 +771,12 @@ a:visited
 	padding: 5px 10px;
 	border: 0;
 	font-weight: bold;
+  -webkit-border-top-left-radius: 4px;
+     -moz-border-top-left-radius: 4px;
+          border-top-left-radius: 4px;
+  -webkit-border-top-right-radius: 4px;
+     -moz-border-top-right-radius: 4px;
+          border-top-right-radius: 4px;
 }
 
 .casecontent
@@ -786,7 +796,11 @@ a:visited
 
 .cases li
 {
-	margin: 2px 0;
+	margin: 3px 0;
+}
+
+.cases textarea {
+    width: 90% !important;
 }
 
 .casesanswerdisplay
@@ -1665,4 +1679,19 @@ body.editmode .mceEditor
 
 .btn-register {
     color: #fff !important;
+}
+
+.cases {
+  min-height: 20px;
+  padding: 3px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    margin: 3px 5px 3px 0px !important;
 }
