@@ -2,22 +2,27 @@
 {% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
 {% block widthtype %}fixed no_bootstrap{% endblock %}
 {% block title %}{{section.label}} [VIEW RESPONSES]{% endblock %}
-{% block sidenav %}
-	<!-- ###### Secondary Navigation ###### -->
-	<div id="secondary_navigation">
-		<div id="fadetop"></div>
-		<div class="block">
-			<h3>Sections</h3>
-{% with "/instructor" as menu_base %}
-{% include "main/menu.html" %}
-{% endwith %}
-		</div><!-- div id="block" -->
-		<div id="fadebottom"></div>
-	</div><!-- div id="secondary_navigation" -->
-{% endblock %}
 
 
 {% block projectbanner %}{% endblock %}
+
+{% block primarynav %}
+    {{ block.super }}
+
+    <!-- ###### Secondary Navigation ###### -->
+    <div id="secondary_navigation" style="display: none">
+        <div class="block">
+            {% if module.get_children %}
+                {% with "/edit" as menu_base %}
+                    {% include "main/menu.html" %}
+                {% endwith %}
+            {% endif %}
+        </div><!-- div id="block" -->
+    </div><!-- div id="secondary_navigation" -->
+{% endblock %}
+
+{% block sidenav %}
+{% endblock %}
 
 
 {% block content %}

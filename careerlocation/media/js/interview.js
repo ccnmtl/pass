@@ -526,6 +526,7 @@
             var thisAnswer = jQuery(srcElement).parent().next();
             jQuery(thisAnswer).show('fast');
             jQuery(".btn.ask").attr("disabled", "disabled");
+            jQuery(".btn.done").button('loading');
 
             this.current_question = this.current_actor.get("questions").getByDataId(jQuery(srcElement).data("id"));
 
@@ -539,6 +540,7 @@
                     success: function() {
                         self.state.get("responses").add(response);
                         self.state.save();
+                        jQuery(".btn.done").removeAttr("disabled");
                     }
                 });
             }
