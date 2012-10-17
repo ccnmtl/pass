@@ -1738,3 +1738,7 @@ body.editmode .mceEditor
 input[type="radio"], input[type="checkbox"] {
     margin: 3px 5px 3px 0px !important;
 }
+
+.module_list li {
+    padding: 5px 0;
+}
