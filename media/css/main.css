@@ -1724,17 +1724,6 @@ body.editmode .mceEditor
     color: #fff !important;
 }
 
-.cases {
-  min-height: 20px;
-  padding: 3px;
-  margin-bottom: 20px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
-}
-
 input[type="radio"], input[type="checkbox"] {
     margin: 3px 5px 3px 0px !important;
 }
