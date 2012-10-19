@@ -39,18 +39,25 @@
                      <ol>
                         <li> Click on stakeholder images within the map.</li>
                         <li> Read the stakeholder profiles.</li>
-                        <li> Select 4 stakeholder to interview.</li>
+                        <li> Select 4 stakeholders to interview.</li>
                         <li> Ask each stakeholder 3 questions.</li>
                         <li> Take notes!</li>
+                    </ol>
+
+                    <h4>How to Use the Map</h4>
+                    <ol>
+                        <li> Click "Map Layers" to display additional information.</li>
+                        <li> Check the boxes next to each layer to turn it on or off.</li>
+                        <li> Use this information to help form your conclusion.</li>
                     </ol>
                 {% else %}
                     {% ifequal block.view "LC" %}
                         <h4>How to Select a Practice Location</h4>
                         <ol>
-                            <li> Move your mouse over the map</li>
-                            <li> Individual cells will highlight with your practice location icon</li>
+                            <li> Move your mouse over the map.</li>
+                            <li> You will see a red star as you highlight individual cells.</li>
                             <li> Click the Map Layers button to turn on/off map information.</li>
-                            <li> User your notes to help make a decision.</li>
+                            <li> Use your notes to help make a decision.</li>
                             <li> When you're ready, click on a cell to select your practice location.</li>
                             <li> Change the location by clicking on other cells.</li>
                             <li> Continue on by clicking the "Complete Board Application" link.</li>
@@ -58,11 +65,11 @@
                     {% else %}
                         <h4>How to Complete Your Board Application</h4>
                         <ol>
-                            <li> Each boardmember question will queue up automatically</li>
+                            <li> Each boardmember question will queue up automatically.</li>
                             <li> Read the boardmembers' questions carefully.</li>
-                            <li> Type in a thoughtful reply.</li>
-                            <li> Click the Done button when you're finished.</li>
-                            <li> When asked a question from each boardmember, click the "Summary" link to continue</li>
+                            <li> Answer to the best of your knowledge.</li>
+                            <li> Click the "Done" button only when you're finished answering. You cannot go back to change your response.</li>
+                            <li> When you've answer all the questions, click "Activity Summary" to continue.</li>
                         </ol>
                     {% endifequal %}
                 {% endifequal %}
@@ -97,12 +104,13 @@
 
     <div class="basic_instructions well left alert-info">
         {% ifequal block.view "IV" %}
-            Click on the stakeholder avatar on the map to view profiles.<br />Select 4 stakeholders to interview. Ask each person 3 questions.
+            Click on stakeholders to view their profiles. You only have time to interview 4 of them, and ask 3 questions each. Turn on "Map Layers" to help gather information.
         {% else %}
             {% ifequal block.view "LC" %}
                 Click a grid cell to select your ideal practice location.
             {% else %}
-                Answer all questions from the board members. You may consult your notes and the map for reference.
+                Answer the boardmembers' questions, using your notes and map as reference.
+                Click the "Done" button only when you're finished answering. You cannot go back to change your response.
             {% endifequal %}
         {% endifequal %}
     </div>
