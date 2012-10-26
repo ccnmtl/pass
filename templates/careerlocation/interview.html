@@ -15,7 +15,7 @@
             {% else %}{% ifequal block.view "LC" %}
                 Select a Practice Location
             {% else %}{% ifequal block.view "BD" %}
-                Complete Your Board Application
+                Board of Director's Meeting
             {% else %}{% ifequal block.view "RP" %}
                 Practice Location Report
             {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
@@ -63,7 +63,7 @@
                             <li> Continue on by clicking the "Complete Board Application" link.</li>
                         </ol>
                     {% else %}
-                        <h4>How to Complete Your Board Application</h4>
+                        <h4>How To Present at the Board of Director's Meeting</h4>
                         <ol>
                             <li> Each boardmember question will queue up automatically.</li>
                             <li> Read the boardmembers' questions carefully.</li>
@@ -107,7 +107,8 @@
             Click on stakeholders to view their profiles. You only have time to interview 4 of them, and ask 3 questions each. Turn on "Map Layers" to help gather information.
         {% else %}
             {% ifequal block.view "LC" %}
-                Click a grid cell to select your ideal practice location.
+                Please make your site recommendation for your oral health program.<br />
+                Move your mouse over the map, then click to select a site.
             {% else %}
                 Answer the boardmembers' questions, using your notes and map as reference.
                 Click the "Done" button only when you're finished answering. You cannot go back to change your response.
@@ -121,7 +122,7 @@
             <b>Great work!</b> You've completed your interviews.<br />Click the "Select Practice Location" link to continue.
         {% else %}
             {% ifequal block.view "LC" %}
-                <b>Excellent!</b> You've selected your practice location.<br />
+                <b>Excellent!</b> You've selected a site recommendation for your oral health program.
                 Continue on to complete your board application.
             {% else %}
                 <b>All set!</b> You've answered ALL the boardmembers' questions. Continue on to see how you did.
