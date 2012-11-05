@@ -525,12 +525,12 @@
 
             var thisAnswer = jQuery(srcElement).parent().next();
             jQuery(thisAnswer).show('fast');
-            jQuery(".btn.ask").attr("disabled", "disabled");
-            jQuery(".btn.done").button('loading');
 
             this.current_question = this.current_actor.get("questions").getByDataId(jQuery(srcElement).data("id"));
 
             if (!this.state.isQuestionAnswered(this.current_actor, this.current_question)) {
+                jQuery(".btn.ask").attr("disabled", "disabled");
+                jQuery(".btn.done").button('loading');
                 var response = new ActorResponse();
                 response.set("user", this.state.get("user"));
                 response.set("actor", this.current_actor);
