@@ -207,6 +207,7 @@
             'click #toggle_map_layers': 'onToggleMapLayers',
             'click #toggle_map': 'onToggleMap',
             'click #toggle_notepad': 'onToggleNotepad',
+            'click div.popover-close a.btn.notepad': 'onCloseNotepad',
             'click div.popover-close a.btn': 'onTogglePopover',
             'click div.popover-done button.btn': 'onSubmitBoardQuestion',
             'click div.actor_state.inprogress': 'onShowActorProfile',
@@ -448,7 +449,6 @@
             var srcElement = evt.srcElement || evt.target || evt.originalTarget;
             var notes = jQuery(srcElement).val();
             this.state.set("notes", notes);
-            this.state.save();
 
             // update any other notepads
             jQuery("textarea.notepad").not(srcElement).val(notes);
@@ -511,6 +511,7 @@
         },
         onHideActorProfile: function(evt) {
             var self = this;
+            this.state.save();
             this.toggleOverlay();
             this.current_actor = null;
             this.current_question = null;
@@ -570,6 +571,9 @@
             this.toggleOverlay();
             jQuery('div.notepad_content').toggle();
         },
+        onCloseNotepad: function(evt) {
+            this.state.save();
+        },
         onTogglePopover: function(evt) {
             this.toggleOverlay();
 
@@ -579,7 +583,6 @@
             } else {
                 jQuery(srcElement).parents('div.popover').toggle();
             }
-
         },
         onMouseOverLocation: function(evt) {
             var srcElement = evt.srcElement || evt.target || evt.originalTarget;
