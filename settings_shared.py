@@ -1,5 +1,6 @@
 # Django settings for pass project.
 import os.path
+import sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -18,6 +19,25 @@ DATABASES = {
         'PASSWORD': '',
         }
 }
+
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+            'HOST': '',
+            'PORT': '',
+            'USER': '',
+            'PASSWORD': '',
+            }
+        }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=pass',
+]
 
 
 DEFAULT_FROM_EMAIL = 'pass@pass.ccnmtl.columbia.edu'
