@@ -1,9 +1,11 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import include, patterns
 import os.path
 from tastypie.api import Api
-from careerlocation.api import *
+from careerlocation.api import ActorResource, ActorResponseResource, \
+    ActorQuestionResource, CareerLocationStateResource, MapLayerResource, \
+    UserResource
 
-media_root = os.path.join(os.path.dirname(__file__),"media")
+media_root = os.path.join(os.path.dirname(__file__), "media")
 
 v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
@@ -14,6 +16,7 @@ v1_api.register(ActorResponseResource())
 v1_api.register(CareerLocationStateResource())
 
 urlpatterns = patterns('',
-    (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': media_root}),
-    (r'^api/', include(v1_api.urls))
-)
+                      (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+                       'document_root': media_root}),
+                      (r'^api/', include(v1_api.urls))
+                       )

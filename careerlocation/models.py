@@ -9,10 +9,11 @@ VIEW_CHOICES = (
     ('LC', 'Select Practice Location'),
     ('BD', 'Complete Board Application'),
     ('RP', 'Practice Location Report'),
-    )
+)
 
 GRID_COLUMNS = 14
 GRID_ROWS = 8
+
 
 class MapLayer(models.Model):
     def __unicode__(self):
@@ -21,16 +22,22 @@ class MapLayer(models.Model):
     name = models.CharField(max_length=255)
     display_name = models.CharField(max_length=255)
     legend = models.TextField(null=True, blank=True)
-    image = models.FileField(upload_to="layers/%Y/%m/%d/", null=True, blank=True)
+    image = models.FileField(
+        upload_to="layers/%Y/%m/%d/", null=True, blank=True)
     z_index = models.IntegerField(default=999)
     transparency = models.IntegerField(default=50)
 
+
 class ActorQuestion(models.Model):
     def __unicode__(self):
-        return self.question[:25] + '...' if self.question and len(self.question) > 25 else self.question
+        if self.question and len(self.question) > 25:
+            return self.question[:25] + '...'
+        else:
+            self.question
 
     question = models.TextField()
     answer = models.TextField(null=True, blank=True)
+
 
 class Actor(models.Model):
     def __unicode__(self):
@@ -45,7 +52,9 @@ class Actor(models.Model):
     left = models.IntegerField(null=True, blank=True)
     top = models.IntegerField(null=True, blank=True)
     order = models.IntegerField(null=True, blank=True)
-    image = models.FileField(upload_to="layers/%Y/%m/%d/", null=True, blank=True)
+    image = models.FileField(
+        upload_to="layers/%Y/%m/%d/", null=True, blank=True)
+
 
 class ActorResponse(models.Model):
     def __unicode__(self):
@@ -75,10 +84,13 @@ class CareerLocationState(models.Model):
             return a[0].long_response
 
     def grid_cell(self):
-        if self.practice_location_row == None or self.practice_location_column == None:
+        if (self.practice_location_row is None or
+                self.practice_location_column is None):
             return None
 
-        return (self.practice_location_row * GRID_COLUMNS) + (self.practice_location_column + 1)
+        return ((self.practice_location_row * GRID_COLUMNS) +
+                (self.practice_location_column + 1))
+
 
 class CareerLocationBlock(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
@@ -136,7 +148,8 @@ class CareerLocationBlock(models.Model):
 
         state = a[0]
 
-        stakeholders = state.actors.filter(id__in = [s.id for s in self.stakeholders])
+        stakeholders = state.actors.filter(
+            id__in=[s.id for s in self.stakeholders])
         if len(stakeholders) < 4:
             return False
 
@@ -146,12 +159,13 @@ class CareerLocationBlock(models.Model):
                 return False
 
         if self.view == "LC" or self.view == "BD":
-            if state.practice_location_row == None or \
-               state.practice_location_column == None:
+            if state.practice_location_row is None or \
+                    state.practice_location_column is None:
                 return False
 
         if self.view == "BD":
-            boardmembers = state.actors.filter(id__in = [b.id for b in self.boardmembers])
+            boardmembers = state.actors.filter(
+                id__in=[b.id for b in self.boardmembers])
             if len(boardmembers) < 6:
                 return False
 
@@ -176,9 +190,11 @@ class CareerLocationBlock(models.Model):
 
         return cells
 
+
 class CareerLocationBlockForm(forms.ModelForm):
     class Meta:
         model = CareerLocationBlock
+
 
 class CareerLocationSummaryBlock(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
@@ -211,7 +227,8 @@ class CareerLocationSummaryBlock(models.Model):
         return form.save()
 
     def edit(self, vals, files):
-        form = CareerLocationSummaryBlockForm(data=vals, files=files, instance=self)
+        form = CareerLocationSummaryBlockForm(
+            data=vals, files=files, instance=self)
         if form.is_valid():
             form.save()
 

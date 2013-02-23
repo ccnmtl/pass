@@ -1,8 +1,10 @@
-from careerlocation.models import *
+from careerlocation.models import Actor, ActorQuestion, ActorResponse, \
+    CareerLocationState, MapLayer
 from django.contrib import admin
 
 admin.site.register(MapLayer)
 admin.site.register(Actor)
+
 
 class ActorQuestionAdmin(admin.ModelAdmin):
     class Meta:
@@ -19,9 +21,10 @@ class ActorResponseAdmin(admin.ModelAdmin):
         model = ActorResponse
 
     search_fields = ["user__username"]
-    list_display = ("user","actor","question")
+    list_display = ("user", "actor", "question")
 
 admin.site.register(ActorResponse, ActorResponseAdmin)
+
 
 class CareerLocationStateAdmin(admin.ModelAdmin):
     class Meta:

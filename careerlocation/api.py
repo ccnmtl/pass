@@ -2,7 +2,9 @@ from django.contrib.auth.models import User
 from tastypie import fields
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
-from careerlocation.models import *
+from careerlocation.models import Actor, ActorQuestion, ActorResponse, \
+    CareerLocationState, MapLayer
+
 
 class UsernameAuthorization(Authorization):
     def apply_limits(self, request, object_list):
@@ -11,6 +13,7 @@ class UsernameAuthorization(Authorization):
 
         return object_list.none()
 
+
 class UserAuthorization(Authorization):
     def apply_limits(self, request, object_list):
         if request and hasattr(request, 'user'):
@@ -18,13 +21,16 @@ class UserAuthorization(Authorization):
 
         return object_list.none()
 
+
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
         resource_name = 'user'
-        excludes = ['email', 'password', 'is_active', 'is_staff', 'is_superuser', 'date_joined']
+        excludes = ['email', 'password', 'is_active', 'is_staff',
+                    'is_superuser', 'date_joined']
         allowed_methods = ['get']
         authorization = UsernameAuthorization()
+
 
 class MapLayerResource(ModelResource):
     class Meta:
@@ -32,19 +38,23 @@ class MapLayerResource(ModelResource):
         resource_name = 'map_layer'
         allowed_methods = ['get']
 
+
 class ActorQuestionResource(ModelResource):
     class Meta:
         queryset = ActorQuestion.objects.all()
         resource_name = 'actor_question'
         allowed_methods = ['get']
 
+
 class ActorResource(ModelResource):
-    questions = fields.ManyToManyField('careerlocation.api.ActorQuestionResource', 'questions', full=True)
+    questions = fields.ManyToManyField(
+        'careerlocation.api.ActorQuestionResource', 'questions', full=True)
 
     class Meta:
         queryset = Actor.objects.all()
         resource_name = 'actor'
         allowed_methods = ['get']
+
 
 class ActorResponseResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user')
@@ -57,17 +67,18 @@ class ActorResponseResource(ModelResource):
         authorization = UserAuthorization()
         allowed_methods = ['get', 'put', 'post']
 
+
 class CareerLocationStateResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user')
-    layers = fields.ManyToManyField('careerlocation.api.MapLayerResource', 'layers', full=True)
-    actors = fields.ManyToManyField('careerlocation.api.ActorResource', 'actors', full=True)
-    responses = fields.ManyToManyField('careerlocation.api.ActorResponseResource', 'responses', full=True)
+    layers = fields.ManyToManyField(
+        'careerlocation.api.MapLayerResource', 'layers', full=True)
+    actors = fields.ManyToManyField(
+        'careerlocation.api.ActorResource', 'actors', full=True)
+    responses = fields.ManyToManyField(
+        'careerlocation.api.ActorResponseResource', 'responses', full=True)
 
     class Meta:
         queryset = CareerLocationState.objects.all()
         resource_name = 'career_location_state'
         authorization = UserAuthorization()
         allowed_methods = ['get', 'put', 'post']
-
-
-

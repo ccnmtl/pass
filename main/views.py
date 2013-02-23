@@ -1,25 +1,30 @@
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
-from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.encoding import smart_str
-from pagetree.helpers import get_hierarchy, get_section_from_path, get_module, needs_submit, submitted
-from django.template import RequestContext
+from careerlocation.models import Actor, CareerLocationState
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from models import *
+from django.http import HttpResponseRedirect, HttpResponse, \
+    HttpResponseForbidden
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext
+from django.utils.encoding import smart_str
+from main.models import UserProfile, UserVisited
+
+from pagetree.helpers import get_hierarchy, get_section_from_path, \
+    get_module, needs_submit, submitted
 from pagetree.models import Hierarchy
 from pagetree_export.exportimport import export_zip, import_zip
 from quizblock.models import Submission, Response
-from careerlocation.models import Actor, CareerLocationState
-from main.models import UserProfile
-import os
+from zipfile import ZipFile
 import csv
 import django.core.exceptions
+import os
 
-def get_or_create_profile(user,section):
+
+def get_or_create_profile(user, section):
     if user.is_anonymous():
         return None
     try:
-        user_profile,created = UserProfile.objects.get_or_create(user=user)
+        user_profile, created = UserProfile.objects.get_or_create(user=user)
     except django.core.exceptions.MultipleObjectsReturned:
         user_profile = UserProfile.objects.filter(user=user)[0]
         created = False
@@ -30,7 +35,8 @@ def get_or_create_profile(user,section):
             user_profile.save_visit(a)
     return user_profile
 
-def _unlocked(profile,section):
+
+def _unlocked(profile, section):
     """ if the user can proceed past this section """
     if profile is None:
         return False
@@ -51,10 +57,10 @@ def _unlocked(profile,section):
     # if the previous page had blocks to submit
     # we only let them by if they submitted
     for p in previous.pageblock_set.all():
-        if hasattr(p.block(),'unlocked'):
+        if hasattr(p.block(), 'unlocked'):
             if not p.block().unlocked(profile.user):
                 return False
-          
+
     return profile.has_visited(previous)
 
 
@@ -65,74 +71,88 @@ class rendered_with(object):
     def __call__(self, func):
         def rendered_func(request, *args, **kwargs):
             items = func(request, *args, **kwargs)
-            if type(items) == type({}):
-                return render_to_response(self.template_name, items, context_instance=RequestContext(request))
+            if isinstance(items, type({})):
+                ctx = RequestContext(request)
+                return render_to_response(self.template_name,
+                                          items,
+                                          context_instance=ctx)
             else:
                 return items
         return rendered_func
 
+
 def has_responses(section):
-    quizzes = [p.block() for p in section.pageblock_set.all() if hasattr(p.block(),'needs_submit') and p.block().needs_submit()]
+    quizzes = [p.block() for p in section.pageblock_set.all(
+    ) if hasattr(p.block(), 'needs_submit') and p.block().needs_submit()]
     return quizzes != []
+
 
 def allow_redo(section):
     """ if blocks on the page allow redo """
     allowed = True
     for p in section.pageblock_set.all():
-        if hasattr(p.block(),'allow_redo'):
+        if hasattr(p.block(), 'allow_redo'):
             if not p.block().allow_redo:
                 allowed = False
     return allowed
 
+
 @login_required
 @rendered_with('main/intro.html')
 def intro(request):
-    return { 'demographic_survey_complete': demographic_survey_complete(request) }
+    return {
+        'demographic_survey_complete': demographic_survey_complete(request)
+    }
+
 
 @login_required
 @rendered_with('main/page.html')
-def demographic(request,path):
+def demographic(request, path):
     hierarchy = get_hierarchy('demographic')
-    return process_page(request,path,hierarchy)
+    return process_page(request, path, hierarchy)
+
 
 @login_required
 @rendered_with('main/page.html')
-def module_one(request,path):
+def module_one(request, path):
     if not demographic_survey_complete(request):
         hierarchy = get_hierarchy('demographic')
         return HttpResponseRedirect(hierarchy.get_root().get_absolute_url())
 
     hierarchy = get_hierarchy('module-one')
-    return process_page(request,path,hierarchy)
+    return process_page(request, path, hierarchy)
+
 
 @login_required
 @rendered_with('main/page.html')
-def module_two(request,path):
+def module_two(request, path):
     if not demographic_survey_complete(request):
         hierarchy = get_hierarchy('demographic')
         return HttpResponseRedirect(hierarchy.get_root().get_absolute_url())
 
     hierarchy = get_hierarchy('module-two')
-    return process_page(request,path,hierarchy)
+    return process_page(request, path, hierarchy)
+
 
 @login_required
 @rendered_with('main/admin_page.html')
-def reports(request,path):
+def reports(request, path):
     if not request.user.is_staff:
         return HttpResponseForbidden
 
     hierarchy = get_hierarchy('reports')
-    return process_page(request,path,hierarchy)
+    return process_page(request, path, hierarchy)
+
 
 @login_required
-def process_page(request,path,hierarchy):
-    section = get_section_from_path(path,hierarchy=hierarchy)
+def process_page(request, path, hierarchy):
+    section = get_section_from_path(path, hierarchy=hierarchy)
 
     root = hierarchy.get_root()
     module = get_module(section)
 
-    user_profile = get_or_create_profile(user=request.user,section=section)
-    can_access = _unlocked(user_profile,section)
+    user_profile = get_or_create_profile(user=request.user, section=section)
+    can_access = _unlocked(user_profile, section)
     if can_access:
         user_profile.save_visit(section)
     else:
@@ -157,11 +177,11 @@ def process_page(request,path,hierarchy):
 
     if request.method == "POST":
         # user has submitted a form. deal with it
-        if request.POST.get('action','') == 'reset':
+        if request.POST.get('action', '') == 'reset':
             section.reset(request.user)
             return HttpResponseRedirect(section.get_absolute_url())
 
-        section.submit(request.POST,request.user)
+        section.submit(request.POST, request.user)
 
         if hierarchy.name == 'demographic' and path.startswith("survey"):
             return HttpResponseRedirect("/")
@@ -174,64 +194,74 @@ def process_page(request,path,hierarchy):
             return HttpResponseRedirect("/")
     else:
         instructor_link = has_responses(section)
-        allow_next_link = not needs_submit(section) or submitted(section,request.user)
-        end_section = section.get_next()
+        allow_next_link = not needs_submit(
+            section) or submitted(section, request.user)
+
         return dict(section=section,
                     module=module,
                     allow_next_link=allow_next_link,
                     needs_submit=needs_submit(section),
-                    is_submitted=submitted(section,request.user),
+                    is_submitted=submitted(section, request.user),
                     modules=root.get_children(),
                     root=section.hierarchy.get_root(),
                     instructor_link=instructor_link,
                     can_edit=can_edit,
                     allow_redo=allow_redo(section),
-                    next_unlocked = _unlocked(user_profile,section.get_next()),
+                    next_unlocked=_unlocked(
+                        user_profile, section.get_next()),
                     )
+
+
 @login_required
 @rendered_with("main/instructor_page.html")
-def instructor_page(request,path):
+def instructor_page(request, path):
     if not request.user.is_superuser:
         return HttpResponseForbidden
 
-    hierarchy_name,slash,section_path = path.partition('/')
-    section = get_section_from_path(section_path,hierarchy=hierarchy_name)
+    hierarchy_name, slash, section_path = path.partition('/')
+    section = get_section_from_path(section_path, hierarchy=hierarchy_name)
 
     root = section.hierarchy.get_root()
 
     if request.method == "POST":
         if 'clear' in request.POST.keys():
-            submission = get_object_or_404(Submission,id=request.POST['clear'])
+            submission = get_object_or_404(
+                Submission, id=request.POST['clear'])
             submission.delete()
-            return HttpResponseRedirect("/instructor" + section.get_absolute_url())
+            return HttpResponseRedirect(
+                "/instructor" + section.get_absolute_url())
 
-    quizzes = [p.block() for p in section.pageblock_set.all() if hasattr(p.block(),'needs_submit') and p.block().needs_submit()]
+    quizzes = [p.block() for p in section.pageblock_set.all(
+    ) if hasattr(p.block(), 'needs_submit') and p.block().needs_submit()]
     return dict(section=section,
                 quizzes=quizzes,
                 module=get_module(section),
                 modules=root.get_children(),
                 root=root)
 
+
 def clean_header(s):
-    s = s.replace('<div class=\'question-sub\'>','')
-    s = s.replace('<div class=\'question\'>','')
-    s = s.replace('<div class=\"mf-question\">','')
-    s = s.replace('<div class=\"sw-question\">','')
-    s = s.replace('<p>','')
-    s = s.replace('</p>','')
-    s = s.replace('</div>','')
-    s = s.replace('\n','')
-    s = s.replace('\r','')
-    s = s.replace('<','')
-    s = s.replace('>','')
-    s = s.replace('\'','')
-    s = s.replace('\"','')
-    s = s.replace(',','')
+    s = s.replace('<div class=\'question-sub\'>', '')
+    s = s.replace('<div class=\'question\'>', '')
+    s = s.replace('<div class=\"mf-question\">', '')
+    s = s.replace('<div class=\"sw-question\">', '')
+    s = s.replace('<p>', '')
+    s = s.replace('</p>', '')
+    s = s.replace('</div>', '')
+    s = s.replace('\n', '')
+    s = s.replace('\r', '')
+    s = s.replace('<', '')
+    s = s.replace('>', '')
+    s = s.replace('\'', '')
+    s = s.replace('\"', '')
+    s = s.replace(',', '')
     s = s.encode('utf-8')
     return s
 
+
 class Column(object):
-    def __init__(self, hierarchy, question=None, answer=None, actor=None, actor_question=None, location=None, notes=None):
+    def __init__(self, hierarchy, question=None, answer=None, actor=None,
+                 actor_question=None, location=None, notes=None):
         self.hierarchy = hierarchy
         self.question = question
         self.answer = answer
@@ -242,8 +272,10 @@ class Column(object):
         self.notes = notes
 
         if self.question:
-            self._submission_cache = Submission.objects.filter(quiz=self.question.quiz)
-            self._response_cache = Response.objects.filter(question=self.question)
+            self._submission_cache = Submission.objects.filter(
+                quiz=self.question.quiz)
+            self._response_cache = Response.objects.filter(
+                question=self.question)
             self._answer_cache = self.question.answer_set.all()
 
         if self.actor or self.location or self.notes:
@@ -268,32 +300,37 @@ class Column(object):
     def notes_id(self):
         return "%s_careerlocation_notes" % (self.hierarchy.id)
 
+    def question_value(self, user):
+        r = self._submission_cache.filter(user=user).order_by("-submitted")
+        if r.count() == 0:
+            # user has not submitted this form
+            return ""
+        submission = r[0]
+        r = self._response_cache.filter(submission=submission)
+        if r.count() > 0:
+            if (self.question.is_short_text() or
+                    self.question.is_long_text()):
+                return r[0].value
+            elif self.question.is_multiple_choice():
+                if self.answer.value in [res.value for res in r]:
+                    return self.answer.id
+            else:  # single choice
+                for a in self._answer_cache:
+                    if a.value == r[0].value:
+                        return a.id
+        return ''
+
     def user_value(self, user):
         if self.question:
-            r = self._submission_cache.filter(user=user).order_by("-submitted")
-            if r.count() == 0:
-                # user has not submitted this form
-                return ""
-            submission = r[0]
-            r = self._response_cache.filter(submission=submission)
-            if r.count() > 0:
-                if self.question.is_short_text() or self.question.is_long_text():
-                    return r[0].value
-                elif self.question.is_multiple_choice():
-                    if self.answer.value in [res.value for res in r]:
-                        return self.answer.id
-                else: # single choice
-                    for a in self._answer_cache:
-                        if a.value == r[0].value:
-                            return a.id
-
+            return self.question_value(user)
         else:
             a = self._state_cache.filter(user=user)
             if len(a) > 0:
                 state = a[0]
 
                 if self.actor and self.actor_question:
-                    responses = state.responses.filter(actor=self.actor, question=self.actor_question)
+                    responses = state.responses.filter(
+                        actor=self.actor, question=self.actor_question)
                     if len(responses) > 0:
                         return self.actor_question.id
                 elif self.actor:
@@ -309,47 +346,114 @@ class Column(object):
 
     def key_row(self):
         if self.question:
-            row = [self.question_id(), self.module_name, self.question.question_type, clean_header(self.question.text)]
+            row = [self.question_id(
+            ), self.module_name, self.question.question_type,
+                clean_header(self.question.text)]
             if self.answer:
                 row.append(self.answer.id)
                 row.append(clean_header(self.answer.label))
         elif self.actor:
             if len(self.actor.questions.all()) > 1:
-                row = [self.actor_id(), self.module_name, "multiple choice", clean_header(self.actor.name)]
+                row = [self.actor_id(), self.module_name,
+                       "multiple choice", clean_header(self.actor.name)]
                 row.append(self.actor_question.id)
                 row.append(clean_header(self.actor_question.question))
             else:
-                row = [self.actor_id(), self.module_name, "short text", clean_header(self.actor_question.question)]
+                row = [self.actor_id(), self.module_name, "short text",
+                       clean_header(self.actor_question.question)]
         elif self.location:
-            row = [ self.location_id(), self.module_name, "grid cell", self.location ]
+            row = [self.location_id(
+            ), self.module_name, "grid cell", self.location]
         elif self.notes:
-            row = [ self.notes_id(), self.module_name, "long text", self.notes ]
+            row = [self.notes_id(), self.module_name, "long text", self.notes]
 
         return row
 
     def header_column(self):
         if self.question and self.answer:
-            return [ self.question_answer_id() ]
+            return [self.question_answer_id()]
         elif self.question:
-            return [ self.question_id() ]
+            return [self.question_id()]
         elif self.actor and self.actor_question:
-            return [ self.actor_answer_id() ]
+            return [self.actor_answer_id()]
         elif self.actor:
-            return [ self.actor_id() ]
+            return [self.actor_id()]
         elif self.location:
-            return [ self.location_id() ]
+            return [self.location_id()]
         elif self.notes:
-            return [ self.notes_id() ]
+            return [self.notes_id()]
+
+
+def _get_quiz_key(h, s):
+    quiz_type = ContentType.objects.filter(name='quiz')
+    columns = []
+    # quizzes
+    for p in s.pageblock_set.filter(content_type=quiz_type):
+        for q in p.block().question_set.all():
+            if q.answerable():
+                # need to make a column for each answer
+                for a in q.answer_set.all():
+                    columns.append(
+                        Column(hierarchy=h, question=q, answer=a))
+            else:
+                columns.append(Column(hierarchy=h, question=q))
+    return columns
+
+
+def _get_quiz_results(h, s):
+    quiz_type = ContentType.objects.filter(name='quiz')
+    columns = []
+
+    # quizzes
+    for p in s.pageblock_set.filter(content_type=quiz_type):
+        for q in p.block().question_set.all():
+            if q.answerable() and q.is_multiple_choice():
+                # need to make a column for each answer
+                for a in q.answer_set.all():
+                    columns.append(
+                        Column(hierarchy=h, question=q, answer=a))
+            else:
+                columns.append(Column(hierarchy=h, question=q))
+
+    return columns
+
+
+def _get_career_location_results(h, s):
+    careerlocation_type = ContentType.objects.filter(
+        name='career location block')
+    columns = []
+    for p in s.pageblock_set.filter(content_type=careerlocation_type):
+        if p.block().view == "IV":
+            # career location state
+            for a in p.block().stakeholders:
+                for q in a.questions.all():
+                    columns.append(Column(
+                        hierarchy=h, actor=a, actor_question=q))
+        elif p.block().view == "LC":
+            # practice location - cell number
+            columns.append(Column(hierarchy=h,
+                           location="Practice Location Grid Number"))
+        elif p.block().view == "BD":
+            # boardmembers
+            for a in Actor.objects.filter(type="BD").order_by("order"):
+                columns.append(Column(hierarchy=h, actor=a))
+
+            # notes
+            columns.append(Column(hierarchy=h, notes="Interview Notes"))
+
+    return columns
+
 
 @login_required
 def all_results_key(request):
-
     """
         A "key" for all questions and answers in the system.
         * One row for short/long text questions
-        * Multiple rows for single/multiple-choice questions. Each question/answer pair get a row
+        * Multiple rows for single/multiple-choice questions.
+        Each question/answer pair get a row
         itemIdentifier - unique system identifier,
-            concatenates hierarchy id, item type string, page block id (if necessary) and item id
+            concatenates hierarchy id, item type string,
+            page block id (if necessary) and item id
         module - first child label in the hierarchy
         itemType - [question, discussion topic, referral field]
         itemText - identifying text for the item
@@ -361,45 +465,42 @@ def all_results_key(request):
         return HttpResponseForbidden
 
     response = HttpResponse(mimetype='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=pass_response_key.csv'
+    response[
+        'Content-Disposition'] = 'attachment; filename=pass_response_key.csv'
     writer = csv.writer(response)
-    headers = ['itemIdentifier', 'module', 'itemType', 'itemText', 'answerIdentifier', 'answerText']
+    headers = ['itemIdentifier', 'module', 'itemType', 'itemText',
+               'answerIdentifier', 'answerText']
     writer.writerow(headers)
 
-    quiz_type = ContentType.objects.filter(name='quiz')
-    careerlocation_type = ContentType.objects.filter(name='career location block')
+    careerlocation_type = ContentType.objects.filter(
+        name='career location block')
 
     columns = []
     for h in Hierarchy.objects.all():
         for s in h.get_root().get_descendants():
-            # quizzes
-            for p in s.pageblock_set.filter(content_type=quiz_type):
-                for q in p.block().question_set.all():
-                    if q.answerable():
-                        # need to make a column for each answer
-                        for a in q.answer_set.all():
-                            columns.append(Column(hierarchy=h, question=q, answer=a))
-                    else:
-                        columns.append(Column(hierarchy=h, question=q))
-
+            columns = columns + _get_quiz_key(h, s)
 
             for p in s.pageblock_set.filter(content_type=careerlocation_type):
                 if p.block().view == "IV":
                     # career location state
                     for a in p.block().stakeholders:
                         for q in a.questions.all():
-                            columns.append(Column(hierarchy=h, actor=a, actor_question=q))
+                            columns.append(Column(
+                                hierarchy=h, actor=a, actor_question=q))
                 elif p.block().view == "LC":
                     # practice location - cell number
-                    columns.append(Column(hierarchy=h, location="Practice Location Grid Number"))
+                    columns.append(Column(hierarchy=h,
+                                   location="Practice Location Grid Number"))
                 elif p.block().view == "BD":
                     # boardmembers
                     for a in Actor.objects.filter(type="BD").order_by("order"):
                         for q in a.questions.all():
-                            columns.append(Column(hierarchy=h, actor=a, actor_question=q))
+                            columns.append(Column(
+                                hierarchy=h, actor=a, actor_question=q))
 
                     # notes
-                    columns.append(Column(hierarchy=h, notes="Interview Notes"))
+                    columns.append(
+                        Column(hierarchy=h, notes="Interview Notes"))
 
     for column in columns:
         try:
@@ -418,7 +519,7 @@ def all_results(request):
         * One or more column for each question in system.
             ** 1 column for short/long text. label = itemIdentifier from key
             ** 1 column for single choice. label = itemIdentifier from key
-            ** n columns for multiple choice: one column for each possible answer
+            ** n columns for multiple choice: 1 column for each possible answer
                *** column labeled as itemIdentifer_answer.id
 
         * One row for each user in the system.
@@ -427,49 +528,22 @@ def all_results(request):
                 * short/long text. text value
                 * single choice. answer.id
                 * multiple choice.
-                    ** answer id is listed in each question/answer column the user selected
+                    ** answer id is listed in each question/answer
+                    column the user selected
                 * Unanswered fields represented as an empty cell
     """
 
     if not request.user.is_staff:
         return HttpResponseForbidden
 
-    if not request.GET.get('format','html') == 'csv':
+    if not request.GET.get('format', 'html') == 'csv':
         return dict()
-
-    quiz_type = ContentType.objects.filter(name='quiz')
-    careerlocation_type = ContentType.objects.filter(name='career location block')
 
     columns = []
     for h in Hierarchy.objects.all():
         for s in h.get_root().get_descendants():
-            # quizzes
-            for p in s.pageblock_set.filter(content_type=quiz_type):
-                for q in p.block().question_set.all():
-                    if q.answerable() and q.is_multiple_choice():
-                        # need to make a column for each answer
-                        for a in q.answer_set.all():
-                            columns.append(Column(hierarchy=h, question=q, answer=a))
-                    else:
-                        columns.append(Column(hierarchy=h, question=q))
-
-            for p in s.pageblock_set.filter(content_type=careerlocation_type):
-                if p.block().view == "IV":
-                    # career location state
-                    for a in p.block().stakeholders:
-                        for q in a.questions.all():
-                            columns.append(Column(hierarchy=h, actor=a, actor_question=q))
-                elif p.block().view == "LC":
-                    # practice location - cell number
-                    columns.append(Column(hierarchy=h, location="Practice Location Grid Number"))
-                elif p.block().view == "BD":
-                    # boardmembers
-                    for a in Actor.objects.filter(type="BD").order_by("order"):
-                        columns.append(Column(hierarchy=h, actor=a))
-
-                    # notes
-                    columns.append(Column(hierarchy=h, notes="Interview Notes"))
-
+            columns = columns + _get_quiz_results(h, s)
+            columns = columns + _get_career_location_results(h, s)
 
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=pass_responses.csv'
@@ -481,9 +555,9 @@ def all_results(request):
     writer.writerow(headers)
 
     # Only look at users who have submission
-    users =  User.objects.filter(submission__isnull = False).distinct()
+    users = User.objects.filter(submission__isnull=False).distinct()
     for u in users:
-        row = [ u.username ]
+        row = [u.username]
         for column in columns:
             v = smart_str(column.user_value(u))
             row.append(v)
@@ -492,26 +566,26 @@ def all_results(request):
 
     return response
 
+
 @login_required
 @rendered_with('main/edit_page.html')
-def edit_page(request,path):
+def edit_page(request, path):
     if not request.user.is_superuser:
         return HttpResponseForbidden
 
-    hierarchy_name,slash,section_path = path.partition('/')
+    hierarchy_name, slash, section_path = path.partition('/')
 
     h = Hierarchy.objects.get(name=hierarchy_name)
     root = h.get_root()
-    c = root.get_children()
 
-    section = get_section_from_path(section_path,hierarchy=hierarchy_name)
+    section = get_section_from_path(section_path, hierarchy=hierarchy_name)
 
     root = section.hierarchy.get_root()
 
     return dict(section=section,
-        module=get_module(section),
-        modules=root.get_children(),
-        root=section.hierarchy.get_root())
+                module=get_module(section),
+                modules=root.get_children(),
+                root=section.hierarchy.get_root())
 
 
 @login_required
@@ -525,12 +599,12 @@ def exporter(request):
 
     with open(zip_filename) as zipfile:
         resp = HttpResponse(zipfile.read())
-    resp['Content-Disposition'] = "attachment; filename=%s.zip" % section.hierarchy.name
+    resp['Content-Disposition'] = \
+        "attachment; filename=%s.zip" % section.hierarchy.name
 
     os.unlink(zip_filename)
     return resp
 
-from zipfile import ZipFile
 
 @rendered_with("main/import.html")
 @login_required
@@ -551,7 +625,7 @@ def importer(request):
     hierarchy = import_zip(zipfile, hierarchy_name)
 
     url = hierarchy.get_absolute_url()
-    url = '/' + url.lstrip('/') # sigh
+    url = '/' + url.lstrip('/')  # sigh
     return HttpResponseRedirect(url)
 
 
@@ -566,11 +640,13 @@ def demographic_survey_complete(request):
     registration_quiz = section.pageblock_set.filter(content_type=content_type)
 
     if len(registration_quiz) > 0:
-        submission = Submission.objects.filter(quiz=registration_quiz[0].content_object, user=request.user)
+        submission = Submission.objects.filter(
+            quiz=registration_quiz[0].content_object, user=request.user)
         if len(submission) > 0:
             return True
 
     return False
+
 
 def clear_state(request):
     if not request.user.is_superuser:
@@ -590,10 +666,11 @@ def clear_state(request):
         s.response_set.all().delete()
     quizblock.models.Submission.objects.filter(user=request.user).delete()
 
-
     # clear careerlocationstate
     import careerlocation
-    careerlocation.models.ActorResponse.objects.filter(user=request.user).delete()
-    careerlocation.models.CareerLocationState.objects.filter(user=request.user).delete()
+    careerlocation.models.ActorResponse.objects.filter(
+        user=request.user).delete()
+    careerlocation.models.CareerLocationState.objects.filter(
+        user=request.user).delete()
 
     return HttpResponseRedirect("/")
