@@ -75,8 +75,6 @@
             jQuery("#edit-blocks-tab").disableSelection();
         });
     </script>
-
-
 {% endblock %}
 
 {% block projectbanner %}{% endblock %}
@@ -108,12 +106,13 @@
 <div id="tabber">
 
 <ul>
-{% if section.pageblock_set.count %}
-  <li><a href="#edit-blocks-tab">Edit Blocks</a></li>
-{% endif %}
-  <li><a href="#children-tab">Children</a></li>
-  <li><a href="#add-pageblock-tab">Add Pageblock</a></li>
-  <li><a href="#edit-page-tab">Edit Section</a></li>
+    {% if section.pageblock_set.count %}
+        <li><a href="#edit-blocks-tab">Edit Blocks</a></li>
+    {% endif %}
+    <li><a href="#children-tab">Children</a></li>
+    <li><a href="#add-pageblock-tab">Add Pageblock</a></li>
+    <li><a href="#edit-page-tab">Edit Section</a></li>
+    <li><a href="#move-page-tab">Move Section</a></li>
 </ul>
 
 {% if section.pageblock_set.count %}
@@ -203,25 +202,36 @@ method="post">
 </div>
 
 <div id="edit-page-tab">
-<form action="{% url delete-section section.id %}" method="post">
-<input type="submit" value="Delete this page" />
-</form>
-
-<form action="{% url edit-section section.id %}" method="post">
-<fieldset><legend>Edit Page</legend>
-<table>
-{{ section.edit_form.as_table }}
-</table>
-<input type="submit" value="Save" />
-</fieldset>
-</form>
+    <form action="{% url delete-section section.id %}" method="post">
+        <input type="submit" value="Delete this page" />
+    </form>
+    
+    <form action="{% url edit-section section.id %}" method="post">
+        <fieldset>
+            <legend>Edit Page</legend>
+            <table>
+                {{ section.edit_form.as_table }}
+            </table>
+            <input type="submit" value="Save" />
+        </fieldset>
+    </form>
 </div>
 
+    <div id="move-page-tab">
+        <form action="{% url move-section section.id %}" method="post">{% csrf_token %}        
+            <fieldset>
+                <legend>Move "{{section.label}}" Section To...</legend>
+                <p>
+                    {{ section.move_form.as_p }}
+                    <input value="Move" class="default" name="_move" type="submit">
+                </p>
+            </fieldset>
+        </form>
+    </div>
 </div>
-
 {% endblock %}
 
-        <div class="visualclear"></div>
+
 {% block content-nav %}
 
     <div class="content-nav">
