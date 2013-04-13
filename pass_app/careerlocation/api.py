@@ -48,7 +48,8 @@ class ActorQuestionResource(ModelResource):
 
 class ActorResource(ModelResource):
     questions = fields.ManyToManyField(
-        'careerlocation.api.ActorQuestionResource', 'questions', full=True)
+        'pass_app.careerlocation.api.ActorQuestionResource',
+        'questions', full=True)
 
     class Meta:
         queryset = Actor.objects.all()
@@ -71,11 +72,14 @@ class ActorResponseResource(ModelResource):
 class CareerLocationStateResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user')
     layers = fields.ManyToManyField(
-        'careerlocation.api.MapLayerResource', 'layers', full=True)
+        'pass_app.careerlocation.api.MapLayerResource', 'layers',
+        full=True)
     actors = fields.ManyToManyField(
-        'careerlocation.api.ActorResource', 'actors', full=True)
+        'pass_app.careerlocation.api.ActorResource', 'actors',
+        full=True)
     responses = fields.ManyToManyField(
-        'careerlocation.api.ActorResponseResource', 'responses', full=True)
+        'pass_app.careerlocation.api.ActorResponseResource', 'responses',
+        full=True)
 
     class Meta:
         queryset = CareerLocationState.objects.all()

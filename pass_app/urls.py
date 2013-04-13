@@ -24,8 +24,6 @@ urlpatterns = patterns(
     (r'^admin/reports/(?P<path>.*)$', 'pass_app.main.views.reports'),
     (r'^registration/', include('registration.urls')),
     ('^accounts/', include('djangowind.urls')),
-    (r'^admin/pagetree/', include('pagetree.urls')),
-    (r'^admin/quiz/', include('quizblock.urls')),
     (r'^admin/', include(admin.site.urls)),
     (r'^munin/', include('munin.urls')),
     (r'^pagetree/', include('pagetree.urls')),
