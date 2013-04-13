@@ -1,5 +1,5 @@
-from pass.careerlocation.models import Actor, ActorQuestion, ActorResponse, \
-    CareerLocationState, MapLayer
+from pass_app.careerlocation.models import Actor, ActorQuestion, \
+    ActorResponse, CareerLocationState, MapLayer
 from django.contrib import admin
 
 admin.site.register(MapLayer)

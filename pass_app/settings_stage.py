@@ -5,7 +5,7 @@ ADMINS = (
 )
 
 TEMPLATE_DIRS = (
-    "/usr/local/share/sandboxes/common/pass/pass/pass/templates",
+    "/usr/local/share/sandboxes/common/pass/pass/pass_app/templates",
 )
 
 MEDIA_ROOT = '/usr/local/share/sandboxes/common/pass/uploads/'

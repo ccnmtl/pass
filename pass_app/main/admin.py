@@ -1,4 +1,4 @@
-from pass.main.models import UserVisited, UserProfile
+from pass_app.main.models import UserVisited, UserProfile
 from django.contrib import admin
 
 admin.site.register(UserProfile)

@@ -1,4 +1,4 @@
-from pass.careerlocation.models import Actor, CareerLocationState
+from pass_app.careerlocation.models import Actor, CareerLocationState
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse, \
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils.encoding import smart_str
-from pass.main.models import UserProfile, UserVisited
+from pass_app.main.models import UserProfile, UserVisited
 from pagetree.helpers import get_hierarchy, get_section_from_path, \
     get_module, needs_submit, submitted
 from pagetree.models import Hierarchy

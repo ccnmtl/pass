@@ -1,4 +1,5 @@
-from pass.careerlocation.api import ActorResource, ActorResponseResource, \
+from django.conf.urls.defaults import include, patterns
+from pass_app.careerlocation.api import ActorResource, ActorResponseResource, \
     ActorQuestionResource, CareerLocationStateResource, MapLayerResource, \
     UserResource
 from tastypie.api import Api

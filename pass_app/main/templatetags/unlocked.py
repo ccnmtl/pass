@@ -1,5 +1,5 @@
 from django import template
-from main.views import _unlocked
+from pass_app.main.views import _unlocked
 
 register = template.Library()
 

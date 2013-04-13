@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from pass.careerlocation.models import Actor, ActorQuestion, ActorResponse, \
-    CareerLocationState, MapLayer
+from pass_app.careerlocation.models import Actor, ActorQuestion, \
+    ActorResponse, CareerLocationState, MapLayer
 from tastypie import fields
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource

@@ -1,7 +1,7 @@
 from settings_shared import *
 
 TEMPLATE_DIRS = (
-    "/var/www/pass/pass/pass/templates",
+    "/var/www/pass/pass/pass_app/templates",
 )
 
 MEDIA_ROOT = '/var/www/pass/uploads/'

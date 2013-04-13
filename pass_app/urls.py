@@ -5,23 +5,23 @@ import os.path
 from django.views.generic.simple import direct_to_template
 admin.autodiscover()
 
-site_media_root = os.path.join(os.path.dirname(__file__), "media")
+site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
 urlpatterns = patterns(
     '',
-    (r'^$', 'pass.main.views.intro'),
+    (r'^$', 'pass_app.main.views.intro'),
 
     (r'^about/',
      direct_to_template, {'template': 'main/about.html'}),
     (r'^help/',
      direct_to_template, {'template': 'main/help.html'}),
 
-    (r'^export/$', 'pass.main.views.exporter'),
-    (r'^import/$', 'pass.main.views.importer'),
-    (r'^admin/_clear_state/$', 'pass.main.views.clear_state'),
-    ('^admin/allresults/$', 'pass.main.views.all_results'),
-    ('^admin/allresultskey/$', 'pass.main.views.all_results_key'),
-    (r'^admin/reports/(?P<path>.*)$', 'pass.main.views.reports'),
+    (r'^export/$', 'pass_app.main.views.exporter'),
+    (r'^import/$', 'pass_app.main.views.importer'),
+    (r'^admin/_clear_state/$', 'pass_app.main.views.clear_state'),
+    ('^admin/allresults/$', 'pass_app.main.views.all_results'),
+    ('^admin/allresultskey/$', 'pass_app.main.views.all_results_key'),
+    (r'^admin/reports/(?P<path>.*)$', 'pass_app.main.views.reports'),
     (r'^registration/', include('registration.urls')),
     ('^accounts/', include('djangowind.urls')),
     (r'^admin/pagetree/', include('pagetree.urls')),
@@ -38,17 +38,17 @@ urlpatterns = patterns(
     (r'^_quiz/', include('quizblock.urls')),
     (r'^quizblock/', include('quizblock.urls')),
     (r'^_careermap/', include('careermapblock.urls')),
-    (r'^_careerlocation/', include('pass.careerlocation.urls')),
+    (r'^_careerlocation/', include('pass_app.careerlocation.urls')),
     (r'^_stats/',
      direct_to_template, {'template': 'main/stats.html'}),
     (r'^edit/(?P<path>.*)$',
-     'pass.main.views.edit_page', {}, 'edit-page'),
+     'pass_app.main.views.edit_page', {}, 'edit-page'),
     (r'^instructor/(?P<path>.*)$',
-     'pass.main.views.instructor_page'),
+     'pass_app.main.views.instructor_page'),
     (r'^demographic/(?P<path>.*)$',
-     'pass.main.views.demographic'),
+     'pass_app.main.views.demographic'),
     (r'^module-one/(?P<path>.*)$',
-     'pass.main.views.module_one'),
+     'pass_app.main.views.module_one'),
     (r'^module-two/(?P<path>.*)$',
-     'pass.main.views.module_two'),
+     'pass_app.main.views.module_two'),
 )

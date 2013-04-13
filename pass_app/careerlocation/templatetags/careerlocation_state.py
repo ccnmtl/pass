@@ -1,5 +1,6 @@
 from django import template
-from careerlocation.models import CareerLocationState, CareerLocationBlock
+from pass_app.careerlocation.models import CareerLocationState, \
+    CareerLocationBlock
 register = template.Library()
 
 

@@ -73,10 +73,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware'
 )
 
-ROOT_URLCONF = 'pass.urls'
+ROOT_URLCONF = 'pass_app.urls'
 
 TEMPLATE_DIRS = (
-    "/var/www/pass/templates/",
+    "/var/www/pass/pass_app/templates/",
     os.path.join(os.path.dirname(__file__), "templates"),
 )
 
@@ -99,7 +99,7 @@ INSTALLED_APPS = (
     'munin',
     'pagetree',
     'pageblocks',
-    'pass.main',
+    'pass_app.main',
     'quizblock',
     'careermapblock',
     'registration',
@@ -107,7 +107,7 @@ INSTALLED_APPS = (
     'proxyblock',
     'south',
     'django_statsd',
-    'pass.careerlocation',
+    'pass_app.careerlocation',
 )
 
 STATSD_CLIENT = 'statsd.client'
