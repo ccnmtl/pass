@@ -4,8 +4,6 @@ import os, sys, site
 site.addsitedir('/var/www/pass/pass/ve/lib/python2.6/site-packages')
 
 # paths we might need to pick up the project's settings
-sys.path.append('/var/www/')
-sys.path.append('/var/www/pass/')
 sys.path.append('/var/www/pass/pass/')
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'pass.settings_production'

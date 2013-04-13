@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
+
+{% block title %}Welcome to PASS{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block css %}
+{{ block.super }}
+<link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+{% endblock %}
+
+{% block primarynav %}{% endblock %}
+
+{% block content %}
+<h2>Welcome to Population Based Approaches to Patient Service and Professional Success (PASS)</h2>
+
+    <div class="maintext">
+        <p>While your dental education intensely prepares you for understanding and applying biomedical and clinical competencies, there is little opportunity to consider the patient populations you will be able to serve at the completion of your training.</p>
+
+        <p>These modules are designed to orient you to populations across the lifespan so that you can consider how your career may align with your professional and personals goals.</p>
+
+        <p>The first of five modules focuses on the young children in the United States.</p>
+
+        {%  if demographic_survey_complete %}
+        <h3>Let's get started:</h3>
+        <ul class="module_list">
+            <li>Module 1: <a href="/module-one/">Young Children</a></li>
+            <li>Module 2: <a href="/module-two/">Adolescents</a></li>
+        </ul>
+        {%  else  %}
+        <p>Since this is your first time using this site, please fill out some information about yourself before you can access the modules.</p>
+        <p><a href="/demographic/survey/" class="btn btn-info btn-register">Register</a></p>
+        {%  endif %}
+    </div>
+
+{% endblock %}

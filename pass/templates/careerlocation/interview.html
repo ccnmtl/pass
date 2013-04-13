@@ -1,0 +1,241 @@
+{% load smartif %}
+{% load careerlocation_state %}
+
+
+<div class="career_location {{block.view}}" style="display: none">
+    <div id="view_type" style="display: none">{{block.view}}</div>
+    <div class="career_location_overlay" style="display: none"></div>
+
+    <div class="profile" style="display: none"></div>
+
+    <div class="toolbar">
+        <h2 class="left">
+            {% ifequal block.view "IV" %}
+                Interview Stakeholders
+            {% else %}{% ifequal block.view "LC" %}
+                Select a Practice Location
+            {% else %}{% ifequal block.view "BD" %}
+                Board of Director's Meeting
+            {% else %}{% ifequal block.view "RP" %}
+                Practice Location Report
+            {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
+        </h2>
+        <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
+        {% ifequal block.view "BD" %}
+            <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
+        {% else %}
+            <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
+        {% endifequal %}
+        <a class="btn right" href="#" id="toggle_notepad"><i class="icon-th-list"></i> Notepad</a>
+    </div>
+    <div class="visualclear"></div>
+
+    <div class="help_content popover-parent" style="display: none">
+        <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
+        <h3 class="popover-title">Help</h3>
+        <div class="popover-content">
+                {% ifequal block.view "IV" %}
+                    <h4>How to Interview Stakeholders</h4>
+                     <ol>
+                        <li> Click on stakeholder images within the map.</li>
+                        <li> Read the stakeholder profiles.</li>
+                        <li> Select 4 stakeholders to interview.</li>
+                        <li> Ask each stakeholder 3 questions.</li>
+                        <li> Take notes!</li>
+                    </ol>
+
+                    <h4>How to Use the Map</h4>
+                    <ol>
+                        <li> Click "Map Layers" to display additional information.</li>
+                        <li> Check the boxes next to each layer to turn it on or off.</li>
+                        <li> Use this information to help form your conclusion.</li>
+                    </ol>
+                {% else %}
+                    {% ifequal block.view "LC" %}
+                        <h4>How to Select a Practice Location</h4>
+                        <ol>
+                            <li> Move your mouse over the map.</li>
+                            <li> You will see a red star as you highlight individual cells.</li>
+                            <li> Click the Map Layers button to turn on/off map information.</li>
+                            <li> Use your notes to help make a decision.</li>
+                            <li> When you're ready, click on a cell to select your practice location.</li>
+                            <li> Change the location by clicking on other cells.</li>
+                            <li> Continue on by clicking the "Complete Board Application" link.</li>
+                        </ol>
+                    {% else %}
+                        <h4>How To Present at the Board of Director's Meeting</h4>
+                        <ol>
+                            <li> Each boardmember question will queue up automatically.</li>
+                            <li> Read the boardmembers' questions carefully.</li>
+                            <li> Answer to the best of your knowledge.</li>
+                            <li> Click the "Done" button only when you're finished answering. You cannot go back to change your response.</li>
+                            <li> When you've answer all the questions, click "Activity Summary" to continue.</li>
+                        </ol>
+                    {% endifequal %}
+                {% endifequal %}
+
+            <div class="popover-close"><a class="btn" href="#">Close</a></div>
+        </div>
+
+    </div>
+
+    <div class="map_layer_content popover-parent" style="display: none">
+        <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
+        <h3 class="popover-title">Select Map Layers</h3>
+        <div class="popover-content">
+            {% for layer in block.layers %}
+                <div>
+                    <input type="checkbox" class="select-layer" data-id="{{layer.id}}" id="select_layer_{{layer.id}}" value="{{layer.name}}"></input>
+                    {{ layer.display_name }}
+                </div>
+            {% endfor %}
+            <div class="popover-close"><a class="btn" href="#">Close</a></div>
+        </div>
+    </div>
+
+    <div class="notepad_content popover-parent" style="display: none">
+        <a class="btn right" href="#" id="toggle_notepad"><i class="icon-th-list"></i> Notepad</a>
+        <h3 class="popover-title">Notepad</h3>
+        <div class="popover-content">
+            <textarea class="notepad scrollable"></textarea>
+            <div class="popover-close"><a class="btn notepad" href="#">Close</a></div>
+        </div>
+    </div>
+
+    <div class="basic_instructions well left alert-info">
+        {% ifequal block.view "IV" %}
+            Click on stakeholders to view their profiles. You only have time to interview 4 of them, and ask 3 questions each. Turn on "Map Layers" to help gather information.
+        {% else %}
+            {% ifequal block.view "LC" %}
+                Please make your site recommendation for your oral health program.<br />
+                Move your mouse over the map, then click to select a site.
+            {% else %}
+                Answer the boardmembers' questions, using your notes and map as reference.
+                Click the "Done" button only when you're finished answering. You cannot go back to change your response.
+            {% endifequal %}
+        {% endifequal %}
+    </div>
+
+    {% ifnotequal block.view "RP" %}
+    <div class="unlock_instructions well left alert-success" style="display: none">
+        {% ifequal block.view "IV" %}
+            <b>Great work!</b> You've completed your interviews.<br />Click the "Select Practice Location" link to continue.
+        {% else %}
+            {% ifequal block.view "LC" %}
+                <b>Excellent!</b> You've selected a site recommendation for your oral health program.
+                Continue on to complete your board application.
+            {% else %}
+                <b>All set!</b> You've answered ALL the boardmembers' questions. Continue on to see how you did.
+            {% endifequal %}
+        {% endifequal %}
+    </div>
+    {% endifnotequal %}
+
+    <div class="interview_state" {% ifequal block.view "BD" %} style="display: none" {% endifequal %}>
+        {%  for x in block.max_stakeholders %}
+            <div class="actor_state left empty"><h1>{{ forloop.counter }}</h1></div>
+        {%  endfor %}
+    </div>
+    <div class="visualclear"></div>
+
+    <div class="boardmember_container" {% ifnotequal block.view "BD" %} style="display: none" {% endifnotequal %}>
+        {%  for actor in block.boardmembers.all %}
+            <div class="boardmember left disabled" data-sort="{{actor.order}}" data-id="{{actor.id}}">
+                <img src="{{actor.image.url}}"
+                     alt="interview boardmember"></img>
+            </div>
+        {%  endfor %}
+
+        <div class="visualclear"></div>
+
+        <div id="boardmember_question" class="callout border-callout">
+
+        </div>
+    </div>
+
+
+    <div {% ifequal block.view "BD" %} style="display: none" class="career_location_map_container popover" {% else %} class="career_location_map_container" {% endifequal %}>
+        {% ifequal block.view "BD" %}
+            <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
+            <h2 class="popover-title">Map View</h2>
+        {% endifequal %}
+
+        {% ifnotequal block.view "IV" %}
+            {% ifequal block.view "RP" %}
+                {% with block.practice_location_report as cells %}
+                    <table class="location_grid {{block.view}}">
+                        {% for i in block.grid_rows %}
+                            {% with forloop.counter0 as outerloop %}
+                                <tr>
+                                    {% for j in block.grid_columns %}
+                                        <td>
+                                            {% get_location_count block cells outerloop forloop.counter0 %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endwith %}
+                        {% endfor %}
+                    </table>
+                {% endwith %}
+            {% else %}
+                <table class="location_grid {{block.view}}">
+                    {% for i in block.grid_rows %}
+                        {% with forloop.counter0 as outerloop %}
+                            <tr>
+                                {% for j in block.grid_columns %}
+                                    <td>............<br/><br/>............</td>
+                                {% endfor %}
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
+                </table>
+            {% endifequal %}
+        {% endifnotequal %}
+
+        <div class="career_location_map">
+            {%  for actor in block.stakeholders.all %}
+                <div id="actor_map_{{actor.id}}" class="actor_container" style="left: {{actor.left}}px; top: {{actor.top}}px">
+                <img data-id="{{actor.id}}"
+                     class="actor"
+                     src="{{actor.image.url}}"
+                     alt="interview stakeholder"></img>
+                    <div class="question_state"></div>
+                </div>
+            {%  endfor %}
+
+            <img class="career_location_base_layer" src="{{block.base_layer.image.url}}" alt="career location base map" />
+            {% for layer in block.layers %}
+                <img id="map_layer_{{layer.id}}"
+                     data-id="{{layer.id}}"
+                     class="career_location_map_layer"
+                     src="{{layer.image.url}}"
+                     alt="career location base map"
+                     style="display: none; z-index: {{layer.z_index}}; opacity:0.{{layer.transparency}}; -moz-opacity:0.{{layer.transparency}}; filter:alpha(opacity={{layer.transparency}});"></img>
+            {% endfor %}
+        </div>
+        <div class="visualclear"></div>
+        <div class="map_legend_container">
+            <h3>Map Legends</h3>
+	    <div id="base_map_layer">{{block.base_layer.legend|safe}}</div>
+
+            {% for layer in block.layers %}
+                <div id="map_legend_{{layer.id}}"
+                     data-id="{{layer.id}}"
+                     class="map_legend left"
+                     style="display: none">
+                    <h5>{{layer.display_name}}</h5>
+                    {{layer.legend|safe}}
+                </div>
+            {% endfor %}
+            <div class="visualclear"></div>
+        </div>
+
+        {% ifequal block.view "BD" %}
+            <div class="visualclear"></div>
+            <div class="popover-close"><a class="btn" href="#">Close</a></div>
+        {% endifequal %}
+
+    </div>
+</div>
+
+<div class="visualclear"></div>

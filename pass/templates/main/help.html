@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
+{% block title %}Help{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block css %}
+{{ block.super }}
+<link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+{% endblock %}
+
+{% block loginbutton %}<a href="/" class="btn btn-mini btn-danger">Log in</a>{% endblock %}
+
+{% block projectbanner %}{% endblock %}
+
+{% block content %}
+
+<h2>Help</h2>
+
+<ul>
+	<li><a href="#browsers">What browsers should I use for this site?</a></li>
+	<li><a href="#uni_login">What is a UNI login?</a></li>
+	<li><a href="#create_account">How do I create a new account?</a></li>
+	<li><a href="#forgot_pswd">I forgot my account username/password. What should I do?</a></li>
+	<li><a href="#interactive">The interactive activities are not working.</a></li>
+	<li><a href="#undo_responses1">Can I undo my responses in the activities?</a></li>
+	<li><a href="#undo_responses2">I entered incorrect information on the Feedback/Register page. Can I change it?</a></li>
+	<li><a href="#video">The videos are not playing on my browser/There's a "Blocked Plug-in" error message on the video.</a></li>
+	<li><a href="#navigate">Can I jump ahead to another section, or go back?</a></li>
+</ul>
+
+
+<h4><a name="browsers"></a>What browsers should I use for this site</h4>
+<p>PASS is best viewed in the following browsers:</p>
+<ul>
+	<li><a href="http://www.google.com/chrome/" target="_blank">Google Chrome</a></li>
+	<li><a href="http://getfirefox.com" target="_blank">Mozilla Firefox</a></li>
+	<li><a href="http://www.apple.com/safari/" target="_blank">Apple Safari</a></li>
+	<li><a href="http://windows.microsoft.com/ie/" target="_blank">Internet Explore</a> for Windows <b><i>versions 8 and above.</i></b></li>
+</ul>
+
+
+<h4><a name="uni_login"></a>What is a UNI login?</h4>
+<p>A UNI is the username and password assigned to you if you are a student, faculty or staff member of Columbia University. Please visit the <a href="http://cuit.columbia.edu/cuit/manage-my-uni" target="_blank">Columbia Univesity Information Technology</a> (CUIT) website for more information.</p>
+
+<h4><a name="create_account"></a>How do I create a new account?</h4>
+<ul>
+	<li>Click "<a href="/registration/register/">Need a new account?</a>" link on the login page. </li>
+	<li>Once you've selected your username and password, you will receive an email. Please check it and click on the confirmation link to activate your PASS account.</li>
+	<li>Log in after you've activated your account using the username and password you set at registration to access PASS modules.</li>
+</ul>
+
+<h4><a name="forgot_pswd"></a>I forgot my account username/password. What should I do?</h4>
+<p>If you're logging in using your UNI, please visit the <a href="http://cuit.columbia.edu/cuit/manage-my-uni" target="_blank">CUIT</a> website to reset your password.</p>
+
+<p>If you're logging in using your PASS account, please <a href="mailto:ccnmtl-pass@columbia.edu">send us an email</a> and we will help you reset your account.</p>
+
+<h4><a name="interactive"></a>The interactive activities are not working.</h4>
+<p>First, check if your browser is listed on the <a href="#browsers">supported browser</a> list of this website. Then check the JavaScript setting for your browser. If it is disabled, turn JavaScript on.</p>
+
+<p>If the activities are still not working properly, please <a href="mailto:ccnmtl-pass@columbia.edu">send us an email</a> detailing what went wrong, which operating system you're on, and the browser version you're using.</p>
+
+<h4><a name="undo_responses1"></a>Can I undo my responses in the activities?</h4>
+<p>Unfortunately, you cannot undo the responses within the activities that you've submitted. However, please <a href="mailto:ccnmtl-pass@columbia.edu">send us an email</a> to discuss a reset to the activities.</p>
+
+<h4><a name="undo_responses2"></a>I entered incorrect information on the Feedback/Register page. Can I change it?</h4>
+<p>Please <a href="mailto:ccnmtl-pass@columbia.edu">send us an email</a> to request help on reseting your registration and feedback.</p>
+
+<h4><a name="video"></a>The videos are not playing on my browser.</h4>
+<p>This site uses Flash video, and it requires the latest version of Adobe Flash Player. Please <a href="http://get.adobe.com/flashplayer/" target="_blank">install the player</a> and try again.</p>
+
+<p>If the video playback problem still persists, please <a href="mailto:ccnmtl-pass@columbia.edu">send us an email</a> detailing what went wrong, which operating system you're on, and the browser version you're using.</p>
+
+<h4><a name="navigate"></a>Can I jump ahead to another section, or go back?</h4>
+<p>PASS modules are serial learning environment, where you can move forward a section at a time. You can return to visited sections using the drop-down menu bearing the name of the module.</p>
+
+
+{% endblock %}

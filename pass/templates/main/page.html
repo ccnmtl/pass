@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load render %}
+{% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
+
+{% block js %}
+
+    {% for block in section.pageblock_set.all %}
+        {% renderjs block %}
+    {% endfor %}
+
+    {% ifequal module.slug 'adolescents' %}
+        <script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
+    {% endifequal %}
+
+
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+
+            jQuery("form").submit(function() {
+                var valid = true;
+
+                var children = jQuery(this).find("input,textarea,select");
+                jQuery.each(children, function() {
+                    if (valid) {
+                        if (this.tagName === 'INPUT' && this.type === 'text' ||
+                                this.tagName === 'TEXTAREA') {
+                            valid = jQuery(this).val().trim().length > 0;
+                        }
+
+                        if (this.tagName === 'SELECT') {
+                            var value = jQuery(this).val()
+                            valid = value !== undefined && value.length > 0 && jQuery(this).val().trim() !== '-----';
+                        }
+
+                        if (this.type === 'checkbox' || this.type === 'radio') {
+                            // one in the group needs to be checked
+                            var selector = 'input[name=' + jQuery(this).attr("name") + ']';
+                            valid = jQuery(selector).is(":checked");
+                        }
+                    }
+                });
+
+                if (!valid) {
+                    alert("Please complete all form fields before continuing.");
+                }
+
+                return valid;
+            });
+        });
+    </script>
+
+{% endblock %}
+
+{% block css %}
+    {% ifequal module.slug 'adolescents' %}
+        <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+        {% comment %}<link href="/site_media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">{% endcomment %}
+    {% endifequal %}
+
+    {% for block in section.pageblock_set.all %}
+        {% rendercss block %}
+    {% endfor %}
+{% endblock %}
+
+
+{% block title %}{{module.label}}&mdash;{{section.label}}{% endblock %}
+
+{% block projectbanner %}{% endblock %}
+
+{% block primarynav %}
+    {{ block.super }}
+
+    <!-- ###### Secondary Navigation ###### -->
+    <div id="secondary_navigation" style="display: none">
+        <div class="block">
+            {% if module.get_children %}
+                <!--<h3>Sections</h3>-->
+                {% include "main/menu.html" %}
+            {% endif %}
+        </div><!-- div id="block" -->
+    </div><!-- div id="secondary_navigation" -->
+{% endblock %}
+
+{% block sidenav %}
+
+{% endblock %}
+
+{% block content %}
+
+{% ifequal section.slug 'interview-stakeholders' %}
+{% else %}
+{% ifequal section.slug 'complete-board-application' %}
+{% else %}
+{% ifequal section.slug 'select-practice-location' %}
+{% else %}
+<h2>{{section.label}}</h2>
+{% endifequal %}
+{% endifequal %}
+{% endifequal %}
+
+{% if needs_submit %}
+{% if is_submitted %}
+{% else %}
+<form action="." method="post">
+{% endif %}
+{% endif %}
+
+
+{% for block in section.pageblock_set.all %}
+<div class="pageblock" id="pageblock-{{block.id}}">
+{% if block.label %}<h3>{{block.label}}</h3>{% endif %}
+{% render block %}
+</div>
+{% endfor %}
+
+
+{% if needs_submit %}
+{% if request.user.is_anonymous %}
+{% else %}
+
+{% if is_submitted %}
+{% if allow_redo %}
+<form action="." method="post">
+<input type="hidden" name="action" value="reset" />
+<input type="submit" value="Clear your answers and try again" class="btn btn-info right" />
+</form>
+{% endif %}
+{% else %}
+<input type="submit" value="Submit" class="btn btn-info right" />
+
+</form>
+{% endif %}
+{% endif %}
+{% endif %}
+
+{% endblock %}
+
+{% block content-nav %}
+
+    <div class="content-nav">
+        {%  with section.get_previous as previous %}
+            {%  if previous %}
+                {%  ifnotequal previous.depth 2 %}
+                    <a href="{{previous.get_absolute_url}}" id="previous" class="pager_button"><b>&larr;</b> {{previous.label}} </a>
+                {% endifnotequal %}
+            {% endif %}
+        {% endwith %}
+
+        {% with section.get_next as next %}
+            {% if next %}
+                {% if not next.is_root %}
+                    {% if next_unlocked %}
+                        <a href="{{ next.get_absolute_url}}" id="next" class="pager_button">{{next.label}} <b>&rarr;</b></a>
+                    {% else %}
+                        <div id="next" class="pager_button">{{next.label}} <b>&rarr;</b></div>
+                        <input type="hidden" id="next_url" value="{{next.get_absolute_url}}" />
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endwith %}
+                 <div class="visualclear"></div>
+    </div><!-- div id="content-nav" -->
+
+{% endblock %}

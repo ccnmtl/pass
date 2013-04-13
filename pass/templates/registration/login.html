@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
+{% block widthtype %}fixed login{% endblock %}
+{% block title %}Log In{% endblock %}
+{% block primarynav %}{% endblock %}
+{% block content %}
+
+<div class="loginbox">
+	<h2>Choose a login option...</h2>
+	<div class="content">
+	
+	
+	<form method="get" action="{{ wind_base }}login">
+	<input type="hidden" name="service" value="{{ wind_service }}" />
+	<input type="hidden" name="destination" value="http://{{ request.get_host }}/accounts/windlogin/?next={{ next }}" />
+	<p>If you have a Columbia University Network ID (UNI)...</p>
+	<input class="regbutton" type="submit" value="LOG IN" />
+	</form>
+
+	<p class="smalltxt"><a href="http://cuit.columbia.edu/cuit/manage-my-uni" title="Learn more about UNI" target="_blank">What is a UNI?</a></p>
+	<!-- End UNI LOG IN -->
+	
+	<hr class="seperator" />
+	
+{% if form.errors%}
+    <p class="errornote"><span><b>ERROR:</b> Invalid username or password.</span> Please try again. Note that both username and password are case-sensitive.</p>
+{% endif %}
+
+	<p>If you have a PASS account...</p>
+<form method="post" action="." name="login_local">
+
+{% csrf_token %}
+
+	<div class="fieldwrapper">
+		<label for="id_username">Username:</label>
+		{{ form.username }}
+	</div><!-- fieldwrapper -->
+
+	<div class="fieldwrapper">
+		<label for="id_password">Password:</label>
+		{{ form.password }}
+	</div><!-- fieldwrapper -->
+    
+
+<input class="regbutton" type="submit" value="LOG IN" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+
+
+	<p class="smalltxt"><a href="/registration/register/" title="Create your new PASS account">Need a new account?</a></p>
+	</div><!-- content -->
+</div><!-- loginbox -->
+
+<h2>Welcome to Population Based Approaches to Patient Service and Professional Success (PASS)</h2>
+
+<p>While your dental education prepares you well for clinical practice, there is often little time to reflect upon how your future dental career and personal goals may align with the needs of vulnerable underserved populations.</p>
+
+<p>PASS is a series of self-paced, web-based learning modules that address five specific populations across the lifespan, their oral health needs, and opportunities to address their care.</p>
+
+<p>Each module will include:</p>
+
+<ol>
+	<li>a description of one population and its oral health status and needs,</li>
+	<li>an activity that presents information on opportunities unique to addressing that population, and</li>
+	<li>videos of real life dental exemplars who have successfully incorporated service to these populations into their professional careers.</li>
+</ol>
+
+<p><i>Please log in with your UNI or your PASS account ID to access these modules.</b></i>
+
+{% endblock %}

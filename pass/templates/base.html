@@ -1,0 +1,181 @@
+{% load getroot %}
+{% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>PASS: {% block title %}{% endblock %}</title>
+	<link rel="stylesheet" href="/site_media/css/main.css?site=PASS" media="screen" />
+	<link rel="stylesheet" href="/site_media/css/print.css?site=PASS" media="print" />
+	<link rel="shortcut icon" href="/site_media/img/favicon.ico" type="image/x-icon" />
+	{% block css %}{% endblock %}
+
+	{% block feeds %}{% endblock %}
+</head>
+<body class="one_column {% block widthtype %}fixed{% endblock %} {% ifequal module.slug 'young-children' %}no_bootstrap{% endifequal %}">
+{% comment %}
+###### FOR WIDTH TYPE--
+   fixed : fixed width, doesn't change with browser resize
+   fluid : variable width, changes with browser resize
+   You can move this to base template if you don't want to deal with it
+   all time in flatpages templates
+{% endcomment %}
+
+<div id="container">
+    <div id="shieldbox"></div>
+
+{% block masthead %}
+    <!-- ###### Site banner ###### -->
+    <div id="header">
+        <!-- Project title/logo -->
+        <h1 id="logo_project"><a href="{{site_root}}/" title="PASS"><span>PASS</span></a></h1>	
+
+		{% block standardnav %}
+		<ul id="standardnav"></ul>
+		{% endblock %}
+
+        {% block usernav %}
+        <div id="usernav">
+            <h4 id="logo_uncharted"><span>Uncharted Dental Education</span></a></h4>
+            <div class="userstatus">
+            {% if request.user.is_anonymous %}
+                {% block loginbutton %}{% endblock %}
+            {% else %}
+                Hello, {% if request.user.first_name or request.user.last_name %}{{request.user.first_name}}{% else %}{{ request.user.username }}{% endif %}
+                &nbsp;
+                <a href="/logout/" class="btn btn-mini btn-danger">Log out</a>
+            {% comment %}{% if can_edit %}
+                <a href="/edit{{request.path}}" class="btn btn-mini btn-info">Edit</a>
+            {% if instructor_link %}
+                <a href="/instructor{{request.path}}" class="btn btn-mini btn-info">responses</a>
+            {% endif %}
+            {% endif %}{% endcomment %}
+            {% endif %}
+            </div><!-- userstatus -->
+        </div><!-- id="usernav" -->
+        {% endblock %}
+    </div><!-- id="header" -->
+{% endblock %}
+
+	<!-- ###### Don't touch this ###### -->
+	<div class="visualclear"></div>
+	
+    
+	<!-- ###### PASS banner ###### -->
+{% block projectbanner %}
+    <div id="banner"></div>
+{% endblock %}
+
+
+{% block primarynav %}
+	<!-- ###### Primary navigation ###### -->
+    <div id="primarynav">
+        <div class="encase" id="{% block navalignment %}leftside{% endblock %}">
+            {% comment %}
+            ###### FOR ALIGNMENT OF TABS on the primary navigation--
+            leftside : all tabs aligning to the left, login to the right
+            rightside :  all tabs aligning to the right, login to the left
+            {% endcomment %}
+            
+            {% block primarynavtabs %}
+            <ul class="globalnav">
+                {% for section in modules %}
+                <li {% ifequal section.id module.id %} class="active section"{% endifequal %}>
+                <a href="#">{{section.label}} <span class="icon-chevron-down"></span></a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endblock %}
+                {% if request.user.is_superuser %}
+                    {% if can_edit %}
+                        {% ifequal section.get_absolute_url NONE  %}
+                        {% else %}
+                            <ul class="pagemode nav nav-pills" style="float:right;">
+                            <li class="pmode_title"><a style="color: #000 !important;"><b>Page mode:</b></a></li>
+                            <li{% block mode-view %} class="active"{% endblock %}> <a href="{{section.get_absolute_url}}" >View</a></li>
+                            <li{% block mode-edit %}{% endblock %}><a href="/edit{{section.get_absolute_url}}">Edit</a></li>
+                            {% if instructor_link %}
+                            <li{% block mode-responses %}{% endblock %}><a href="/instructor{{request.path}}">Responses</a></li>
+                            {% endif %}
+                            </ul>
+                        {% endifequal %}
+                    {% endif %}                   
+                {% endif %} <!-- superuser -->
+        </div><!-- id="leftside/rightside" -->
+    </div><!-- id="primarynav" -->
+{% endblock %}
+
+
+{% comment %} not using this now <div id="breadcrumbs">{% block breadcrumbs %}{% endblock %}</div> {% endcomment %}
+
+
+	<!-- ###### Page: Sidebars and Content ###### -->
+    <div id="pagebody">
+        {% block sidenav %}{% endblock %}
+        
+        <!-- ###### Page Content ###### -->
+        <div id="content">
+            <div id="squish"><!-- Don't touch this div -->
+                <div class="block">
+
+                {% block pagetitle %}{% endblock %}
+                {% block content %}{% endblock %}
+                 <div class="visualclear"></div>
+                {% block content-nav %}{% endblock %}
+                
+                </div><!-- class="block" -->
+            </div><!-- id="squish" -->
+        </div><!-- id="content" -->
+        
+        <div class="visualclear"></div>
+        
+    </div><!-- id="pagebody" -->
+
+
+
+{% block footer %}
+	<!-- ###### Footer ###### -->
+	<div id="footer">
+	<ul id="standard-elements">
+	<li>
+	<a href="{{site_root}}/about">About</a>
+	</li>
+	<li>
+	<a href="{{site_root}}/help">Help</a>
+	</li>
+	<li>
+	<a href="mailto:ccnmtl-pass@columbia.edu">Contact</a>
+	</li>
+	</ul>
+	<p class="printonly"><br /><img src="/site_media/img/logo_ccnmtl_sidebar.gif" class="printonly" /></p>
+	</div><!-- id="footer" -->
+{% endblock %}
+
+</div><!-- id="container" -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" ></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/site_media/js/browserdetect.js" type="text/javascript" language="javascript"></script>
+<script src="/site_media/js/shield.js" type="text/javascript" language="javascript"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        /* Select from list: Chrome, Firefox, Safari, MSIE */
+        shieldbrowser({"Chrome": 15, "Firefox": 10, "Safari": 4, "MSIE": 8 });
+
+        jQuery("li.section a").click(function(evt) {
+            jQuery(this).parents("div#primarynav").next().slideToggle();
+            evt.stopPropagation();
+        });
+
+        jQuery("body").click(function() {
+            if (jQuery("#secondary_navigation").is(":visible")) {
+                jQuery("#secondary_navigation").slideToggle();
+            }
+        });
+    });
+</script>
+
+{% block js %}{% endblock %}
+</body>
+</html>
