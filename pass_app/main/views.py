@@ -1,4 +1,3 @@
-from pass_app.careerlocation.models import Actor, CareerLocationState
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -7,11 +6,13 @@ from django.http import HttpResponseRedirect, HttpResponse, \
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils.encoding import smart_str
-from pass_app.main.models import UserProfile, UserVisited
 from pagetree.helpers import get_hierarchy, get_section_from_path, \
     get_module, needs_submit, submitted
 from pagetree.models import Hierarchy
 from pagetree_export.exportimport import export_zip, import_zip
+from pass_app.careerlocation.models import Actor, CareerLocationState, \
+    ActorResponse
+from pass_app.main.models import UserProfile, UserVisited
 from quizblock.models import Submission, Response
 from zipfile import ZipFile
 import csv
@@ -130,6 +131,17 @@ def module_two(request, path):
         return HttpResponseRedirect(hierarchy.get_root().get_absolute_url())
 
     hierarchy = get_hierarchy('module-two')
+    return process_page(request, path, hierarchy)
+
+
+@login_required
+@rendered_with('main/page.html')
+def module_three(request, path):
+    if not demographic_survey_complete(request):
+        hierarchy = get_hierarchy('demographic')
+        return HttpResponseRedirect(hierarchy.get_root().get_absolute_url())
+
+    hierarchy = get_hierarchy('module-three')
     return process_page(request, path, hierarchy)
 
 
@@ -582,6 +594,7 @@ def edit_page(request, path):
     root = section.hierarchy.get_root()
 
     return dict(section=section,
+                can_edit=True,
                 module=get_module(section),
                 modules=root.get_children(),
                 root=section.hierarchy.get_root())
@@ -666,10 +679,8 @@ def clear_state(request):
     quizblock.models.Submission.objects.filter(user=request.user).delete()
 
     # clear careerlocationstate
-    import careerlocation
-    careerlocation.models.ActorResponse.objects.filter(
-        user=request.user).delete()
-    careerlocation.models.CareerLocationState.objects.filter(
+    ActorResponse.objects.filter(user=request.user).delete()
+    CareerLocationState.objects.filter(
         user=request.user).delete()
 
     return HttpResponseRedirect("/")

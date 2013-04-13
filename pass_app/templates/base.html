@@ -86,21 +86,23 @@
                 {% endfor %}
             </ul>
             {% endblock %}
-                {% if request.user.is_superuser %}
-                    {% if can_edit %}
-                        {% ifequal section.get_absolute_url NONE  %}
-                        {% else %}
-                            <ul class="pagemode nav nav-pills" style="float:right;">
-                            <li class="pmode_title"><a style="color: #000 !important;"><b>Page mode:</b></a></li>
-                            <li{% block mode-view %} class="active"{% endblock %}> <a href="{{section.get_absolute_url}}" >View</a></li>
-                            <li{% block mode-edit %}{% endblock %}><a href="/edit{{section.get_absolute_url}}">Edit</a></li>
-                            {% if instructor_link %}
-                            <li{% block mode-responses %}{% endblock %}><a href="/instructor{{request.path}}">Responses</a></li>
-                            {% endif %}
-                            </ul>
-                        {% endifequal %}
-                    {% endif %}                   
-                {% endif %} <!-- superuser -->
+           
+            <!-- superuser -->
+           {% if request.user.is_superuser %}
+               {% if can_edit %}
+                   {% ifequal section.get_absolute_url NONE  %}
+                   {% else %}
+                       <ul class="pagemode nav nav-pills" style="float:right;">
+                       <li class="pmode_title"><a style="color: #000 !important;"><b>Page mode:</b></a></li>
+                       <li{% block mode-view %} class="active"{% endblock %}> <a href="{{section.get_absolute_url}}" >View</a></li>
+                       <li{% block mode-edit %}{% endblock %}><a href="/edit{{section.get_absolute_url}}">Edit</a></li>
+                       {% if instructor_link %}
+                       <li{% block mode-responses %}{% endblock %}><a href="/instructor{{request.path}}">Responses</a></li>
+                       {% endif %}
+                       </ul>
+                   {% endifequal %}
+               {% endif %}                   
+           {% endif %}
         </div><!-- id="leftside/rightside" -->
     </div><!-- id="primarynav" -->
 {% endblock %}

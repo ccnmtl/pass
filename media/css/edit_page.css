@@ -1,0 +1,38 @@
+#edit-blocks-tab .draggable {background-color: #ddd;}
+
+.draghandle {float: left;}
+
+#children-order-list {list-style-type: none; margin-left: 0px; padding: 5px;}
+
+li.children {margin: 0 3px 3px 3px; padding: 0.4em;
+    padding-left: 1.5em;
+    background-color: #ddd;}
+
+li.children span {position: absolute; margin-left: -1.3em;}
+
+li.children a {text-decoration: underline;}
+
+.dragging {border: #f60 solid 1px;}
+
+table.block-edit-header,
+table.block-edit-header tr,
+table.block-edit-header tr td {
+    border: 0;
+}
+
+div.block-edit form table tbody tr td a {
+    text-decoration: underline;
+}
+
+/* MATCH specific css */
+#id_topics, #id_question {
+    width: 100%;
+}
+
+h2.edit-section-label {
+    padding: 0 !important;
+}
+
+div#tabber {
+	margin-bottom: 20px;
+}
