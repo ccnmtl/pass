@@ -1,9 +1,10 @@
 from pass_app.careerlocation.models import Actor, ActorQuestion, \
-    ActorResponse, CareerLocationState, MapLayer
+    ActorResponse, CareerLocationState, MapLayer, Strategy
 from django.contrib import admin
 
 admin.site.register(MapLayer)
 admin.site.register(Actor)
+admin.site.register(Strategy)
 
 
 class ActorQuestionAdmin(admin.ModelAdmin):

@@ -18,6 +18,7 @@ urlpatterns = patterns(
 
     (r'^export/$', 'pass_app.main.views.exporter'),
     (r'^import/$', 'pass_app.main.views.importer'),
+    (r'^download/(?P<filename>\w[^/]*)/$', 'pass_app.main.views.download'),
     (r'^admin/_clear_state/$', 'pass_app.main.views.clear_state'),
     ('^admin/allresults/$', 'pass_app.main.views.all_results'),
     ('^admin/allresultskey/$', 'pass_app.main.views.all_results_key'),

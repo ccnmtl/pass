@@ -66,6 +66,20 @@ class ActorResponse(models.Model):
     long_response = models.TextField(null=True, blank=True)
 
 
+class Strategy(models.Model):
+    def __unicode__(self):
+        return "%s. %s" % (self.ordinal, self.title)
+
+    ordinal = models.PositiveIntegerField()
+    title = models.CharField(max_length=256)
+    summary = models.TextField()
+    pros = models.TextField()
+    cons = models.TextField()
+    pdf = models.FileField(
+        upload_to="layers/%Y/%m/%d/", null=True, blank=True)
+    example = models.URLField(null=True, blank=True)
+
+
 class CareerLocationState(models.Model):
     def __unicode__(self):
         return self.user.username
@@ -77,6 +91,10 @@ class CareerLocationState(models.Model):
     notes = models.TextField(null=True, blank=True)
     practice_location_row = models.IntegerField(null=True, blank=True)
     practice_location_column = models.IntegerField(null=True, blank=True)
+    strategies_viewed = models.ManyToManyField(
+        Strategy, null=True, blank=True, related_name="strategies_viewed")
+    strategy_selected = models.ForeignKey(
+        Strategy, null=True, blank=True, related_name="strategy_selected")
 
     def get_response(self, question):
         a = self.responses.filter(question=question)
@@ -96,8 +114,10 @@ class CareerLocationBlock(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
     template_file = "careerlocation/interview.html"
     js_template_file = "careerlocation/interview_js.html"
-    css_template_file = "careerlocation/interview_css.html"
+    css_template_file = "careerlocation/careerlocation_css.html"
     base_layer = models.ForeignKey(MapLayer)
+    optional_layers = models.ManyToManyField(MapLayer,
+                                             related_name="optional_layers")
     display_name = "Career Location Exercise"
 
     view = models.CharField(max_length=2, choices=VIEW_CHOICES)
@@ -178,7 +198,7 @@ class CareerLocationBlock(models.Model):
         return True
 
     def layers(self):
-        return MapLayer.objects.exclude(name="base")
+        return self.optional_layers.all()
 
     def practice_location_report(self):
         cells = [0] * (len(self.grid_columns) * len(self.grid_rows))
@@ -199,7 +219,7 @@ class CareerLocationBlockForm(forms.ModelForm):
 class CareerLocationSummaryBlock(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
     template_file = "careerlocation/summary.html"
-    css_template_file = "careerlocation/interview_css.html"
+    css_template_file = "careerlocation/careerlocation_css.html"
     display_name = "Career Location Summary"
 
     def boardmembers(self):
@@ -239,3 +259,83 @@ class CareerLocationSummaryBlock(models.Model):
 class CareerLocationSummaryBlockForm(forms.ModelForm):
     class Meta:
         model = CareerLocationSummaryBlock
+
+
+STRATEGY_VIEW_CHOICES = (
+    ('VP', 'View Strategies'),
+    ('SP', 'Select Strategy'),
+    ('DP', 'Defend Strategy Selection'),
+    ('PC', 'Strategy Pros And Cons'),
+)
+
+
+class CareerLocationStrategyBlock(models.Model):
+    pageblocks = generic.GenericRelation(PageBlock)
+    template_file = "careerlocation/strategy.html"
+    js_template_file = "careerlocation/strategy_js.html"
+    css_template_file = "careerlocation/careerlocation_css.html"
+    base_layer = models.ForeignKey(MapLayer)
+    optional_layers = models.ManyToManyField(
+        MapLayer, related_name="strategy_optional_layers")
+    view = models.CharField(max_length=2, choices=STRATEGY_VIEW_CHOICES)
+
+    display_name = "Career Location Strategy Exercise"
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def needs_submit(self):
+        return False
+
+    @classmethod
+    def add_form(self):
+        return CareerLocationStrategyBlockForm()
+
+    def edit_form(self):
+        return CareerLocationStrategyBlockForm(instance=self)
+
+    @classmethod
+    def create(self, request):
+        form = CareerLocationStrategyBlockForm(request.POST)
+        return form.save()
+
+    def edit(self, vals, files):
+        form = CareerLocationStrategyBlockForm(data=vals,
+                                               files=files,
+                                               instance=self)
+        if form.is_valid():
+            form.save()
+
+    def unlocked(self, user):
+        '''
+            This module is unlocked if:
+                The user has selected 4 stakeholders
+        '''
+        a = CareerLocationState.objects.filter(user=user)
+        if len(a) < 1:
+            return False
+
+        state = a[0]
+
+        if len(state.strategies_viewed.all()) < len(self.strategies()):
+            return False
+
+        if self.view != "VP":
+            if state.strategy_selected is None:
+                return False
+
+        return True
+
+    def strategies(self):
+        return Strategy.objects.all().order_by('ordinal')
+
+    def layers(self):
+        return self.optional_layers.all()
+
+
+class CareerLocationStrategyBlockForm(forms.ModelForm):
+    class Meta:
+        model = CareerLocationStrategyBlock

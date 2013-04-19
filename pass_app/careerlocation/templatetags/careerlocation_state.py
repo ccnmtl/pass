@@ -76,3 +76,45 @@ def get_location_count(parser, token):
     column = token.split_contents()[1:][3]
 
     return GetLocationCount(block, cells, row, column)
+
+
+class GetCareerLocationState(template.Node):
+    def __init__(self, user):
+        self.user = template.Variable(user)
+
+    def render(self, context):
+        u = self.user.resolve(context)
+
+        obj, created = CareerLocationState.objects.get_or_create(user=u)
+        return obj
+
+
+@register.tag('get_career_location_state')
+def get_career_location_state(parser, token):
+    user = token.split_contents()[1:][0]
+    return GetCareerLocationState(user)
+
+
+class GetUserStrategyState(template.Node):
+    def __init__(self, user, strategy):
+        self.user = template.Variable(user)
+        self.strategy = template.Variable(strategy)
+
+    def render(self, context):
+        u = self.user.resolve(context)
+        s = self.strategy.resolve(context)
+
+        obj, created = CareerLocationState.objects.get_or_create(user=u)
+        if s == obj.strategy_selected:
+            return "selected"
+        elif s in obj.strategies_viewed.all():
+            return "viewed"
+
+        return ""
+
+
+@register.tag('get_user_strategy_state')
+def get_user_strategy_state(parser, token):
+    user = token.split_contents()[1:][0]
+    strategy = token.split_contents()[1:][1]
+    return GetUserStrategyState(user, strategy)

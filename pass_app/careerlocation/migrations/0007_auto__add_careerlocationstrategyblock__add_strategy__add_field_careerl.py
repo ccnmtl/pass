@@ -7,15 +7,64 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        
+        # Adding model 'CareerLocationStrategyBlock'
+        db.create_table('careerlocation_careerlocationstrategyblock', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('base_layer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['careerlocation.MapLayer'])),
+            ('view', self.gf('django.db.models.fields.CharField')(max_length=2)),
+        ))
+        db.send_create_signal('careerlocation', ['CareerLocationStrategyBlock'])
 
-        # Adding field 'Actor.title'
-        db.add_column('careerlocation_actor', 'title', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True), keep_default=False)
+        # Adding M2M table for field optional_layers on 'CareerLocationStrategyBlock'
+        db.create_table('careerlocation_careerlocationstrategyblock_optional_layers', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('careerlocationstrategyblock', models.ForeignKey(orm['careerlocation.careerlocationstrategyblock'], null=False)),
+            ('maplayer', models.ForeignKey(orm['careerlocation.maplayer'], null=False))
+        ))
+        db.create_unique('careerlocation_careerlocationstrategyblock_optional_layers', ['careerlocationstrategyblock_id', 'maplayer_id'])
+
+        # Adding model 'Strategy'
+        db.create_table('careerlocation_strategy', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('ordinal', self.gf('django.db.models.fields.PositiveIntegerField')()),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=256)),
+            ('summary', self.gf('django.db.models.fields.TextField')()),
+            ('pros', self.gf('django.db.models.fields.TextField')()),
+            ('cons', self.gf('django.db.models.fields.TextField')()),
+            ('pdf', self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True, blank=True)),
+            ('example', self.gf('django.db.models.fields.URLField')(max_length=200, null=True, blank=True)),
+        ))
+        db.send_create_signal('careerlocation', ['Strategy'])
+
+        # Adding field 'CareerLocationState.strategy_selected'
+        db.add_column('careerlocation_careerlocationstate', 'strategy_selected', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='strategy_selected', null=True, to=orm['careerlocation.Strategy']), keep_default=False)
+
+        # Adding M2M table for field strategies_viewed on 'CareerLocationState'
+        db.create_table('careerlocation_careerlocationstate_strategies_viewed', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('careerlocationstate', models.ForeignKey(orm['careerlocation.careerlocationstate'], null=False)),
+            ('strategy', models.ForeignKey(orm['careerlocation.strategy'], null=False))
+        ))
+        db.create_unique('careerlocation_careerlocationstate_strategies_viewed', ['careerlocationstate_id', 'strategy_id'])
 
 
     def backwards(self, orm):
+        
+        # Deleting model 'CareerLocationStrategyBlock'
+        db.delete_table('careerlocation_careerlocationstrategyblock')
 
-        # Deleting field 'Actor.title'
-        db.delete_column('careerlocation_actor', 'title')
+        # Removing M2M table for field optional_layers on 'CareerLocationStrategyBlock'
+        db.delete_table('careerlocation_careerlocationstrategyblock_optional_layers')
+
+        # Deleting model 'Strategy'
+        db.delete_table('careerlocation_strategy')
+
+        # Deleting field 'CareerLocationState.strategy_selected'
+        db.delete_column('careerlocation_careerlocationstate', 'strategy_selected_id')
+
+        # Removing M2M table for field strategies_viewed on 'CareerLocationState'
+        db.delete_table('careerlocation_careerlocationstate_strategies_viewed')
 
 
     models = {
@@ -34,7 +83,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 4, 19, 11, 20, 0, 990565)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -42,7 +91,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 4, 19, 11, 20, 0, 990482)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -79,6 +128,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'CareerLocationBlock'},
             'base_layer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['careerlocation.MapLayer']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'optional_layers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'optional_layers'", 'symmetrical': 'False', 'to': "orm['careerlocation.MapLayer']"}),
             'view': ('django.db.models.fields.CharField', [], {'max_length': '2'})
         },
         'careerlocation.careerlocationstate': {
@@ -90,7 +140,16 @@ class Migration(SchemaMigration):
             'practice_location_column': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'practice_location_row': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'responses': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['careerlocation.ActorResponse']", 'null': 'True', 'blank': 'True'}),
+            'strategies_viewed': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'strategies_viewed'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['careerlocation.Strategy']"}),
+            'strategy_selected': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'strategy_selected'", 'null': 'True', 'to': "orm['careerlocation.Strategy']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'career_location_state'", 'to': "orm['auth.User']"})
+        },
+        'careerlocation.careerlocationstrategyblock': {
+            'Meta': {'object_name': 'CareerLocationStrategyBlock'},
+            'base_layer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['careerlocation.MapLayer']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'optional_layers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'strategy_optional_layers'", 'symmetrical': 'False', 'to': "orm['careerlocation.MapLayer']"}),
+            'view': ('django.db.models.fields.CharField', [], {'max_length': '2'})
         },
         'careerlocation.careerlocationsummaryblock': {
             'Meta': {'object_name': 'CareerLocationSummaryBlock'},
@@ -105,6 +164,17 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'transparency': ('django.db.models.fields.IntegerField', [], {'default': '50'}),
             'z_index': ('django.db.models.fields.IntegerField', [], {'default': '999'})
+        },
+        'careerlocation.strategy': {
+            'Meta': {'object_name': 'Strategy'},
+            'cons': ('django.db.models.fields.TextField', [], {}),
+            'example': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'ordinal': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            'pdf': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'pros': ('django.db.models.fields.TextField', [], {}),
+            'summary': ('django.db.models.fields.TextField', [], {}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '256'})
         },
         'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},

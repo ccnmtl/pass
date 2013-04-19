@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from pass_app.careerlocation.models import Actor, ActorQuestion, \
-    ActorResponse, CareerLocationState, MapLayer
+    ActorResponse, CareerLocationState, MapLayer, Strategy
 from tastypie import fields
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
@@ -69,6 +69,19 @@ class ActorResponseResource(ModelResource):
         allowed_methods = ['get', 'put', 'post']
 
 
+class StrategyResource(ModelResource):
+    class Meta:
+        queryset = Strategy.objects.all()
+        resource_name = 'strategy'
+        allowed_methods = ['get']
+        excludes = ['pdf', 'example']
+
+    def dehydrate(self, bundle):
+        bundle.data['pdf_url'] = ''
+        bundle.data['example_url'] = ''
+        return bundle
+
+
 class CareerLocationStateResource(ModelResource):
     user = fields.ForeignKey(UserResource, 'user')
     layers = fields.ManyToManyField(
@@ -80,6 +93,21 @@ class CareerLocationStateResource(ModelResource):
     responses = fields.ManyToManyField(
         'pass_app.careerlocation.api.ActorResponseResource', 'responses',
         full=True)
+    strategies_viewed = fields.ManyToManyField(
+        'pass_app.careerlocation.api.StrategyResource',
+        'strategies_viewed',
+        full=True,
+        null=True)
+    strategy_selected = fields.ForeignKey(StrategyResource,
+                                          'strategy_selected',
+                                          full=True,
+                                          null=True)
+
+    #def hydrate_m2m(self, bundle):
+    #    if bundle.data.get("strategies_viewed"):
+    #        for sid in bundle.data["strategies_viewed"]:
+    #            strategy = Strategy.objects.get(id=sid)
+    #            bundle.obj.strategies_viewed.add(strategy)
 
     class Meta:
         queryset = CareerLocationState.objects.all()

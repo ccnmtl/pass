@@ -7,15 +7,20 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-
-        # Adding field 'Actor.title'
-        db.add_column('careerlocation_actor', 'title', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True), keep_default=False)
+        
+        # Adding M2M table for field optional_layers on 'CareerLocationBlock'
+        db.create_table('careerlocation_careerlocationblock_optional_layers', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('careerlocationblock', models.ForeignKey(orm['careerlocation.careerlocationblock'], null=False)),
+            ('maplayer', models.ForeignKey(orm['careerlocation.maplayer'], null=False))
+        ))
+        db.create_unique('careerlocation_careerlocationblock_optional_layers', ['careerlocationblock_id', 'maplayer_id'])
 
 
     def backwards(self, orm):
-
-        # Deleting field 'Actor.title'
-        db.delete_column('careerlocation_actor', 'title')
+        
+        # Removing M2M table for field optional_layers on 'CareerLocationBlock'
+        db.delete_table('careerlocation_careerlocationblock_optional_layers')
 
 
     models = {
@@ -34,7 +39,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 4, 15, 9, 21, 22, 179224)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -42,7 +47,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 4, 15, 9, 21, 22, 179144)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -79,6 +84,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'CareerLocationBlock'},
             'base_layer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['careerlocation.MapLayer']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'optional_layers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'optional_layers'", 'symmetrical': 'False', 'to': "orm['careerlocation.MapLayer']"}),
             'view': ('django.db.models.fields.CharField', [], {'max_length': '2'})
         },
         'careerlocation.careerlocationstate': {

@@ -1,0 +1,117 @@
+{% load smartif %}
+{% load careerlocation_state %}
+
+
+<div class="career_location {{block.view}}">
+    <div id="view_type" style="display: none">{{block.view}}</div>
+    <div class="career_location_overlay" style="display: none"></div>
+
+    <div class="strategy" style="display: none"></div>
+
+    <div class="toolbar">
+        <h2 class="left">
+            {% ifequal block.view "VP" %}
+                View Strategies
+            {% else %}{% ifequal block.view "SP" %}
+                Select Strategies
+            {% else %}{% ifequal block.view "DP" %}
+                Defend Strategy
+            {% else %}{% ifequal block.view "PC" %}
+                Pros & Cons
+            {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
+        </h2>
+        <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Instructions</a>
+        {% ifnotequal block.view "VP" %}
+            <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
+        {% else %}
+            <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
+        {% endifnotequal %}
+    </div>
+    <div class="visualclear"></div>
+
+    <div class="help_content popover-parent" style="display: none">
+        <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Instructions</a>
+        <h3 class="popover-title">Help</h3>
+        <div class="popover-content">            
+            {% ifequal block.view "VP" %}
+                Proin vel neque sed nisl iaculis sagittis. Curabitur sed est nec felis blandit ultrices. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum varius congue. Donec fermentum, nunc eu imperdiet dignissim, massa magna consequat elit, sed lobortis dolor mi sit amet elit. Quisque nibh est, mattis nec laoreet at, feugiat eu erat. Aliquam erat volutpat.
+            {% else %}{% ifequal block.view "SP" %}
+                @todo
+            {% else %}{% ifequal block.view "DP" %}
+                @todo
+            {% else %}{% ifequal block.view "PC" %}
+                @todo
+            {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
+            <div class="popover-close">
+                <a class="btn" href="#">Close</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="map_layer_content strategy_view popover-parent" style="display: none">
+        <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
+        <h3 class="popover-title">Select Map Layers</h3>
+        <div class="popover-content">
+            {% for layer in block.layers %}
+                <div>
+                    <input type="checkbox" class="select-layer" data-id="{{layer.id}}" id="select_layer_{{layer.id}}" value="{{layer.name}}"></input>
+                    {{ layer.display_name }}
+                </div>
+            {% endfor %}
+            <div class="popover-close"><a class="btn" href="#">Close</a></div>
+        </div>
+    </div>
+
+    <div class="strategies">
+        {% for x in block.strategies %}
+            <div data-id="{{x.id}}" class="strategy-state left empty">
+                {{x.ordinal}}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="visualclear"></div>
+
+    <div {% ifnotequal block.view "VP" %} style="display: none" class="career_location_map_container popover" {% else %} class="career_location_map_container" {% endifnotequal %}>
+        {% ifnotequal block.view "VP" %}
+            <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
+            <h2 class="popover-title">Map View</h2>
+        {% endifnotequal %}
+
+        <div class="career_location_map">
+            <img class="career_location_base_layer" src="{{block.base_layer.image.url}}" alt="career location base map" />
+            {% for layer in block.layers %}
+                <img id="map_layer_{{layer.id}}"
+                     data-id="{{layer.id}}"
+                     class="career_location_map_layer"
+                     src="{{layer.image.url}}"
+                     alt="career location base map"
+                     style="display: none; z-index: {{layer.z_index}}; opacity:0.{{layer.transparency}}; -moz-opacity:0.{{layer.transparency}}; filter:alpha(opacity={{layer.transparency}});"></img>
+            {% endfor %}
+        </div>
+        <div class="visualclear"></div>
+        <div class="map_legend_container">
+        <h3>Map Legends</h3>
+        <div id="base_map_layer">{{block.base_layer.legend|safe}}</div>
+
+            {% for layer in block.layers %}
+                <div id="map_legend_{{layer.id}}"
+                     data-id="{{layer.id}}"
+                     class="map_legend left"
+                     style="display: none">
+                    <h5>{{layer.display_name}}</h5>
+                    {{layer.legend|safe}}
+                </div>
+            {% endfor %}
+            <div class="visualclear"></div>
+        </div>
+
+        {% ifnotequal block.view "VP" %}
+            <div class="visualclear"></div>
+            <div class="popover-close"><a class="btn" href="#">Close</a></div>
+        {% endifnotequal %}
+
+    </div>
+</div>
+
+<div class="visualclear"></div>

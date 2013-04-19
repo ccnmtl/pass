@@ -1,3 +1,7 @@
+h2.section-label {
+	display: none;
+}
+
 .career_location {
     position: relative;
     margin: 0;
@@ -146,6 +150,10 @@ div.help_content {
     width: 830px;
 }
 
+div.map_layer_content.strategy_view {
+	right: 124px;
+}
+
 div.map_layer_content {
     right: 84px;
 }
@@ -159,6 +167,7 @@ div.map_layer_content .btn.right,
 div.help_content .btn.right {
     margin: -45px 0px -45px 0px;
 }
+
 
 div.map_layer_content .btn.right {
     margin: -45px -2px -45px 0;
@@ -648,4 +657,40 @@ h4
     vertical-align: middle;
     font-size: 18px;
     font-weight: bold;
+}
+
+div.strategies div.strategy-state {
+	-webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    width: 19px;
+    height: 19px; 
+    padding: 5px;
+    text-align: center;
+    border: 1px solid gray;
+    margin: 0 8px 8px 0;
+    cursor: pointer;
+}
+
+div.strategies div.strategy-state.viewed {
+	background-color: green;
+}
+
+div.strategies div.strategy-state.selected {
+	background-color: red;
+}
+
+div.strategies div.strategy-state:hover {
+	background-color: #ccc;
+}
+
+div.strategy {
+    position: absolute;
+    z-index: 1003;
+    border: 1px solid #708090;
+    width: 815px;
+    min-height: 430px;
+    padding: 10px;
+    background-color: white;
+    left: 10px;
 }

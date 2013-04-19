@@ -18,6 +18,8 @@ from zipfile import ZipFile
 import csv
 import django.core.exceptions
 import os
+from django.core.servers.basehttp import FileWrapper
+from django.conf import settings
 
 
 def get_or_create_profile(user, section):
@@ -684,3 +686,18 @@ def clear_state(request):
         user=request.user).delete()
 
     return HttpResponseRedirect("/")
+
+
+@login_required
+def download(request, filename):
+    path = "%s/..%spublic/" % (settings.PROJECT_ROOT, settings.STATIC_URL)
+    full_path = os.path.join(path, filename)
+    wrapper = FileWrapper(file(full_path))
+    response = HttpResponse(wrapper, content_type='application/pdf')
+
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+    response['Content-Transfer-Encoding'] = 'binary'
+    response['Accept-Ranges'] = 'bytes'
+    response['Content-Encoding'] = 'none'
+    response['Content-Length'] = os.path.getsize(full_path)
+    return response

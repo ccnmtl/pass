@@ -54,8 +54,9 @@
 {% block css %}
     {% ifequal module.slug 'adolescents' %}
         <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
-        {% comment %}<link href="/site_media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">{% endcomment %}
-    {% endifequal %}
+    {% else %}{% ifequal module.slug 'rural-populations' %}
+        <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+    {% endifequal %}{% endifequal %}
 
     {% for block in section.pageblock_set.all %}
         {% rendercss block %}
@@ -87,16 +88,7 @@
 
 {% block content %}
 
-{% ifequal section.slug 'interview-stakeholders' %}
-{% else %}
-{% ifequal section.slug 'complete-board-application' %}
-{% else %}
-{% ifequal section.slug 'select-practice-location' %}
-{% else %}
-<h2>{{section.label}}</h2>
-{% endifequal %}
-{% endifequal %}
-{% endifequal %}
+<h2 class="section-label">{{section.label}}</h2>
 
 {% if needs_submit %}
 {% if is_submitted %}

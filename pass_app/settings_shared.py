@@ -5,6 +5,8 @@ import sys
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 ADMINS = ()
 
 MANAGERS = ADMINS
@@ -97,6 +99,7 @@ INSTALLED_APPS = (
     'typogrify',
     'sentry.client',
     'munin',
+    'bootstrapform',
     'pagetree',
     'pageblocks',
     'pass_app.main',
@@ -131,7 +134,8 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'responseblock.Response',
               'proxyblock.ProxyBlock',
               'careerlocation.CareerLocationBlock',
-              'careerlocation.CareerLocationSummaryBlock'
+              'careerlocation.CareerLocationSummaryBlock',
+              'careerlocation.CareerLocationStrategyBlock'
               ]
 
 
