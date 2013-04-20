@@ -63,6 +63,9 @@
             return response;
         },
         toJSON: function() {
+            return Backbone.Model.prototype.toJSON.apply(this);
+        },
+        toTemplate: function() {
             var json = _.clone(this.attributes);
             _.each(json, function(value, name) {
                 if (value !== null && _.isFunction(value.toJSON)) {
@@ -82,6 +85,13 @@
         },
         parse: function(response) {
             return response.objects || response;
+        },
+        toTemplate: function() {
+            var a = [];
+            this.forEach(function (item) {
+                a.push(item.toTemplate());
+            });
+            return a;
         }
     });
 

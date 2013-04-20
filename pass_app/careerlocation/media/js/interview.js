@@ -139,7 +139,7 @@
                         slot = slots[0];
                     }
 
-                    var json = actor.toJSON();
+                    var json = actor.toTemplate();
                     json.state = self.state.getActorState(actor);
                     json.asked = self.state.get("responses").getResponsesByActor(actor).length;
 
@@ -196,7 +196,7 @@
                             jQuery(this).removeClass("disabled");
                         });
 
-                        var json = actor.toJSON();
+                        var json = actor.toTemplate();
                         var markup = this.boardmember_template(json);
                         jQuery("#boardmember_question").html(markup);
 
@@ -278,7 +278,7 @@
             this.state.save();
         },
         _updateProfile: function() {
-            var json = this.current_actor.toJSON();
+            var json = this.current_actor.toTemplate();
             json.select_stakeholder = !this.state.isActorSelected(this.current_actor);
             json.remaining_stakeholders = STAKEHOLDER_LIMIT - this.state.get("actors").length;
             json.notes = this.state.get("notes");
