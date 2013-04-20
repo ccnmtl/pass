@@ -1,25 +1,34 @@
 {% load smartif %}
 {% load careerlocation_state %}
 
-
-<div class="career_location {{block.view}}">
+<div class="career_location strategy_container {{block.view}}">
     <div id="view_type" style="display: none">{{block.view}}</div>
     <div class="career_location_overlay" style="display: none"></div>
 
     <div class="strategy" style="display: none"></div>
 
+    <h2>
+        {% ifequal block.view "VP" %}
+            View Strategies
+        {% else %}{% ifequal block.view "SP" %}
+            Select Strategies
+        {% else %}{% ifequal block.view "DP" %}
+            Defend Strategy
+        {% else %}{% ifequal block.view "PC" %}
+            Pros & Cons
+        {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
+    </h2>
+
     <div class="toolbar">
-        <h2 class="left">
-            {% ifequal block.view "VP" %}
-                View Strategies
-            {% else %}{% ifequal block.view "SP" %}
-                Select Strategies
-            {% else %}{% ifequal block.view "DP" %}
-                Defend Strategy
-            {% else %}{% ifequal block.view "PC" %}
-                Pros & Cons
-            {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
-        </h2>
+	    <div class="strategies">
+	        <h4 class="left">Strategies: </h4>
+	        {% for x in block.strategies %}
+	            <div data-id="{{x.id}}" class="strategy-state left">
+	                {{x.ordinal}}
+	            </div>
+	        {% endfor %}
+	    </div>
+    
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Instructions</a>
         {% ifnotequal block.view "VP" %}
             <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
@@ -49,7 +58,7 @@
 
     </div>
 
-    <div class="map_layer_content strategy_view popover-parent" style="display: none">
+    <div class="map_layer_content popover-parent" style="display: none">
         <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
         <h3 class="popover-title">Select Map Layers</h3>
         <div class="popover-content">
@@ -62,15 +71,6 @@
             <div class="popover-close"><a class="btn" href="#">Close</a></div>
         </div>
     </div>
-
-    <div class="strategies">
-        {% for x in block.strategies %}
-            <div data-id="{{x.id}}" class="strategy-state left empty">
-                {{x.ordinal}}
-            </div>
-        {% endfor %}
-    </div>
-    <div class="visualclear"></div>
 
     <div {% ifnotequal block.view "VP" %} style="display: none" class="career_location_map_container popover" {% else %} class="career_location_map_container" {% endifnotequal %}>
         {% ifnotequal block.view "VP" %}
@@ -110,8 +110,9 @@
             <div class="visualclear"></div>
             <div class="popover-close"><a class="btn" href="#">Close</a></div>
         {% endifnotequal %}
-
     </div>
+    
+    <div style="display: none" class="select_strategy_container"></div>
 </div>
 
 <div class="visualclear"></div>

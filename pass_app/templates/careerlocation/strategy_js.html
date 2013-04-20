@@ -8,6 +8,12 @@
 <script src="/_careerlocation/media/js/models.js?version=1" type="text/javascript" ></script>
 <script src="/_careerlocation/media/js/strategy.js?version=2" type="text/javascript" ></script>
 
+<style type="text/css">
+    div.casetitle { display: none; }
+    span.yours.incorrect { background: orange; }
+    span.yours.correct { background: orange; } 
+</style>
+
 <script type="text/javascript">
     jQuery(document).ready(function () {
         var view = new StrategyView({
@@ -21,7 +27,7 @@
 <script type="text/template" id="strategy-template">
     <img id="x" class="btn cancel" src="/site_media/img/close.png"/>    
     <div class="title-container">
-        <div class="strategy-state left">
+        <div class="strategy-state left viewed">
             <%= ordinal %>
         </div>
         <div class="title left"><%= title %></div>
@@ -31,6 +37,58 @@
         <%= summary %>        
     </div>
     <div class="strategy-download right">
-        <a href="<%=pdf_url%>">Download full proposal</a>
+        <a href="/download/<%=pdf_name%>">Download full proposal</a>
     </div>
+</script>
+
+<script type="text/template" id="select-strategy-template">
+    <div class="instructions">
+        <% if (strategy_selected) { %>
+            You've selected <%= strategy_selected.title %>. Please click the Defend Strategy to continue.
+        <% } else { %>
+            Some short text here recapping what happened and what user should do next... please choose your proposal:<br />
+            Also, it's important to inform user that he/she will be asked to defend the choice, and that the selection cannot be changed
+            after submission.
+        <% } %>            
+    </div>
+    <% for (var i=0; i < strategies.length; i++) { %>
+        <div>            
+            <input type="radio" name="strategy" value="<%= strategies[i].id %>"
+                   <% if (strategy_selected) { %>
+                        disabled=disabled
+                        <% if (strategy_selected.id === strategies[i].id) { %> checked=checked class="yours" <% } %>
+                   <% } %>
+            />
+            <%= strategies[i].ordinal %>. <%= strategies[i].title %> 
+        </div>
+    <% } %>
+    <% if (!strategy_selected) { %>
+        <div><input type="button" id="select-strategy" value="Select Strategy" /></div>
+    <% } %>    
+</script>
+
+<script type="text/template" id="defend-strategy-template">
+    <div class="instructions">
+        <% if (strategy_selected) { %>
+            You've selected <%= strategy_selected.title %>. Please click the Defend Strategy to continue.
+        <% } else { %>
+            Some short text here recapping what happened and what user should do next... please choose your proposal:<br />
+            Also, it's important to inform user that he/she will be asked to defend the choice, and that the selection cannot be changed
+            after submission.
+        <% } %>            
+    </div>
+    <% for (var i=0; i < strategies.length; i++) { %>
+        <div>            
+            <input type="radio" name="strategy" value="<%= strategies[i].id %>"
+                   <% if (strategy_selected) { %>
+                        disabled=disabled
+                        <% if (strategy_selected.id === strategies[i].id) { %> checked=checked class="yours" <% } %>
+                   <% } %>
+            />
+            <%= strategies[i].ordinal %>. <%= strategies[i].title %> 
+        </div>
+    <% } %>
+    <% if (!strategy_selected) { %>
+        <div><input type="button" id="select-strategy" value="Select Strategy" /></div>
+    <% } %>    
 </script>

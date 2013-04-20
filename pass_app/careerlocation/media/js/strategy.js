@@ -8,19 +8,26 @@
             'click #toggle_map': 'onToggleMap',
             'click div.popover-close a.btn': 'onTogglePopover',
             'click div.strategy-state': 'onShowStrategy',
-            'click .cancel': 'onHideStrategy'
+            'click .cancel': 'onHideStrategy',
+            'click #select-strategy': 'onSelectStrategy'
         },
         initialize: function(options) {
             _.bindAll(this,
-                "initialRender",
-                "render",
-                "onSelectLayer",
-                "onToggleHelp",
-                "onToggleMapLayers",
-                "onToggleMap",
-                "onTogglePopover");
+                'initialRender',
+                'render',
+                'renderStrategy',
+                'renderSelectStrategy',
+                'onSelectLayer',
+                'onToggleHelp',
+                'onToggleMapLayers',
+                'onToggleMap',
+                'onTogglePopover',
+                'onShowStrategy',
+                'onHideStrategy',
+                'onSelectStrategy');
             
             this.strategyTemplate = _.template(jQuery("#strategy-template").html());
+            this.selectStrategyTemplate = _.template(jQuery("#select-strategy-template").html());
 
             this.layers = new MapLayerList();
             this.layers.fetch();
@@ -47,7 +54,7 @@
             }
         },
         toggleOverlay: function() {
-            var height = jQuery("div.career_location").outerHeight();
+            var height = jQuery("div#pagebody").innerHeight();
             jQuery("div.career_location_overlay").css("height", height + "px").toggle();
         },
         render: function() {
@@ -88,20 +95,46 @@
             strategies.forEach(function (strategy) {
                 var selector = "div.strategy-state[data-id='" + strategy.get('id') + "']";
                 jQuery(selector).addClass("viewed");
+                jQuery(selector).removeClass("selected");
             });
             
-            jQuery(this.el).find("div.help_content a.btn.close").html("Close");
+            var selected = this.state.get('strategy_selected');            
+            if (selected) {
+                var selector = "div.strategy-state[data-id='" + selected.get('id') + "']";
+                jQuery(selector).addClass("selected");
+            }
+            
+            if (this.state.get("view_type") === "SP") {
+                this.renderSelectStrategy();
+            }
             
             this.maybeUnlock();
         },
         renderStrategy: function() {
-            var json = this.currentStrategy.toJSON();
+            var json = this.currentStrategy.toTemplate();
 
             var markup = this.strategyTemplate(json);
             jQuery("div.strategy").html(markup);
 
             this.toggleOverlay();
             jQuery("div.strategy").fadeIn("slow");
+
+            this.delegateEvents();
+        },
+        renderSelectStrategy: function() {
+            var json = {};
+            
+            var selected = this.state.get('strategy_selected');
+            if (selected) {
+                json.strategy_selected = selected.toTemplate();
+            } else {
+                json.strategy_selected = null;
+            }
+            json.strategies = this.strategies.toTemplate();
+
+            var markup = this.selectStrategyTemplate(json);
+            jQuery("div.select_strategy_container").html(markup);
+            jQuery("div.select_strategy_container").fadeIn("slow");
 
             this.delegateEvents();
         },
@@ -176,8 +209,8 @@
             var strategyId = jQuery(srcElement).data("id");
             this.currentStrategy = this.strategies.getByDataId(strategyId);
             
-            if (!this.state.isStrategySelected(this.currentStrategy)) {
-                this.state.selectStrategy(this.currentStrategy);
+            if (!this.state.isStrategyViewed(this.currentStrategy)) {
+                this.state.viewStrategy(this.currentStrategy);
                 this.state.save();
             }
 
@@ -191,6 +224,17 @@
                 jQuery(this).html("");
                 self.delegateEvents();
             });
+        },
+        onSelectStrategy: function(evt) {
+            var elt = jQuery("input[name='strategy']:checked");
+            if (elt.length < 1) {
+                alert("Please select a strategy");
+            } else {
+                var s = this.strategies.getByDataId(elt[0].value);
+                this.state.selectStrategy(s);
+                this.state.save();
+                this.render();            
+            }
         }
     });
 }(jQuery));    

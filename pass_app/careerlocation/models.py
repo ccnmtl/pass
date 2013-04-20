@@ -9,6 +9,7 @@ VIEW_CHOICES = (
     ('LC', 'Select Practice Location'),
     ('BD', 'Complete Board Application'),
     ('RP', 'Practice Location Report'),
+    ('DS', 'Defend Strategy'),
 )
 
 GRID_COLUMNS = 14
@@ -70,13 +71,16 @@ class Strategy(models.Model):
     def __unicode__(self):
         return "%s. %s" % (self.ordinal, self.title)
 
+    class Meta:
+        ordering = ['ordinal']
+
     ordinal = models.PositiveIntegerField()
     title = models.CharField(max_length=256)
     summary = models.TextField()
     pros = models.TextField()
     cons = models.TextField()
     pdf = models.FileField(
-        upload_to="layers/%Y/%m/%d/", null=True, blank=True)
+        upload_to="pdf/", null=True, blank=True)
     example = models.URLField(null=True, blank=True)
 
 

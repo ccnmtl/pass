@@ -690,7 +690,7 @@ def clear_state(request):
 
 @login_required
 def download(request, filename):
-    path = "%s/..%spublic/" % (settings.PROJECT_ROOT, settings.STATIC_URL)
+    path = "%s/pdf/" % (settings.MEDIA_ROOT)
     full_path = os.path.join(path, filename)
     wrapper = FileWrapper(file(full_path))
     response = HttpResponse(wrapper, content_type='application/pdf')

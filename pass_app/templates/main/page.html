@@ -21,7 +21,7 @@
 
                 var children = jQuery(this).find("input,textarea,select");
                 jQuery.each(children, function() {
-                    if (valid) {
+                    if (valid && jQuery(this).is(":visible")) {
                         if (this.tagName === 'INPUT' && this.type === 'text' ||
                                 this.tagName === 'TEXTAREA') {
                             valid = jQuery(this).val().trim().length > 0;

@@ -9,7 +9,13 @@
     });
 
     MapLayer = Backbone.Model.extend({
-        urlRoot: '/_careerlocation/api/v1/map_layer/'
+        urlRoot: '/_careerlocation/api/v1/map_layer/',
+        toJSON: function() {
+            return this.get('resource_uri');
+        },
+        toTemplate: function() {
+            return Backbone.Model.prototype.toJSON.apply(this);
+        }
     });
 
     MapLayerList = Backbone.Collection.extend({
@@ -22,6 +28,13 @@
         removeByDataId: function(id) {
             var internalId = this.urlRoot + id + '/';
             this.remove(internalId);
+        },
+        toTemplate: function() {
+            var a = [];
+            this.forEach(function (item) {
+                a.push(item.toTemplate());
+            });
+            return a;
         }
     });
 
@@ -111,7 +124,13 @@
     });
     
     Strategy = Backbone.Model.extend({
-        urlRoot: '/_careerlocation/api/v1/strategy/'
+        urlRoot: '/_careerlocation/api/v1/strategy/',
+        toJSON: function() {
+            return this.get('resource_uri');
+        },
+        toTemplate: function() {
+            return Backbone.Model.prototype.toJSON.apply(this);
+        }
     });
     
     StrategyList = Backbone.Collection.extend({
@@ -120,6 +139,13 @@
         getByDataId: function(id) {
             var internalId = this.urlRoot + id + '/';
             return this.get(internalId);
+        },
+        toTemplate: function() {
+            var a = [];
+            this.forEach(function (item) {
+                a.push(item.toTemplate());
+            });
+            return a;
         }
     });
 
@@ -130,7 +156,7 @@
             responses: new ActorResponseList(),
             notes: "",
             strategies_viewed: new StrategyList(),
-            strategy_select: new Strategy()
+            strategy_selected: new Strategy()
         },
         urlRoot: '/_careerlocation/api/v1/career_location_state/',
         parse: function(response) {
@@ -140,6 +166,10 @@
                 response.responses = new ActorResponseList(response.responses);
                 response.strategies_viewed =
                     new StrategyList(response.strategies_viewed);
+                if (response.strategy_selected) {
+                    response.strategy_selected =
+                        new Strategy(response.strategy_selected);
+                }
             }
             return response;
         },
@@ -150,12 +180,15 @@
             var obj = this.get("actors").getByDataId(actor.get('id'));
             return typeof obj !== 'undefined' && obj !== null;
         },
-        selectStrategy: function(strategy) {
+        viewStrategy: function(strategy) {
             this.get("strategies_viewed").add(strategy);
         },
-        isStrategySelected: function(strategy) {
+        isStrategyViewed: function(strategy) {
             var obj = this.get("strategies_viewed").getByDataId(strategy.get('id'));
             return typeof obj !== 'undefined' && obj !== null;
+        },
+        selectStrategy: function(strategy) {
+            this.set("strategy_selected", strategy);
         },
         getActorState: function(actor) {
             if (!this.isActorSelected(actor)) {

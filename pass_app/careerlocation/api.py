@@ -4,6 +4,7 @@ from pass_app.careerlocation.models import Actor, ActorQuestion, \
 from tastypie import fields
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
+import os
 
 
 class UsernameAuthorization(Authorization):
@@ -77,8 +78,11 @@ class StrategyResource(ModelResource):
         excludes = ['pdf', 'example']
 
     def dehydrate(self, bundle):
-        bundle.data['pdf_url'] = ''
-        bundle.data['example_url'] = ''
+        if bundle.obj.pdf:
+            bundle.data['pdf_name'] = \
+                os.path.basename(bundle.obj.pdf.file.name)
+        if bundle.obj.example:
+            bundle.data['example_url'] = bundle.obj.example
         return bundle
 
 
@@ -102,12 +106,6 @@ class CareerLocationStateResource(ModelResource):
                                           'strategy_selected',
                                           full=True,
                                           null=True)
-
-    #def hydrate_m2m(self, bundle):
-    #    if bundle.data.get("strategies_viewed"):
-    #        for sid in bundle.data["strategies_viewed"]:
-    #            strategy = Strategy.objects.get(id=sid)
-    #            bundle.obj.strategies_viewed.add(strategy)
 
     class Meta:
         queryset = CareerLocationState.objects.all()
