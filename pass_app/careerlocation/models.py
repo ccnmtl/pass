@@ -31,10 +31,16 @@ class MapLayer(models.Model):
 
 class ActorQuestion(models.Model):
     def __unicode__(self):
-        if self.question and len(self.question) > 25:
-            return self.question[:25] + '...'
-        else:
-            self.question
+        s = ""
+        if self.question:
+            if len(self.question) > 25:
+                s = self.question[:25] + '...'
+            else:
+                s = self.question
+        return s
+
+    class Meta:
+        ordering = ['question']
 
     question = models.TextField()
     answer = models.TextField(null=True, blank=True)
@@ -82,6 +88,7 @@ class Strategy(models.Model):
     pdf = models.FileField(
         upload_to="pdf/", null=True, blank=True)
     example = models.URLField(null=True, blank=True)
+    question = models.ForeignKey(ActorQuestion, null=True, blank=True)
 
 
 class CareerLocationState(models.Model):
@@ -99,6 +106,9 @@ class CareerLocationState(models.Model):
         Strategy, null=True, blank=True, related_name="strategies_viewed")
     strategy_selected = models.ForeignKey(
         Strategy, null=True, blank=True, related_name="strategy_selected")
+    strategy_responses = models.ManyToManyField(
+        ActorResponse, null=True, blank=True,
+        related_name="strategy_responses")
 
     def get_response(self, question):
         a = self.responses.filter(question=question)
@@ -214,6 +224,9 @@ class CareerLocationBlock(models.Model):
 
         return cells
 
+    def actors(self):
+        return Actor.objects.filter(type=self.view)
+
 
 class CareerLocationBlockForm(forms.ModelForm):
     class Meta:
@@ -266,9 +279,9 @@ class CareerLocationSummaryBlockForm(forms.ModelForm):
 
 
 STRATEGY_VIEW_CHOICES = (
-    ('VP', 'View Strategies'),
-    ('SP', 'Select Strategy'),
-    ('DP', 'Defend Strategy Selection'),
+    ('VS', 'View Strategies'),
+    ('SS', 'Select Strategy'),
+    ('DS', 'Defend Strategy Selection'),
     ('PC', 'Strategy Pros And Cons'),
 )
 
@@ -282,6 +295,7 @@ class CareerLocationStrategyBlock(models.Model):
     optional_layers = models.ManyToManyField(
         MapLayer, related_name="strategy_optional_layers")
     view = models.CharField(max_length=2, choices=STRATEGY_VIEW_CHOICES)
+    questioner = models.ForeignKey(Actor, null=True, blank=True)
 
     display_name = "Career Location Strategy Exercise"
 
@@ -327,7 +341,7 @@ class CareerLocationStrategyBlock(models.Model):
         if len(state.strategies_viewed.all()) < len(self.strategies()):
             return False
 
-        if self.view != "VP":
+        if self.view != "VS":
             if state.strategy_selected is None:
                 return False
 
@@ -338,6 +352,9 @@ class CareerLocationStrategyBlock(models.Model):
 
     def layers(self):
         return self.optional_layers.all()
+
+    def questions(self):
+        return self.questioner.questions.all() if self.questioner else None
 
 
 class CareerLocationStrategyBlockForm(forms.ModelForm):

@@ -8,11 +8,11 @@
     <div class="strategy" style="display: none"></div>
 
     <h2>
-        {% ifequal block.view "VP" %}
+        {% ifequal block.view "VS" %}
             View Strategies
-        {% else %}{% ifequal block.view "SP" %}
+        {% else %}{% ifequal block.view "SS" %}
             Select Strategies
-        {% else %}{% ifequal block.view "DP" %}
+        {% else %}{% ifequal block.view "DS" %}
             Defend Strategy
         {% else %}{% ifequal block.view "PC" %}
             Pros & Cons
@@ -30,7 +30,7 @@
 	    </div>
     
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Instructions</a>
-        {% ifnotequal block.view "VP" %}
+        {% ifnotequal block.view "VS" %}
             <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
         {% else %}
             <a class="btn right" href="#" id="toggle_map_layers"><i class="icon-picture"></i> Map Layers</a>
@@ -42,11 +42,11 @@
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Instructions</a>
         <h3 class="popover-title">Help</h3>
         <div class="popover-content">            
-            {% ifequal block.view "VP" %}
+            {% ifequal block.view "VS" %}
                 Proin vel neque sed nisl iaculis sagittis. Curabitur sed est nec felis blandit ultrices. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum varius congue. Donec fermentum, nunc eu imperdiet dignissim, massa magna consequat elit, sed lobortis dolor mi sit amet elit. Quisque nibh est, mattis nec laoreet at, feugiat eu erat. Aliquam erat volutpat.
-            {% else %}{% ifequal block.view "SP" %}
+            {% else %}{% ifequal block.view "SS" %}
                 @todo
-            {% else %}{% ifequal block.view "DP" %}
+            {% else %}{% ifequal block.view "DS" %}
                 @todo
             {% else %}{% ifequal block.view "PC" %}
                 @todo
@@ -72,8 +72,8 @@
         </div>
     </div>
 
-    <div {% ifnotequal block.view "VP" %} style="display: none" class="career_location_map_container popover" {% else %} class="career_location_map_container" {% endifnotequal %}>
-        {% ifnotequal block.view "VP" %}
+    <div {% ifnotequal block.view "VS" %} style="display: none" class="career_location_map_container popover" {% else %} class="career_location_map_container" {% endifnotequal %}>
+        {% ifnotequal block.view "VS" %}
             <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
             <h2 class="popover-title">Map View</h2>
         {% endifnotequal %}
@@ -93,7 +93,6 @@
         <div class="map_legend_container">
         <h3>Map Legends</h3>
         <div id="base_map_layer">{{block.base_layer.legend|safe}}</div>
-
             {% for layer in block.layers %}
                 <div id="map_legend_{{layer.id}}"
                      data-id="{{layer.id}}"
@@ -106,13 +105,16 @@
             <div class="visualclear"></div>
         </div>
 
-        {% ifnotequal block.view "VP" %}
+        {% ifnotequal block.view "VS" %}
             <div class="visualclear"></div>
             <div class="popover-close"><a class="btn" href="#">Close</a></div>
         {% endifnotequal %}
     </div>
     
     <div style="display: none" class="select_strategy_container"></div>
+    
+    <div style="display: none" class="defend_strategy_container"></div>
+    
 </div>
 
 <div class="visualclear"></div>

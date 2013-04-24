@@ -4,7 +4,6 @@ from pass_app.careerlocation.models import Actor, ActorQuestion, \
 from tastypie import fields
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
-import os
 
 
 class UsernameAuthorization(Authorization):
@@ -39,6 +38,20 @@ class MapLayerResource(ModelResource):
         resource_name = 'map_layer'
         allowed_methods = ['get']
 
+    def dehydrate(self, bundle):
+        for key, value in bundle.data.items():
+            bundle.data[key] = str(bundle.data[key])
+
+        return bundle
+
+    def render_list(self, request, lst):
+        data = []
+        for user in lst:
+            bundle = self.build_bundle(obj=user, request=request)
+            dehydrated = self.full_dehydrate(bundle)
+            data.append(dehydrated.data)
+        return data
+
 
 class ActorQuestionResource(ModelResource):
     class Meta:
@@ -46,11 +59,20 @@ class ActorQuestionResource(ModelResource):
         resource_name = 'actor_question'
         allowed_methods = ['get']
 
+    def dehydrate(self, bundle):
+        bundle.data['question'] = str(bundle.data['question'])
+        bundle.data['answer'] = str(bundle.data['answer'])
+        bundle.data['id'] = str(bundle.data['id'])
+        return bundle
+
 
 class ActorResource(ModelResource):
     questions = fields.ManyToManyField(
         'pass_app.careerlocation.api.ActorQuestionResource',
         'questions', full=True)
+
+    def dehydrate(self, bundle):
+        return bundle
 
     class Meta:
         queryset = Actor.objects.all()
@@ -71,18 +93,15 @@ class ActorResponseResource(ModelResource):
 
 
 class StrategyResource(ModelResource):
+    question = fields.ForeignKey(ActorQuestionResource, 'question', full=True)
+
     class Meta:
         queryset = Strategy.objects.all()
         resource_name = 'strategy'
         allowed_methods = ['get']
-        excludes = ['pdf', 'example']
 
     def dehydrate(self, bundle):
-        if bundle.obj.pdf:
-            bundle.data['pdf_name'] = \
-                os.path.basename(bundle.obj.pdf.file.name)
-        if bundle.obj.example:
-            bundle.data['example_url'] = bundle.obj.example
+        bundle = super(ModelResource, self).dehydrate(bundle)
         return bundle
 
 
@@ -106,6 +125,11 @@ class CareerLocationStateResource(ModelResource):
                                           'strategy_selected',
                                           full=True,
                                           null=True)
+    strategy_responses = fields.ManyToManyField(
+        'pass_app.careerlocation.api.ActorResponseResource',
+        'strategy_responses',
+        full=True,
+        null=True)
 
     class Meta:
         queryset = CareerLocationState.objects.all()

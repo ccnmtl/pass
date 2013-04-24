@@ -13,6 +13,7 @@
         var view = new CareerLocationView({
             current_state_id: '{% get_user_state_id request.user %}',
             view_type: '{{block.view}}',
+            layers: {% render_to_json request 'MapLayerResource' block.layers %},
             el: 'div.career_location'
         });
     });

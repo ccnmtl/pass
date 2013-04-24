@@ -14,13 +14,21 @@
             return this.get('resource_uri');
         },
         toTemplate: function() {
-            return Backbone.Model.prototype.toJSON.apply(this);
+            return _(this.attributes).clone();
         }
     });
 
     MapLayerList = Backbone.Collection.extend({
         model: MapLayer,
         urlRoot: '/_careerlocation/api/v1/map_layer/',
+        initialize: function (lst) {
+            if (lst !== undefined && lst instanceof Array) {
+                for (var i = 0; i < lst.length; i++) {
+                    var x = new MapLayer(lst[i]);
+                    this.add(x);
+                }
+            }
+        },   
         getByDataId: function(id) {
             var internalId = this.urlRoot + id + '/';
             return this.get(internalId);
@@ -39,39 +47,54 @@
     });
 
     ActorQuestion = Backbone.Model.extend({
-        urlRoot: '/_careerlocation/api/v1/actor_question/'
+        urlRoot: '/_careerlocation/api/v1/actor_question/',
+        toJSON: function() {
+            return this.get('resource_uri');
+        },        
+        toTemplate: function() {
+            return _(this.attributes).clone();
+        }
     });
 
     ActorQuestionList = Backbone.Collection.extend({
         model: ActorQuestion,
         urlRoot: '/_careerlocation/api/v1/actor_question/',
+        initialize: function (lst) {
+            if (lst !== undefined && lst instanceof Array) {
+                for (var i = 0; i < lst.length; i++) {
+                    var q = new ActorQuestion(lst[i]);
+                    this.add(q);
+                }
+            }
+        },        
         getByDataId: function(id) {
             var internalId = this.urlRoot + id + '/';
             return this.get(internalId);
+        },
+        toTemplate: function() {
+            var a = [];
+            this.forEach(function (item) {
+                var j = item.toTemplate();
+                a.push(j);
+            });
+            return a;
         }
     });
 
     Actor = Backbone.Model.extend({
         urlRoot: '/_careerlocation/api/v1/actor/',
-        defaults: {
-            questions: new ActorQuestionList()
-        },
-        parse: function(response) {
-            if (response) {
-                response.questions = new ActorQuestionList(response.questions);
+        initialize: function(attributes) {
+            if (attributes) {
+                Backbone.Model.prototype.initialize.apply(this, attributes);            
+                this.set('questions', new ActorQuestionList(attributes.questions));
             }
-            return response;
         },
         toJSON: function() {
-            return Backbone.Model.prototype.toJSON.apply(this);
+            return this.get('resource_uri');
         },
         toTemplate: function() {
             var json = _.clone(this.attributes);
-            _.each(json, function(value, name) {
-                if (value !== null && _.isFunction(value.toJSON)) {
-                    json[name] = value.toJSON();
-                }
-            });
+            json.questions = this.get("questions").toTemplate();
             return json;
         }
     });
@@ -82,6 +105,14 @@
         getByDataId: function(id) {
             var internalId = this.urlRoot + id + '/';
             return this.get(internalId);
+        },
+        initialize: function (lst) {
+            if (lst !== undefined && lst instanceof Array) {
+                for (var i = 0; i < lst.length; i++) {
+                    var x = new Actor(lst[i]);
+                    this.add(x);
+                }
+            }
         },
         parse: function(response) {
             return response.objects || response;
@@ -96,10 +127,6 @@
     });
 
     ActorResponse = Backbone.Model.extend({
-        defaults: {
-            actor: new Actor(),
-            question: new ActorQuestion()
-        },
         urlRoot: '/_careerlocation/api/v1/actor_response/',
         initialize: function(attrs) {
             if (attrs) {
@@ -113,6 +140,12 @@
                 response.question = new ActorQuestion(response.question);
             }
             return response;
+        },
+        toTemplate: function() {
+            var json = _(this.attributes).clone();
+            json.question = this.get('question').toTemplate();
+            json.actor = this.get('actor').toTemplate();
+            return json;
         }
     });
 
@@ -130,22 +163,47 @@
         },
         parse: function(response) {
             return response.objects || response;
+        },
+        toTemplate: function() {
+            var a = [];
+            this.forEach(function (item) {
+                a.push(item.toTemplate());
+            });
+            return a;
         }
     });
     
     Strategy = Backbone.Model.extend({
         urlRoot: '/_careerlocation/api/v1/strategy/',
+        initialize: function(attrs) {
+            if (attrs) {
+                this.set("question", new ActorQuestion(attrs.question));
+            }
+        },        
         toJSON: function() {
             return this.get('resource_uri');
         },
         toTemplate: function() {
-            return Backbone.Model.prototype.toJSON.apply(this);
+            var json = _.clone(this.attributes);
+            json.question = this.get("question").toTemplate();
+            
+            var a = json.pdf.split('/');
+            json.pdf = a[a.length - 1];
+            return json;            
         }
     });
     
     StrategyList = Backbone.Collection.extend({
         model: Strategy,
         urlRoot: '/_careerlocation/api/v1/strategy/',
+        initialize: function (lst) {
+            if (lst !== undefined && lst instanceof Array) {
+                for (var i = 0; i < lst.length; i++) {
+                    var x = new Strategy(lst[i]);
+                    this.add(x);
+                }
+            }
+        },
         getByDataId: function(id) {
             var internalId = this.urlRoot + id + '/';
             return this.get(internalId);
@@ -166,7 +224,8 @@
             responses: new ActorResponseList(),
             notes: "",
             strategies_viewed: new StrategyList(),
-            strategy_selected: new Strategy()
+            strategy_selected: new Strategy(),
+            strategy_responses: new ActorResponseList()
         },
         urlRoot: '/_careerlocation/api/v1/career_location_state/',
         parse: function(response) {
@@ -180,6 +239,8 @@
                     response.strategy_selected =
                         new Strategy(response.strategy_selected);
                 }
+                response.strategy_responses =
+                    new ActorResponseList(response.strategy_responses);
             }
             return response;
         },
@@ -221,6 +282,14 @@
                 }
             });
             return answered;
+        },
+        getStrategyQuestionResponse: function(question) {
+            this.get("strategy_responses").forEach(function(response) {
+                if (response.get("question").get("id") === question.get("id")) {
+                    return response;
+                }
+            });
+            return null;   
         },
         unlock: function() {
             var allResponses = this.get("responses");

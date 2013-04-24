@@ -48,16 +48,14 @@
                 "onMouseOverLocation",
                 "onMouseOutLocation");
 
+            this.layers = new MapLayerList(options.layers);            
+            
             this.state = new UserState({id: options.current_state_id});
             this.state.set("view_type", jQuery("#view_type").html());
             this.state.on('change', this.initialRender);
             this.state.fetch();
 
-            this.layers = new MapLayerList();
-            this.layers.fetch();
-
-            this.actors = new ActorList();
-            this.actors.on('reset', this.renderBoardView);
+            this.actors = new ActorList(options.actors);
             this.actors.fetch();
 
             this.profile_template = _.template(jQuery("#profile-template").html());
@@ -345,8 +343,8 @@
                 response.set("question", this.current_question);
 
                 response.save({}, {
-                    success: function() {
-                        self.state.get("responses").add(response);
+                    success: function(model, response) {
+                        self.state.get("responses").add(model);
                         self.state.save();
                         jQuery(".btn.done").removeAttr("disabled");
                     }

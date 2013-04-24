@@ -9,7 +9,8 @@
             'click div.popover-close a.btn': 'onTogglePopover',
             'click div.strategy-state': 'onShowStrategy',
             'click .cancel': 'onHideStrategy',
-            'click #select-strategy': 'onSelectStrategy'
+            'click #select-strategy': 'onSelectStrategy',
+            'click #defend-strategy': 'onDefendStrategy'
         },
         initialize: function(options) {
             _.bindAll(this,
@@ -17,6 +18,7 @@
                 'render',
                 'renderStrategy',
                 'renderSelectStrategy',
+                'renderDefendStrategy',
                 'onSelectLayer',
                 'onToggleHelp',
                 'onToggleMapLayers',
@@ -24,16 +26,16 @@
                 'onTogglePopover',
                 'onShowStrategy',
                 'onHideStrategy',
-                'onSelectStrategy');
+                'onSelectStrategy',
+                'onDefendStrategy');
             
             this.strategyTemplate = _.template(jQuery("#strategy-template").html());
             this.selectStrategyTemplate = _.template(jQuery("#select-strategy-template").html());
+            this.defendStrategyTemplate = _.template(jQuery("#defend-strategy-template").html());
 
-            this.layers = new MapLayerList();
-            this.layers.fetch();
-            
-            this.strategies = new StrategyList();
-            this.strategies.fetch();
+            this.layers = new MapLayerList(options.layers);            
+            this.strategies = new StrategyList(options.strategies);            
+            this.questioner = new Actor(options.questioner);
             
             this.state = new UserState({id: options.current_state_id});
             this.state.set("view_type", jQuery("#view_type").html());
@@ -63,7 +65,7 @@
             // toggle map layers on/off
             jQuery(".career_location_map_layer").each(function() {
                 var dataId = jQuery(this).data("id");
-                if (self.state.get("layers").getByDataId(dataId) || self.state.get("view_type") === "BD") {
+                if (self.state.get("layers").getByDataId(dataId)) {
                     // Check layer box
                     jQuery("#select_layer_" + dataId).attr("checked", "checked");
 
@@ -104,8 +106,10 @@
                 jQuery(selector).addClass("selected");
             }
             
-            if (this.state.get("view_type") === "SP") {
+            if (this.state.get("view_type") === "SS") {
                 this.renderSelectStrategy();
+            } else if (this.state.get("view_type") === "DS") {
+                this.renderDefendStrategy();
             }
             
             this.maybeUnlock();
@@ -122,7 +126,7 @@
             this.delegateEvents();
         },
         renderSelectStrategy: function() {
-            var json = {};
+            var json = this.state.toJSON();
             
             var selected = this.state.get('strategy_selected');
             if (selected) {
@@ -138,9 +142,27 @@
 
             this.delegateEvents();
         },
+        renderDefendStrategy: function() {
+            var json = {};
+            
+            var selected = this.state.get('strategy_selected');
+            if (selected) {
+                json.strategy_selected = selected.toTemplate();
+            }
+            json.questioner = this.questioner.toTemplate();
+            json.responses = this.state.get('strategy_responses').toTemplate();
+            json.defenseComplete = (1 + json.questioner.questions.length) ===
+                json.responses.length;
+                
+            var markup = this.defendStrategyTemplate(json);
+            jQuery("div.defend_strategy_container").html(markup);
+            jQuery("div.defend_strategy_container").fadeIn("slow");
+
+            this.delegateEvents();
+        },
         maybeUnlock: function() {
             // Enable the "next" links if
-            // 1. VIEW == "VP" && strategies_viewed == available strategies
+            // 1. VIEW == "VS" && strategies_viewed == available strategies
             if (this.state.unlockStrategy(this.strategies.length)) {
 
                 var anchor = jQuery("a#next");
@@ -235,6 +257,46 @@
                 this.state.save();
                 this.render();            
             }
+        },
+        onDefendStrategy: function(evt) {
+            var self = this;
+            var valid = true;
+            var elts = jQuery("div.defend_strategy_container input[type='text']");
+            jQuery.each(elts, function(index, elt) {
+                if (elt.value === "") {
+                    valid = false;
+                    return valid;
+                }
+            });
+            
+            if (!valid) {
+                alert("Please answer all questions before continuing.");
+                return false;
+            }
+            
+            var count = 0;
+            jQuery.each(elts, function(index, elt) {
+                var dataId = jQuery(elt).data('id');
+                var question = self.questioner.get('questions').getByDataId(dataId);
+                if (question === undefined) {
+                    question = self.state.get('strategy_selected').get('question');
+                }
+                var response = new ActorResponse();
+                response.set("user", self.state.get("user"));
+                response.set("actor", self.questioner);
+                response.set("question", question);
+                response.set("long_response", elt.value);
+
+                response.save({}, {
+                    success: function(model, response) {
+                        count += 1;
+                        self.state.get("strategy_responses").add(model);
+                        if (count === elts.length) {
+                            self.state.save();
+                        }
+                    }
+                });                
+            });
         }
     });
 }(jQuery));    

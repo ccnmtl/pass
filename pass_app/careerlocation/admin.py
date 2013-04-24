@@ -10,6 +10,7 @@ admin.site.register(Strategy)
 class ActorQuestionAdmin(admin.ModelAdmin):
     class Meta:
         model = ActorQuestion
+        ordering = ['question']
 
     search_fields = ["question", "answer"]
     list_display = ("question", "answer")

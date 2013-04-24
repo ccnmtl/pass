@@ -1,6 +1,8 @@
 from django import template
 from pass_app.careerlocation.models import CareerLocationState, \
     CareerLocationBlock
+from django.utils.importlib import import_module
+
 register = template.Library()
 
 
@@ -118,3 +120,44 @@ def get_user_strategy_state(parser, token):
     user = token.split_contents()[1:][0]
     strategy = token.split_contents()[1:][1]
     return GetUserStrategyState(user, strategy)
+
+
+class RenderListToJSON(template.Node):
+    def __init__(self, request, resource, lst):
+        self.request = template.Variable(request)
+        self.resource = template.Variable(resource)
+        self.lst = template.Variable(lst)
+
+    def render(self, context):
+        req = self.request.resolve(context)
+        rez_name = self.resource.resolve(context)
+        lst = self.lst.resolve(context)
+
+        # instantiate resource
+        module = import_module("pass_app.careerlocation.api")
+        rez = getattr(module, rez_name)()
+
+        # render
+        import collections
+
+        if isinstance(lst, collections.Iterable):
+            data = []
+            for item in lst:
+                bundle = rez.build_bundle(obj=item, request=req)
+                dehydrated = rez.full_dehydrate(bundle)
+                data.append(dehydrated.data)
+        else:
+            bundle = rez.build_bundle(obj=lst, request=req)
+            dehydrated = rez.full_dehydrate(bundle)
+            data = dehydrated.data
+
+        serialized = rez.serialize(req, data, 'application/json')
+        return serialized
+
+
+@register.tag('render_to_json')
+def render_to_json(parser, token):
+    request = token.split_contents()[1:][0]
+    resource_name = token.split_contents()[1:][1]
+    lst = token.split_contents()[1:][2]
+    return RenderListToJSON(request, resource_name, lst)

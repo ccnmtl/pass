@@ -16,11 +16,18 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function () {
-        var view = new StrategyView({
-            current_state_id: '{% get_user_state_id request.user %}',
-            view_type: '{{block.view}}',
-            el: 'div.career_location'
-        });
+        var options = {
+            current_state_id: "{% get_user_state_id request.user %}",
+            view_type: "{{block.view}}",
+            layers: {% render_to_json request 'MapLayerResource' block.layers %},
+            strategies: {% render_to_json request 'StrategyResource' block.strategies %},
+            el: "div.career_location"
+        };
+        {% if block.questioner %}
+            options.questioner = {% render_to_json request 'ActorResource' block.questioner %} 
+        {% endif %}
+        
+        var view = new StrategyView(options);
     });
 </script>
 
@@ -37,7 +44,7 @@
         <%= summary %>        
     </div>
     <div class="strategy-download right">
-        <a href="/download/<%=pdf_name%>">Download full proposal</a>
+        <a href="/download/<%=pdf%>">Download full proposal</a>
     </div>
 </script>
 
@@ -69,26 +76,49 @@
 
 <script type="text/template" id="defend-strategy-template">
     <div class="instructions">
-        <% if (strategy_selected) { %>
-            You've selected <%= strategy_selected.title %>. Please click the Defend Strategy to continue.
+        <% if (defenseComplete) { %>
+            You've completed the questions. Click View Pros & Cons to continue.
         <% } else { %>
-            Some short text here recapping what happened and what user should do next... please choose your proposal:<br />
-            Also, it's important to inform user that he/she will be asked to defend the choice, and that the selection cannot be changed
-            after submission.
-        <% } %>            
+            You've selected <%= strategy_selected.title %>. Please answer the following questions
+        <% } %>
     </div>
-    <% for (var i=0; i < strategies.length; i++) { %>
-        <div>            
-            <input type="radio" name="strategy" value="<%= strategies[i].id %>"
-                   <% if (strategy_selected) { %>
-                        disabled=disabled
-                        <% if (strategy_selected.id === strategies[i].id) { %> checked=checked class="yours" <% } %>
-                   <% } %>
-            />
-            <%= strategies[i].ordinal %>. <%= strategies[i].title %> 
+    <div>
+        <div>
+            <div><%= strategy_selected.question.question %></div>
+            <div>
+                <input type="text"
+                       data-id="<%=strategy_selected.question.id%>"
+                       <% if (defenseComplete) { %>
+                           disabled="disabled"
+                           <% for (var i=0; i < responses.length; i++) { %>
+                               <% if (responses[i].question.id === strategy_selected.question.id) { %>
+                                   value="<%= responses[i].long_response %>"
+                               <% } %>
+                           <% } %>
+                       <% } %>
+                 />
+            </div>
         </div>
-    <% } %>
-    <% if (!strategy_selected) { %>
-        <div><input type="button" id="select-strategy" value="Select Strategy" /></div>
-    <% } %>    
+        <% for (var i = 0; i < questioner.questions.length; i++) { %>
+            <div>
+                <div><%= questioner.questions[i].question %></div>
+                <div>
+                    <input type="text"
+                           data-id="<%=questioner.questions[i].id%>"
+                           <% if (defenseComplete) { %>
+                               disabled="disabled"
+                               <% for (var j=0; j < responses.length; j++) { %>
+                                   <% if (responses[j].question.id === questioner.questions[i].id) { %>
+                                       value="<%= responses[j].long_response %>"
+                                   <% } %>
+                               <% } %>
+                           <% } %>
+                     />
+                </div>
+            </div>
+        <% } %>
+        <% if (!defenseComplete) { %>
+            <div><input type="button" id="defend-strategy" value="Submit" /></div>
+        <% } %>
+    </div>   
 </script>
