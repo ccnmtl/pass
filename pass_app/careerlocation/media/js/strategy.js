@@ -9,8 +9,8 @@
             'click div.popover-close a.btn': 'onTogglePopover',
             'click div.strategy-state': 'onShowStrategy',
             'click .cancel': 'onHideStrategy',
-            'click #select-strategy': 'onSelectStrategy',
-            'click #defend-strategy': 'onDefendStrategy'
+            'click #select-strategy': 'onSelectStrategy',            
+            'click #defend-strategy': 'onDefendStrategy'                
         },
         initialize: function(options) {
             _.bindAll(this,
@@ -43,6 +43,10 @@
             this.state.fetch();
         },
         initialRender: function() {
+            if (this.state.get("view_type") === "PC") {
+                this.currentStrategy = this.state.get("strategy_selected");
+            }
+
             this.state.off("change", this.initialRender);
             this.state.get("layers").on("add remove", this.render);
             this.render();
@@ -89,10 +93,6 @@
                 jQuery("div.map_legend_container h3").hide();
             }
             
-            if (this.currentStrategy) {
-                this.renderStrategy();
-            }
-            
             var strategies = this.state.get('strategies_viewed');            
             strategies.forEach(function (strategy) {
                 var selector = "div.strategy-state[data-id='" + strategy.get('id') + "']";
@@ -112,17 +112,35 @@
                 this.renderDefendStrategy();
             }
             
-            this.maybeUnlock();
+            if (this.currentStrategy) {
+                this.renderStrategy();
+            }
+            
+            if (this.state.get("view_type") !== "RS") {
+                this.maybeUnlock();
+            }
         },
         renderStrategy: function() {
+            var elt;
             var json = this.currentStrategy.toTemplate();
-
+            
+            json.selected = false;
+            if (this.state.get('strategy_selected')) {
+                json.selected = this.currentStrategy.id ===
+                    this.state.get("strategy_selected").id;
+            }
+            
+            if (this.state.get("view_type") === "PC") {
+                elt = jQuery("div.custom_view_container");                
+            } else {
+                elt = jQuery("div.strategy");
+                json.pros = null;
+                json.cons = null;                
+                this.toggleOverlay();
+            }
             var markup = this.strategyTemplate(json);
-            jQuery("div.strategy").html(markup);
-
-            this.toggleOverlay();
-            jQuery("div.strategy").fadeIn("slow");
-
+            jQuery(elt).html(markup);
+            jQuery(elt).fadeIn("slow");
             this.delegateEvents();
         },
         renderSelectStrategy: function() {
@@ -137,8 +155,8 @@
             json.strategies = this.strategies.toTemplate();
 
             var markup = this.selectStrategyTemplate(json);
-            jQuery("div.select_strategy_container").html(markup);
-            jQuery("div.select_strategy_container").fadeIn("slow");
+            jQuery("div.custom_view_container").html(markup);
+            jQuery("div.custom_view_container").fadeIn("slow");
 
             this.delegateEvents();
         },
@@ -155,15 +173,16 @@
                 json.responses.length;
                 
             var markup = this.defendStrategyTemplate(json);
-            jQuery("div.defend_strategy_container").html(markup);
-            jQuery("div.defend_strategy_container").fadeIn("slow");
+            jQuery("div.custom_view_container").html(markup);
+            jQuery("div.custom_view_container").fadeIn("slow");
 
             this.delegateEvents();
         },
         maybeUnlock: function() {
             // Enable the "next" links if
             // 1. VIEW == "VS" && strategies_viewed == available strategies
-            if (this.state.unlockStrategy(this.strategies.length)) {
+            if (this.state.unlockStrategy(this.strategies.length,
+                    this.questioner.get('questions').length)) {
 
                 var anchor = jQuery("a#next");
                 if (anchor.length < 1) {
@@ -261,7 +280,7 @@
         onDefendStrategy: function(evt) {
             var self = this;
             var valid = true;
-            var elts = jQuery("div.defend_strategy_container input[type='text']");
+            var elts = jQuery("div.custom_view_container input[type='text']");
             jQuery.each(elts, function(index, elt) {
                 if (elt.value === "") {
                     valid = false;
@@ -292,7 +311,11 @@
                         count += 1;
                         self.state.get("strategy_responses").add(model);
                         if (count === elts.length) {
-                            self.state.save();
+                            self.state.save({}, {
+                                success: function(model, response) {
+                                    self.render();
+                                }    
+                            });                            
                         }
                     }
                 });                

@@ -16,7 +16,9 @@
             Defend Strategy
         {% else %}{% ifequal block.view "PC" %}
             Pros & Cons
-        {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
+        {% else %}{% ifequal block.view "RS" %}
+            Rethink Strategy Selection            
+        {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
     </h2>
 
     <div class="toolbar">
@@ -111,9 +113,7 @@
         {% endifnotequal %}
     </div>
     
-    <div style="display: none" class="select_strategy_container"></div>
-    
-    <div style="display: none" class="defend_strategy_container"></div>
+    <div style="display: none" class="custom_view_container"></div>
     
 </div>
 

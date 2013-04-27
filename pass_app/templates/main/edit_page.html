@@ -94,8 +94,15 @@
 {% block content %}
     <table style="width: 100%; border: 0">
         <tr style="width: 100%; border: 0">
-            <td style="width: 33%; border: 0;">
+            <td style="width: 33%; border: 0;"></td>        
+            <td style="width: 33%; text-align: center; border: 0;">
+                <a href="/edit{{section.get_module.get_absolute_url}}" id="previous">^ {{section.get_module.label}} ^</a>
+                <h2 class="edit-section-label">{{ section.parent }}</h2>
             </td>        
+            <td style="width: 33%; text-align: right; border: 0; vertical-align: top" />
+        </tr>        
+        <tr style="width: 100%; border: 0">
+            <td style="width: 33%; border: 0;"></td>        
             <td style="width: 33%; text-align: center; border: 0;">
                 <h2 class="edit-section-label">{{ section.label }}</h2>
             </td>        

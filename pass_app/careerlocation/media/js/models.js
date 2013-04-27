@@ -321,19 +321,26 @@
                 }
             }
 
-            if (this.get("view_type") === "BD" && boardmembers.length < BOARDMEMBER_LIMIT) {
+            if (this.get("view_type") === "BD" &&
+                    boardmembers.length < BOARDMEMBER_LIMIT) {
                 return false;
             }
             return true;
         },
-        unlockStrategy: function(strategyTotal) {
+        unlockStrategy: function(strategyTotal, questionTotal) {
             if (this.get("strategies_viewed").length < strategyTotal)
                 return false;
             
-            if (this.get("view_type") === "SP" && this.get("strategy_selected") === null) {
+            if (this.get("view_type") === "SS" &&
+                    this.get("strategy_selected") === null) {
                 return false;
             }
-            
+
+            if (this.get("view_type") === "DS" &&
+                    this.get("strategy_responses").length < questionTotal) {
+                return false;
+            }
+
             return true;
         }
     });

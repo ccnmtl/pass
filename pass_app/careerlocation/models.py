@@ -283,6 +283,7 @@ STRATEGY_VIEW_CHOICES = (
     ('SS', 'Select Strategy'),
     ('DS', 'Defend Strategy Selection'),
     ('PC', 'Strategy Pros And Cons'),
+    ('RS', 'Rethink Strategy Selection'),
 )
 
 
@@ -343,6 +344,10 @@ class CareerLocationStrategyBlock(models.Model):
 
         if self.view != "VS":
             if state.strategy_selected is None:
+                return False
+
+        if self.view == 'DS':
+            if len(state.strategy_responses.all()) < len(self.questions()):
                 return False
 
         return True
