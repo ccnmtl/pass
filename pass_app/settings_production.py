@@ -7,7 +7,7 @@ TEMPLATE_DIRS = (
 MEDIA_ROOT = '/var/www/pass/uploads/'
 # put any static media here to override app served static media
 STATICMEDIA_MOUNTS = (
-    ('/sitemedia', '/var/www/pass/pass/sitemedia'),	
+    ('/sitemedia', '/var/www/pass/pass/sitemedia'),
 )
 
 import logging

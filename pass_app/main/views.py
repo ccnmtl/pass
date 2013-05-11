@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseRedirect, HttpResponse, \
-    HttpResponseForbidden
+    HttpResponseForbidden, HttpResponseServerError
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils.encoding import smart_str
@@ -199,10 +199,10 @@ def process_page(request, path, hierarchy):
         if hierarchy.name == 'demographic' and path.startswith("survey"):
             return HttpResponseRedirect("/")
 
-        next = section.get_next()
-        if next:
+        next_section = section.get_next()
+        if next_section:
             # ignoring proceed and always pushing them along. see PMT #77454
-            return HttpResponseRedirect(section.get_next().get_absolute_url())
+            return HttpResponseRedirect(next_section.get_absolute_url())
         else:
             return HttpResponseRedirect("/")
     else:
@@ -301,8 +301,8 @@ class Column(object):
         return "%s_%s" % (self.question_id(), self.answer.id)
 
     def actor_id(self):
-        type = "stakeholder" if self.actor.type == "IV" else "boardmember"
-        return "%s_%s_%s" % (self.hierarchy.id, type, self.actor.id)
+        t = "stakeholder" if self.actor.type == "IV" else "boardmember"
+        return "%s_%s_%s" % (self.hierarchy.id, t, self.actor.id)
 
     def actor_answer_id(self):
         return "%s_%s" % (self.actor_id(), self.actor_question.id)
@@ -588,9 +588,6 @@ def edit_page(request, path):
 
     hierarchy_name, slash, section_path = path.partition('/')
 
-    h = Hierarchy.objects.get(name=hierarchy_name)
-    root = h.get_root()
-
     section = get_section_from_path(section_path, hierarchy=hierarchy_name)
 
     root = section.hierarchy.get_root()
@@ -628,8 +625,8 @@ def importer(request):
 
     if request.method == "GET":
         return {}
-    file = request.FILES['file']
-    zipfile = ZipFile(file)
+    f = request.FILES['file']
+    zipfile = ZipFile(f)
 
     # If we exported the morx.com site, and we are now
     # visiting http://fleem.com/import/, we don't want
@@ -647,8 +644,12 @@ def demographic_survey_complete(request):
     if request.user.is_anonymous():
         return False
 
-    # Show the demographic survey if the user has not yet completed
-    hierarchy = Hierarchy.objects.get(name='demographic')
+    try:
+        # Show the demographic survey if the user has not yet completed
+        hierarchy = Hierarchy.objects.get(name='demographic')
+    except Hierarchy.DoesNotExist:
+        return HttpResponseServerError('Server does not have required data')
+
     section = hierarchy.get_section_from_path('survey')
     content_type = ContentType.objects.filter(name='quiz')
     registration_quiz = section.pageblock_set.filter(content_type=content_type)

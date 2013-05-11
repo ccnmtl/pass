@@ -9,17 +9,14 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding model 'CareerLocationSummaryBlock'
-        db.create_table('careerlocation_careerlocationsummaryblock', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-        ))
-        db.send_create_signal('careerlocation', ['CareerLocationSummaryBlock'])
+        # Adding field 'CareerLocationStrategyBlock.instructions'
+        db.add_column('careerlocation_careerlocationstrategyblock', 'instructions', self.gf('django.db.models.fields.TextField')(null=True, blank=True), keep_default=False)
 
 
     def backwards(self, orm):
         
-        # Deleting model 'CareerLocationSummaryBlock'
-        db.delete_table('careerlocation_careerlocationsummaryblock')
+        # Deleting field 'CareerLocationStrategyBlock.instructions'
+        db.delete_column('careerlocation_careerlocationstrategyblock', 'instructions')
 
 
     models = {
@@ -38,7 +35,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 5, 11, 18, 22, 5, 147797)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -46,7 +43,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 5, 11, 18, 22, 5, 147717)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -61,11 +58,12 @@ class Migration(SchemaMigration):
             'order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'profile': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'questions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['careerlocation.ActorQuestion']", 'null': 'True', 'blank': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'top': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '2'})
         },
         'careerlocation.actorquestion': {
-            'Meta': {'object_name': 'ActorQuestion'},
+            'Meta': {'ordering': "['question']", 'object_name': 'ActorQuestion'},
             'answer': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'question': ('django.db.models.fields.TextField', [], {})
@@ -82,6 +80,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'CareerLocationBlock'},
             'base_layer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['careerlocation.MapLayer']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'optional_layers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'optional_layers'", 'symmetrical': 'False', 'to': "orm['careerlocation.MapLayer']"}),
             'view': ('django.db.models.fields.CharField', [], {'max_length': '2'})
         },
         'careerlocation.careerlocationstate': {
@@ -93,7 +92,19 @@ class Migration(SchemaMigration):
             'practice_location_column': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'practice_location_row': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'responses': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['careerlocation.ActorResponse']", 'null': 'True', 'blank': 'True'}),
+            'strategies_viewed': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'strategies_viewed'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['careerlocation.Strategy']"}),
+            'strategy_responses': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'strategy_responses'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['careerlocation.ActorResponse']"}),
+            'strategy_selected': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'strategy_selected'", 'null': 'True', 'to': "orm['careerlocation.Strategy']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'career_location_state'", 'to': "orm['auth.User']"})
+        },
+        'careerlocation.careerlocationstrategyblock': {
+            'Meta': {'object_name': 'CareerLocationStrategyBlock'},
+            'base_layer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['careerlocation.MapLayer']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'instructions': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'optional_layers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'strategy_optional_layers'", 'symmetrical': 'False', 'to': "orm['careerlocation.MapLayer']"}),
+            'questioner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['careerlocation.Actor']", 'null': 'True', 'blank': 'True'}),
+            'view': ('django.db.models.fields.CharField', [], {'max_length': '2'})
         },
         'careerlocation.careerlocationsummaryblock': {
             'Meta': {'object_name': 'CareerLocationSummaryBlock'},
@@ -108,6 +119,18 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'transparency': ('django.db.models.fields.IntegerField', [], {'default': '50'}),
             'z_index': ('django.db.models.fields.IntegerField', [], {'default': '999'})
+        },
+        'careerlocation.strategy': {
+            'Meta': {'ordering': "['ordinal']", 'object_name': 'Strategy'},
+            'cons': ('django.db.models.fields.TextField', [], {}),
+            'example': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'ordinal': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            'pdf': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'pros': ('django.db.models.fields.TextField', [], {}),
+            'question': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['careerlocation.ActorQuestion']", 'null': 'True', 'blank': 'True'}),
+            'summary': ('django.db.models.fields.TextField', [], {}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '256'})
         },
         'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},

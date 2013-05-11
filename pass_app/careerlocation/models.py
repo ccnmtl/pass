@@ -297,6 +297,7 @@ class CareerLocationStrategyBlock(models.Model):
         MapLayer, related_name="strategy_optional_layers")
     view = models.CharField(max_length=2, choices=STRATEGY_VIEW_CHOICES)
     questioner = models.ForeignKey(Actor, null=True, blank=True)
+    instructions = models.TextField(null=True, blank=True)
 
     display_name = "Career Location Strategy Exercise"
 

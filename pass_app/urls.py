@@ -46,7 +46,7 @@ urlpatterns = patterns(
      'pass_app.main.views.instructor_page'),
     (r'^demographic/(?P<path>.*)$',
      'pass_app.main.views.demographic'),
-
+    (r'smoketest/', include('smoketest.urls')),
     (r'^module-one/(?P<path>.*)$', 'pass_app.main.views.module_one'),
     (r'^module-two/(?P<path>.*)$', 'pass_app.main.views.module_two'),
     (r'^module-three/(?P<path>.*)$', 'pass_app.main.views.module_three'),
