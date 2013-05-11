@@ -31,7 +31,9 @@
 	        {% endfor %}
 	    </div>
     
-        <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Instructions</a>
+        <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button">
+            <i class="icon-question-sign"></i> Instructions
+        </a>
         {% ifnotequal block.view "VS" %}
             <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
         {% else %}
@@ -43,16 +45,12 @@
     <div class="help_content popover-parent" style="display: none">
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Instructions</a>
         <h3 class="popover-title">Help</h3>
-        <div class="popover-content">            
-            {% ifequal block.view "VS" %}
-                Proin vel neque sed nisl iaculis sagittis. Curabitur sed est nec felis blandit ultrices. Suspendisse potenti. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum varius congue. Donec fermentum, nunc eu imperdiet dignissim, massa magna consequat elit, sed lobortis dolor mi sit amet elit. Quisque nibh est, mattis nec laoreet at, feugiat eu erat. Aliquam erat volutpat.
-            {% else %}{% ifequal block.view "SS" %}
+        <div class="popover-content">
+            {% if block.instructions %}
+                {{block.instructions}}
+            {% else %}
                 @todo
-            {% else %}{% ifequal block.view "DS" %}
-                @todo
-            {% else %}{% ifequal block.view "PC" %}
-                @todo
-            {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
+            {% endif %}
             <div class="popover-close">
                 <a class="btn" href="#">Close</a>
             </div>

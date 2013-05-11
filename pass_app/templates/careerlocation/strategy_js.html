@@ -32,7 +32,7 @@
 </script>
 
 <script type="text/template" id="strategy-template">
-    <img id="x" class="btn cancel" src="/site_media/img/close.png" <% if (pros && cons) { %>style="display: none" <% } %>/>
+    <img id="x" class="btn cancel strategy" src="/site_media/img/close.png" <% if (pros && cons) { %>style="display: none" <% } %>/>
     
     <div class="title-container">
         <div class="strategy-state left viewed <% if (selected) { %>selected<% } %>">
@@ -59,6 +59,14 @@
     </div>
     <div class="strategy-download right">
         <a href="/download/<%=pdf%>">Download full proposal</a>
+    </div>
+</script>
+
+<script type="text/template" id="all-strategies-template">
+    <img id="x" class="btn cancel all-strategies" src="/site_media/img/close.png" />
+
+    <div>
+        <h1>You've viewed all the strategies. Click Select Strategy to continue</h1>
     </div>
 </script>
 

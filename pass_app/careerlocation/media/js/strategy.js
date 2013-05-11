@@ -8,7 +8,8 @@
             'click #toggle_map': 'onToggleMap',
             'click div.popover-close a.btn': 'onTogglePopover',
             'click div.strategy-state': 'onShowStrategy',
-            'click .cancel': 'onHideStrategy',
+            'click .cancel.strategy': 'onHideStrategy',
+            'click .cancel.all-strategies': 'onHideAllStrategies',
             'click #select-strategy': 'onSelectStrategy',            
             'click #defend-strategy': 'onDefendStrategy'                
         },
@@ -26,15 +27,21 @@
                 'onTogglePopover',
                 'onShowStrategy',
                 'onHideStrategy',
+                'onHideAllStrategies',
                 'onSelectStrategy',
                 'onDefendStrategy');
             
-            this.strategyTemplate = _.template(jQuery("#strategy-template").html());
-            this.selectStrategyTemplate = _.template(jQuery("#select-strategy-template").html());
-            this.defendStrategyTemplate = _.template(jQuery("#defend-strategy-template").html());
+            this.strategyTemplate =
+                _.template(jQuery("#strategy-template").html());
+            this.selectStrategyTemplate =
+                _.template(jQuery("#select-strategy-template").html());
+            this.defendStrategyTemplate =
+                _.template(jQuery("#defend-strategy-template").html());
+            this.allStrategiesTemplate =
+                _.template(jQuery("#all-strategies-template").html());
 
             this.layers = new MapLayerList(options.layers);            
-            this.strategies = new StrategyList(options.strategies);            
+            this.strategies = new StrategyList(options.strategies);       
             this.questioner = new Actor(options.questioner);
             
             this.state = new UserState({id: options.current_state_id});
@@ -69,7 +76,8 @@
             // toggle map layers on/off
             jQuery(".career_location_map_layer").each(function() {
                 var dataId = jQuery(this).data("id");
-                if (self.state.get("layers").getByDataId(dataId)) {
+                if (self.state.get("layers").getByDataId(dataId) ||
+                        self.state.get("view_type") !== "VS") {
                     // Check layer box
                     jQuery("#select_layer_" + dataId).attr("checked", "checked");
 
@@ -110,6 +118,10 @@
                 this.renderSelectStrategy();
             } else if (this.state.get("view_type") === "DS") {
                 this.renderDefendStrategy();
+            } else if (this.state.get("view_type") === "VS" &&
+                       this.complete) {
+                this.complete = false;
+                this.renderAllStrategies();             
             }
             
             if (this.currentStrategy) {
@@ -142,6 +154,14 @@
             jQuery(elt).html(markup);
             jQuery(elt).fadeIn("slow");
             this.delegateEvents();
+        },
+        renderAllStrategies: function() {
+            var elt = jQuery("div.strategy");
+            this.toggleOverlay();
+            var markup = this.allStrategiesTemplate({});
+            jQuery(elt).html(markup);
+            jQuery(elt).fadeIn("slow");
+            this.delegateEvents();            
         },
         renderSelectStrategy: function() {
             var json = this.state.toJSON();
@@ -261,6 +281,20 @@
             var self = this;
             this.toggleOverlay();
             this.currentStrategy = null;
+            jQuery("div.strategy").fadeOut("slow", function() {
+                jQuery(this).html("");
+                self.delegateEvents();
+                
+                if (self.state.unlockStrategy(self.strategies.length,
+                        self.questioner.get('questions').length)) {
+                    self.complete = true;
+                    self.render();
+                }
+            });
+        },
+        onHideAllStrategies: function(evt) {
+            var self = this;
+            this.toggleOverlay();
             jQuery("div.strategy").fadeOut("slow", function() {
                 jQuery(this).html("");
                 self.delegateEvents();
