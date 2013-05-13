@@ -120,8 +120,8 @@ INSTALLED_APPS = (
     'south',
     'django_statsd',
     'pass_app.careerlocation',
-    'django_jenkins',
-    'smoketest'
+    #'django_jenkins',
+    #'smoketest'
 )
 
 STATSD_CLIENT = 'statsd.client'
