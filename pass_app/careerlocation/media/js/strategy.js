@@ -50,6 +50,8 @@
             this.state.fetch();
         },
         initialRender: function() {
+            this.complete = this.is_complete();
+            
             if (this.state.get("view_type") === "PC") {
                 this.currentStrategy = this.state.get("strategy_selected");
             }
@@ -65,6 +67,10 @@
                 jQuery(this.el).find("div.help_content div.popover-close a.btn").html("I got it!");
                 this.onToggleHelp();
             }
+        },
+        is_complete: function() {
+            return this.state.unlockStrategy(this.strategies.length,
+                   this.questioner.get('questions').length);  
         },
         toggleOverlay: function() {
             var height = jQuery("div#pagebody").innerHeight();
@@ -118,14 +124,17 @@
                 this.renderSelectStrategy();
             } else if (this.state.get("view_type") === "DS") {
                 this.renderDefendStrategy();
-            } else if (this.state.get("view_type") === "VS" &&
-                       this.complete) {
-                this.complete = false;
-                this.renderAllStrategies();             
             }
             
             if (this.currentStrategy) {
                 this.renderStrategy();
+            }
+            
+            if (this.state.get("view_type") === "VS" &&
+                    !this.complete &&
+                    this.is_complete()) {
+                this.complete = true;
+                this.renderAllStrategies();             
             }
             
             if (this.state.get("view_type") !== "RS") {
@@ -274,26 +283,24 @@
             var strategyId = jQuery(srcElement).data("id");
             this.currentStrategy = this.strategies.getByDataId(strategyId);
             
-            if (!this.state.isStrategyViewed(this.currentStrategy)) {
-                this.state.viewStrategy(this.currentStrategy);
-                this.state.save();
-            }
-
             this.render();
         },
         onHideStrategy: function(evt) {
             var self = this;
-            this.toggleOverlay();
+            var strategy = this.currentStrategy;
             this.currentStrategy = null;
+            this.toggleOverlay();            
             jQuery("div.strategy").fadeOut("slow", function() {
                 jQuery(this).html("");
                 self.delegateEvents();
-                
-                if (self.state.unlockStrategy(self.strategies.length,
-                        self.questioner.get('questions').length)) {
-                    self.complete = true;
-                    self.render();
-                }
+                if (!self.state.isStrategyViewed(strategy)) {
+                    self.state.viewStrategy(strategy);
+                    self.state.save({}, {
+                        success: function() {
+                            self.render();
+                        }
+                    });
+                }                
             });
         },
         onHideAllStrategies: function(evt) {
