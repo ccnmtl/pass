@@ -322,8 +322,14 @@
                 this.state.selectStrategy(s);
                 this.state.save({}, {
                     success: function(model, response) {
-                        var anchor = jQuery("a#next");
-                        window.location = jQuery(anchor).attr("href");
+                        var url;
+                        if (jQuery("#next_url").length > 0) {
+                            url = jQuery("#next_url").attr("value");
+                        } else {
+                            var anchor = jQuery("a#next");
+                            url = jQuery(anchor).attr("href");
+                        }
+                        window.location = url;
                     }
                 });
             }
