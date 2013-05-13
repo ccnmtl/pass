@@ -8,9 +8,9 @@
         {% renderjs block %}
     {% endfor %}
 
-    {% ifequal module.slug 'adolescents' %}
+    {% ifnotequal module.slug 'young-children' %}
         <script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
-    {% endifequal %}
+    {% endifnotequal %}
 
 
     <script type="text/javascript">
@@ -52,11 +52,9 @@
 {% endblock %}
 
 {% block css %}
-    {% ifequal module.slug 'adolescents' %}
+    {% ifnotequal module.slug 'young-children' %}
         <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
-    {% else %}{% ifequal module.slug 'rural-populations' %}
-        <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
-    {% endifequal %}{% endifequal %}
+    {% endifnotequal %}
 
     {% for block in section.pageblock_set.all %}
         {% rendercss block %}

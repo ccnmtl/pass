@@ -32,7 +32,7 @@
 </script>
 
 <script type="text/template" id="strategy-template">
-    <img id="x" class="btn cancel strategy" src="/site_media/img/close.png" <% if (pros && cons) { %>style="display: none" <% } %>/>
+    <img id="x" class="btn cancel strategy" src="/site_media/img/close.png" <% if (!show_cancel_button) { %>style="display: none" <% } %>/>
     
     <div class="title-container">
         <div class="strategy-state left viewed <% if (selected) { %>selected<% } %>">
@@ -92,7 +92,7 @@
         </div>
     <% } %>
     <% if (!strategy_selected) { %>
-        <div><input type="button" id="select-strategy" value="Select Strategy" /></div>
+        <button id="select-strategy" data-loading-text="Saving..." class="btn btn-primary">Submit</button>
     <% } %>    
 </script>
 
@@ -140,7 +140,7 @@
             </div>
         <% } %>
         <% if (!defenseComplete) { %>
-            <div><input type="button" id="defend-strategy" value="Submit" /></div>
+            <button id="defend-strategy" data-loading-text="Saving..." class="btn btn-primary">Submit</button>
         <% } %>
     </div>   
 </script>

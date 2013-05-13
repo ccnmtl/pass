@@ -143,11 +143,15 @@
             }
             
             if (this.state.get("view_type") === "PC") {
-                elt = jQuery("div.custom_view_container");                
+                elt = jQuery("div.custom_view_container");
+                json.show_cancel_button = false;
             } else {
                 elt = jQuery("div.strategy");
-                json.pros = null;
-                json.cons = null;                
+                if (this.state.get("view_type") !== "RS") {
+                    json.pros = null;
+                    json.cons = null;
+                }
+                json.show_cancel_button = true;
                 this.toggleOverlay();
             }
             var markup = this.strategyTemplate(json);
@@ -301,17 +305,24 @@
             });
         },
         onSelectStrategy: function(evt) {
+            var srcElement = evt.srcElement || evt.target || evt.originalTarget;
             var elt = jQuery("input[name='strategy']:checked");
             if (elt.length < 1) {
                 alert("Please select a strategy");
             } else {
+                jQuery(srcElement).button("loading");
                 var s = this.strategies.getByDataId(elt[0].value);
                 this.state.selectStrategy(s);
-                this.state.save();
-                this.render();            
+                this.state.save({}, {
+                    success: function(model, response) {
+                        var anchor = jQuery("a#next");
+                        window.location = jQuery(anchor).attr("href");
+                    }
+                });
             }
         },
         onDefendStrategy: function(evt) {
+            var srcElement = evt.srcElement || evt.target || evt.originalTarget;
             var self = this;
             var valid = true;
             var elts = jQuery("div.custom_view_container input[type='text']");
@@ -326,6 +337,8 @@
                 alert("Please answer all questions before continuing.");
                 return false;
             }
+            
+            jQuery(srcElement).button("loading");
             
             var count = 0;
             jQuery.each(elts, function(index, elt) {
