@@ -15,9 +15,8 @@ requirements/src/django-annoying-0.7.6.tar.gz
 requirements/src/django-treebeard-1.61.tar.gz
 requirements/src/django-registration-0.7.tar.gz
 requirements/src/django-responseblock-0.1.4.tar.gz
-#wait until we're pushing to selma/patty
-#requirements/src/django-jenkins-0.14.0.tar.gz
-#requirements/src/django-smoketest-0.1.3.tar.gz
+requirements/src/django-jenkins-0.14.0.tar.gz
+requirements/src/django-smoketest-0.1.3.tar.gz
 requirements/src/django-proxyblock-0.1.2.tar.gz
 requirements/src/South-0.7.3.tar.gz
 requirements/src/django-statsd-mozilla-0.3.3.tar.gz
