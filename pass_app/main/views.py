@@ -303,15 +303,15 @@ class Column(object):
         return "%s_%s" % (self.question_id(), self.answer.id)
 
     def actor_id(self):
-        t = ""
         if self.actor.type == "IV":
             t = "stakeholder"
+            return "%s_%s_%s" % (self.hierarchy.id, t, self.actor.id)
         elif self.actor.type == "BD":
             t = "boardmember"
+            return "%s_%s_%s" % (self.hierarchy.id, t, self.actor.id)
         elif self.actor.type == "DS":
             t = "defend_strategy"
-
-        return "%s_%s_%s" % (self.hierarchy.id, t, self.actor.id)
+            return "%s_%s" % (self.hierarchy.id, t)
 
     def actor_answer_id(self):
         return "%s_%s" % (self.actor_id(), self.actor_question.id)
