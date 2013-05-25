@@ -11,7 +11,7 @@ from pagetree.helpers import get_hierarchy, get_section_from_path, \
 from pagetree.models import Hierarchy
 from pagetree_export.exportimport import export_zip, import_zip
 from pass_app.careerlocation.models import Actor, CareerLocationState, \
-    ActorResponse
+    ActorResponse, Strategy
 from pass_app.main.models import UserProfile, UserVisited
 from quizblock.models import Submission, Response
 from zipfile import ZipFile
@@ -274,7 +274,8 @@ def clean_header(s):
 
 class Column(object):
     def __init__(self, hierarchy, question=None, answer=None, actor=None,
-                 actor_question=None, location=None, notes=None):
+                 actor_question=None, location=None, notes=None,
+                 strategy=None):
         self.hierarchy = hierarchy
         self.question = question
         self.answer = answer
@@ -283,6 +284,7 @@ class Column(object):
         self.actor_question = actor_question
         self.location = location
         self.notes = notes
+        self.strategy = strategy
 
         if self.question:
             self._submission_cache = Submission.objects.filter(
@@ -291,7 +293,7 @@ class Column(object):
                 question=self.question)
             self._answer_cache = self.question.answer_set.all()
 
-        if self.actor or self.location or self.notes:
+        if self.actor or self.location or self.notes or self.strategy:
             self._state_cache = CareerLocationState.objects.all()
 
     def question_id(self):
@@ -301,11 +303,25 @@ class Column(object):
         return "%s_%s" % (self.question_id(), self.answer.id)
 
     def actor_id(self):
-        t = "stakeholder" if self.actor.type == "IV" else "boardmember"
+        t = ""
+        if self.actor.type == "IV":
+            t = "stakeholder"
+        elif self.actor.type == "BD":
+            t = "boardmember"
+        elif self.actor.type == "DS":
+            t = "defend_strategy"
+
         return "%s_%s_%s" % (self.hierarchy.id, t, self.actor.id)
 
     def actor_answer_id(self):
         return "%s_%s" % (self.actor_id(), self.actor_question.id)
+
+    def select_strategy_id(self):
+        return "%s_select_strategy" % self.hierarchy.id
+
+    def strategy_question_id(self):
+        return "%s_strategy_question_%s" % (self.hierarchy.id,
+                                            self.strategy.id)
 
     def location_id(self):
         return "%s_careerlocation_location" % (self.hierarchy.id)
@@ -336,24 +352,39 @@ class Column(object):
     def user_value(self, user):
         if self.question:
             return self.question_value(user)
-        else:
-            a = self._state_cache.filter(user=user)
-            if len(a) > 0:
-                state = a[0]
 
-                if self.actor and self.actor_question:
-                    responses = state.responses.filter(
-                        actor=self.actor, question=self.actor_question)
-                    if len(responses) > 0:
-                        return self.actor_question.id
-                elif self.actor:
-                    responses = state.responses.filter(actor=self.actor)
-                    if len(responses) > 0:
-                        return responses[0].long_response
-                elif self.location:
-                    return state.grid_cell()
-                elif self.notes:
-                    return state.notes
+        a = self._state_cache.filter(user=user)
+        if len(a) > 0:
+            state = a[0]
+
+            if self.strategy and self.actor_question:
+                responses = state.strategy_responses.filter(
+                    question=self.actor_question)
+                if len(responses) > 0:
+                    return responses[0].long_response
+            elif (self.actor and
+                  self.actor_question and
+                  self.actor.type == "DS"):
+                responses = state.strategy_responses.filter(
+                    actor=self.actor, question=self.actor_question)
+                if len(responses) > 0:
+                    return responses[0].long_response
+            elif self.actor and self.actor_question:
+                responses = state.responses.filter(
+                    actor=self.actor, question=self.actor_question)
+                if len(responses) > 0:
+                    return self.actor_question.id
+            elif self.actor:
+                responses = state.responses.filter(actor=self.actor)
+                if len(responses) > 0:
+                    return responses[0].long_response
+            elif self.location:
+                return state.grid_cell()
+            elif self.notes:
+                return state.notes
+            elif self.strategy:
+                return state.strategy_selected \
+                    if state.strategy_selected is not None else ""
 
         return ""
 
@@ -365,21 +396,32 @@ class Column(object):
             if self.answer:
                 row.append(self.answer.id)
                 row.append(clean_header(self.answer.label))
-        elif self.actor:
-            if len(self.actor.questions.all()) > 1:
-                row = [self.actor_id(), self.module_name,
-                       "multiple choice", clean_header(self.actor.name)]
-                row.append(self.actor_question.id)
-                row.append(clean_header(self.actor_question.question))
-            else:
-                row = [self.actor_id(), self.module_name, "short text",
-                       clean_header(self.actor_question.question)]
+        elif self.actor and self.actor.type == "DS":
+            row = [self.actor_answer_id(), self.module_name, "short text",
+                   clean_header(self.actor_question.question)]
+        elif self.actor and len(self.actor.questions.all()) > 1:
+            row = [self.actor_id(), self.module_name,
+                   "multiple choice", clean_header(self.actor.name)]
+            row.append(self.actor_question.id)
+            row.append(clean_header(self.actor_question.question))
+        elif self.actor and len(self.actor.questions.all()) == 1:
+            row = [self.actor_id(), self.module_name, "short text",
+                   clean_header(self.actor_question.question)]
         elif self.location:
             row = [self.location_id(
             ), self.module_name, "grid cell", self.location]
         elif self.notes:
             row = [self.notes_id(), self.module_name, "long text", self.notes]
-
+        elif self.strategy and self.actor_question:
+            row = [self.strategy_question_id(),
+                   self.module_name,
+                   "short text",
+                   clean_header(self.actor_question.question)]
+        elif self.strategy:
+            row = [self.select_strategy_id(), self.module_name,
+                   "single choice", "Select a strategy",
+                   self.strategy.id,
+                   clean_header(self.strategy.title)]
         return row
 
     def header_column(self):
@@ -395,6 +437,10 @@ class Column(object):
             return [self.location_id()]
         elif self.notes:
             return [self.notes_id()]
+        elif self.strategy and self.actor_question:
+            return [self.strategy_question_id()]
+        elif self.strategy:
+            return [self.select_strategy_id()]
 
 
 def _get_quiz_key(h, s):
@@ -457,6 +503,82 @@ def _get_career_location_results(h, s):
     return columns
 
 
+def _get_career_location_key(h, s):
+    careerlocation_type = ContentType.objects.filter(
+        name='career location block')
+    columns = []
+
+    for p in s.pageblock_set.filter(content_type=careerlocation_type):
+        if p.block().view == "IV":
+            # career location state
+            for a in p.block().stakeholders:
+                for q in a.questions.all():
+                    columns.append(Column(
+                        hierarchy=h, actor=a, actor_question=q))
+        elif p.block().view == "LC":
+            # practice location - cell number
+            columns.append(Column(hierarchy=h,
+                           location="Practice Location Grid Number"))
+        elif p.block().view == "BD":
+            # board members
+            for a in Actor.objects.filter(type="BD").order_by("order"):
+                for q in a.questions.all():
+                    columns.append(Column(
+                        hierarchy=h, actor=a, actor_question=q))
+
+            # notes
+            columns.append(
+                Column(hierarchy=h, notes="Interview Notes"))
+
+    return columns
+
+
+def _get_career_strategy_results(h, s):
+    careerstrategy_type = ContentType.objects.filter(
+        name='career location strategy block')
+    columns = []
+
+    for p in s.pageblock_set.filter(content_type=careerstrategy_type):
+        if p.block().view == "SS":
+            columns.append(Column(hierarchy=h,
+                                  strategy="Select a strategy"))
+            for s in Strategy.objects.all():
+                columns.append(Column(hierarchy=h,
+                                      strategy=s,
+                                      actor_question=s.question))
+
+        elif p.block().view == "DS":
+            for a in Actor.objects.filter(type="DS").order_by("order"):
+                for q in a.questions.all():
+                    columns.append(Column(
+                        hierarchy=h, actor=a, actor_question=q))
+
+    return columns
+
+
+def _get_career_strategy_key(h, s):
+    careerstrategy_type = ContentType.objects.filter(
+        name='career location strategy block')
+    columns = []
+
+    for p in s.pageblock_set.filter(content_type=careerstrategy_type):
+        if p.block().view == "SS":
+            for s in Strategy.objects.all():
+                columns.append(Column(hierarchy=h,
+                                      strategy=s))
+            for s in Strategy.objects.all():
+                columns.append(Column(hierarchy=h,
+                                      strategy=s,
+                                      actor_question=s.question))
+
+        elif p.block().view == "DS":
+            for a in Actor.objects.filter(type="DS").order_by("order"):
+                for q in a.questions.all():
+                    columns.append(Column(
+                        hierarchy=h, actor=a, actor_question=q))
+    return columns
+
+
 @login_required
 def all_results_key(request):
     """
@@ -485,35 +607,12 @@ def all_results_key(request):
                'answerIdentifier', 'answerText']
     writer.writerow(headers)
 
-    careerlocation_type = ContentType.objects.filter(
-        name='career location block')
-
     columns = []
     for h in Hierarchy.objects.all():
         for s in h.get_root().get_descendants():
             columns = columns + _get_quiz_key(h, s)
-
-            for p in s.pageblock_set.filter(content_type=careerlocation_type):
-                if p.block().view == "IV":
-                    # career location state
-                    for a in p.block().stakeholders:
-                        for q in a.questions.all():
-                            columns.append(Column(
-                                hierarchy=h, actor=a, actor_question=q))
-                elif p.block().view == "LC":
-                    # practice location - cell number
-                    columns.append(Column(hierarchy=h,
-                                   location="Practice Location Grid Number"))
-                elif p.block().view == "BD":
-                    # boardmembers
-                    for a in Actor.objects.filter(type="BD").order_by("order"):
-                        for q in a.questions.all():
-                            columns.append(Column(
-                                hierarchy=h, actor=a, actor_question=q))
-
-                    # notes
-                    columns.append(
-                        Column(hierarchy=h, notes="Interview Notes"))
+            columns = columns + _get_career_location_key(h, s)
+            columns = columns + _get_career_strategy_key(h, s)
 
     for column in columns:
         try:
@@ -557,6 +656,7 @@ def all_results(request):
         for s in h.get_root().get_descendants():
             columns = columns + _get_quiz_results(h, s)
             columns = columns + _get_career_location_results(h, s)
+            columns = columns + _get_career_strategy_results(h, s)
 
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=pass_responses.csv'
