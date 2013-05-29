@@ -187,8 +187,10 @@
             var json = _.clone(this.attributes);
             json.question = this.get("question").toTemplate();
             
-            var a = json.pdf.split('/');
-            json.pdf = a[a.length - 1];
+            if (json.pdf) {
+                var a = json.pdf.split('/');
+                json.pdf = a[a.length - 1];
+            }
             return json;            
         }
     });

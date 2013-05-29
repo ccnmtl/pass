@@ -288,9 +288,11 @@
         onHideStrategy: function(evt) {
             var self = this;
             var strategy = this.currentStrategy;
+            var selector = "div.strategy-state[data-id='" + strategy.get('id') + "']";
+            jQuery(selector).addClass("viewed");
             this.currentStrategy = null;
             this.toggleOverlay();            
-            jQuery("div.strategy").fadeOut("slow", function() {
+            jQuery("div.strategy").fadeOut("fast", function() {
                 jQuery(this).html("");
                 self.delegateEvents();
                 if (!self.state.isStrategyViewed(strategy)) {
