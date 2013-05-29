@@ -1,4 +1,16 @@
+# flake8: noqa
 from settings_shared import *
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pass',
+        'HOST': '',
+        'PORT': 6432,
+        'USER': '',
+        'PASSWORD': '',
+    }
+}
 
 TEMPLATE_DIRS = (
     "/var/www/pass/pass/pass_app/templates",
@@ -12,11 +24,11 @@ STATICMEDIA_MOUNTS = (
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+SENTRY_SITE = 'pass-staging'
+STATSD_PREFIX = 'pass-staging'
+STAGING_ENV = True
 
-# remember to set the SENTRY_KEY in a local_settings.py
-# as documented in the wiki
-SENTRY_REMOTE_URL = 'http://sentry.ccnmtl.columbia.edu/sentry/store/'
-SENTRY_SITE = 'pass'
+SENTRY_SERVERS = ['http://sentry.ccnmtl.columbia.edu/sentry/store/']
 
 if 'migrate' not in sys.argv:
     import logging
