@@ -76,6 +76,9 @@
             var height = jQuery("div#pagebody").innerHeight();
             jQuery("div.career_location_overlay").css("height", height + "px").toggle();
         },
+        hideOverlay: function() {
+            jQuery("div.career_location_overlay").hide();
+        },        
         render: function() {
             var self = this;
 
@@ -129,14 +132,7 @@
             if (this.currentStrategy) {
                 this.renderStrategy();
             }
-            
-            if (this.state.get("view_type") === "VS" &&
-                    !this.complete &&
-                    this.is_complete()) {
-                this.complete = true;
-                this.renderAllStrategies();             
-            }
-            
+                        
             if (this.state.get("view_type") !== "RS") {
                 this.maybeUnlock();
             }
@@ -169,12 +165,16 @@
             this.delegateEvents();
         },
         renderAllStrategies: function() {
-            var elt = jQuery("div.strategy");
-            this.toggleOverlay();
-            var markup = this.allStrategiesTemplate({});
-            jQuery(elt).html(markup);
-            jQuery(elt).fadeIn("slow");
-            this.delegateEvents();            
+            if (this.state.get("view_type") === "VS" &&
+                    !this.complete && this.is_complete()) {
+                this.complete = true;
+                var elt = jQuery("div.strategy");
+                this.toggleOverlay();
+                var markup = this.allStrategiesTemplate({});
+                jQuery(elt).html(markup);
+                jQuery(elt).fadeIn("slow");
+                this.delegateEvents();
+            }
         },
         renderSelectStrategy: function() {
             var json = this.state.toJSON();
@@ -288,21 +288,23 @@
         onHideStrategy: function(evt) {
             var self = this;
             var strategy = this.currentStrategy;
+            this.currentStrategy = null;
+            
             var selector = "div.strategy-state[data-id='" + strategy.get('id') + "']";
             jQuery(selector).addClass("viewed");
-            this.currentStrategy = null;
-            this.toggleOverlay();            
-            jQuery("div.strategy").fadeOut("fast", function() {
+            this.hideOverlay();
+            
+            jQuery("div.strategy").fadeOut("slow", function() {
                 jQuery(this).html("");
                 self.delegateEvents();
                 if (!self.state.isStrategyViewed(strategy)) {
                     self.state.viewStrategy(strategy);
                     self.state.save({}, {
                         success: function() {
-                            self.render();
+                            self.renderAllStrategies();
                         }
                     });
-                }                
+                }    
             });
         },
         onHideAllStrategies: function(evt) {
