@@ -13,6 +13,17 @@ STATICMEDIA_MOUNTS = (
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pass',
+        'HOST': '',
+        'PORT': 6432,
+        'USER': '',
+        'PASSWORD': '',
+    }
+}
+
 # remember to set the SENTRY_KEY in a local_settings.py
 # as documented in the wiki
 SENTRY_REMOTE_URL = 'http://sentry.ccnmtl.columbia.edu/sentry/store/'

@@ -11,6 +11,7 @@ class BasicTest(TestCase):
         self.u.set_password("test")
         self.u.save()
         self.c.login(username="testuser", password="test")
+        self.c.get("/module-one/")
 
     def tearDown(self):
         self.u.delete()
@@ -22,4 +23,4 @@ class BasicTest(TestCase):
     def test_smoketest(self):
         response = self.c.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
-        assert "PASS" in response.content
+        assert "PASS" in response.content, response.content

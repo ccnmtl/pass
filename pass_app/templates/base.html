@@ -44,12 +44,6 @@
                 Hello, {% if request.user.first_name or request.user.last_name %}{{request.user.first_name}}{% else %}{{ request.user.username }}{% endif %}
                 &nbsp;
                 <a href="/logout/" class="btn btn-mini btn-danger">Log out</a>
-            {% comment %}{% if can_edit %}
-                <a href="/edit{{request.path}}" class="btn btn-mini btn-info">Edit</a>
-            {% if instructor_link %}
-                <a href="/instructor{{request.path}}" class="btn btn-mini btn-info">responses</a>
-            {% endif %}
-            {% endif %}{% endcomment %}
             {% endif %}
             </div><!-- userstatus -->
         </div><!-- id="usernav" -->
@@ -179,5 +173,14 @@
 </script>
 
 {% block js %}{% endblock %}
+
+{% if STAGING_ENV %}
+<div class="alert alert-error" style="position: fixed; right: 0px; bottom: 0px;">
+<h4>Warning: Staging Site</h4>
+<p>You are viewing a staging version of this site, not the production site.</p>
+<p>This site was last updated on: <b>{{STAGING_DEPLOY_TIME}}</b></p>
+</div>
+{% endif %}
+
 </body>
 </html>
