@@ -47,7 +47,7 @@
         <h3 class="popover-title">Help</h3>
         <div class="popover-content">
             {% if block.instructions %}
-                {{block.instructions}}
+                {{block.instructions|safe}}
             {% else %}
                 @todo
             {% endif %}

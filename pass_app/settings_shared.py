@@ -82,7 +82,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware'
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'waffle.middleware.WaffleMiddleware',
 )
 
 ROOT_URLCONF = 'pass_app.urls'
@@ -122,7 +123,8 @@ INSTALLED_APPS = (
     'django_statsd',
     'pass_app.careerlocation',
     'django_jenkins',
-    'smoketest'
+    'smoketest',
+    'waffle'
 )
 
 STATSD_CLIENT = 'statsd.client'

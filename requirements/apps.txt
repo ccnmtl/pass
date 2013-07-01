@@ -28,3 +28,4 @@ requirements/src/django-quizblock-0.6.9.tar.gz
 requirements/src/django-pagetree_export-0.3.tar.gz
 requirements/src/django-careermapblock-0.2.15.tar.gz
 requirements/src/django-stagingcontext-0.1.0.tar.gz
+requirements/src/django-waffle-0.9.0.tar.gz 

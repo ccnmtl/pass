@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load waffle_tags %}
 {% comment %}######## THIS IS PASS TEMPLATE ########{% endcomment %}
 
 {% block title %}Welcome to PASS{% endblock %}
@@ -26,11 +27,14 @@
         <p>The first of five modules focuses on the young children in the United States.</p>
 
         {%  if demographic_survey_complete %}
-        <h3>Let's get started:</h3>
-        <ul class="module_list">
-            <li>Module 1: <a href="/module-one/">Young Children</a></li>
-            <li>Module 2: <a href="/module-two/">Adolescents</a></li>
-        </ul>
+            <h3>Let's get started:</h3>
+            <ul class="module_list">
+                <li>Module 1: <a href="/module-one/">Young Children</a></li>
+                <li>Module 2: <a href="/module-two/">Adolescents</a></li>
+                {% switch "rural_populations" %}
+                    <li>Module 2: <a href="/module-three/">Rural Populations</a></li>
+                {% endswitch %}        
+            </ul>
         {%  else  %}
         <p>Since this is your first time using this site, please fill out some information about yourself before you can access the modules.</p>
         <p><a href="/demographic/survey/" class="btn btn-info btn-register">Register</a></p>
