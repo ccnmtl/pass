@@ -694,7 +694,7 @@ div.strategy_container .career_location_map_container.popover {
     z-index: 3000;
     margin-top: 77px;
     margin-left: 8px;
-    width: 836px;
+    width: 850px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
@@ -754,6 +754,6 @@ div.strategy_container div.help_content .btn.right {
 }
 
 div.strategy_container div.career_location_map_container .btn.right {
-    margin: -39px 111px;
+    margin: -39px 126px;
 }
 
