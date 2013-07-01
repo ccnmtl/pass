@@ -741,6 +741,10 @@ div.strategy {
     top: 86px;
 }
 
+div.strategy_container div.map_legend_container {
+    padding-top: 0;
+}
+
 div.strategy_container div.map_layer_content {
     right: 124px;
 }
@@ -755,5 +759,9 @@ div.strategy_container div.help_content .btn.right {
 
 div.strategy_container div.career_location_map_container .btn.right {
     margin: -39px 126px;
+}
+
+div.strategy_container div.career_location_map_container h3 {
+    padding: 20px 0 0 0 !important;
 }
 
