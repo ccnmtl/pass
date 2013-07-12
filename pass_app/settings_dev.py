@@ -1,5 +1,5 @@
 # flake8: noqa
-from pass.settings import *
+from pass_app.settings import *
 
 TEMPLATE_DIRS = (
     "/var/www/pass/pass/pass_app/templates",
