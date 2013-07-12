@@ -232,6 +232,11 @@ div.profile div.title-container .title {
     margin-left: 15px;
 }
 
+div.custom_view_container div.title-container div.title.left,
+div.strategy div.title-container div.title.left {
+    max-width: 700px;
+}
+
 div.profile div.title-container .left {
     margin: 0;
 }
