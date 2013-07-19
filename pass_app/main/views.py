@@ -296,6 +296,9 @@ class Column(object):
         if self.actor or self.location or self.notes or self.strategy:
             self._state_cache = CareerLocationState.objects.all()
 
+    def last_visited_id(self):
+        return "%s_last_visited" % (self.hierarchy.id)
+
     def question_id(self):
         return "%s_question_%s" % (self.hierarchy.id, self.question.id)
 
@@ -329,6 +332,14 @@ class Column(object):
     def notes_id(self):
         return "%s_careerlocation_notes" % (self.hierarchy.id)
 
+    def last_visited_value(self, user):
+        uv = UserVisited.objects.filter(
+            user__user=user,
+            section__hierarchy=self.hierarchy).order_by("-visited_time")[:1]
+        if len(uv) > 0:
+            return uv[0].visited_time.strftime("%m/%d/%y %H:%M:%S")
+        return ""
+
     def question_value(self, user):
         r = self._submission_cache.filter(user=user).order_by("-submitted")
         if r.count() == 0:
@@ -349,10 +360,7 @@ class Column(object):
                         return a.id
         return ''
 
-    def user_value(self, user):
-        if self.question:
-            return self.question_value(user)
-
+    def cached_user_value(self, user):
         a = self._state_cache.filter(user=user)
         if len(a) > 0:
             state = a[0]
@@ -385,8 +393,15 @@ class Column(object):
             elif self.strategy:
                 return state.strategy_selected \
                     if state.strategy_selected is not None else ""
-
         return ""
+
+    def user_value(self, user):
+        if self.question:
+            return self.question_value(user)
+        elif not hasattr(self, "_state_cache"):
+            return self.last_visited_value(user)
+        else:
+            return self.cached_user_value(user)
 
     def key_row(self):
         if self.question:
@@ -422,6 +437,11 @@ class Column(object):
                    "single choice", "Select a strategy",
                    self.strategy.id,
                    clean_header(self.strategy.title)]
+        else:
+            row = [self.last_visited_id(),
+                   self.module_name,
+                   "short text",
+                   "Last Visited Date"]
         return row
 
     def header_column(self):
@@ -441,6 +461,8 @@ class Column(object):
             return [self.strategy_question_id()]
         elif self.strategy:
             return [self.select_strategy_id()]
+        else:
+            return [self.last_visited_id()]
 
 
 def _get_quiz_key(h, s):
@@ -609,6 +631,7 @@ def all_results_key(request):
 
     columns = []
     for h in Hierarchy.objects.all():
+        columns = columns + [Column(hierarchy=h)]
         for s in h.get_root().get_descendants():
             columns = columns + _get_quiz_key(h, s)
             columns = columns + _get_career_location_key(h, s)
@@ -653,6 +676,7 @@ def all_results(request):
 
     columns = []
     for h in Hierarchy.objects.all():
+        columns = columns + [Column(hierarchy=h)]
         for s in h.get_root().get_descendants():
             columns = columns + _get_quiz_results(h, s)
             columns = columns + _get_career_location_results(h, s)
