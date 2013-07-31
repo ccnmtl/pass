@@ -1,5 +1,4 @@
 (function (jQuery) {
-
     window.StrategyView = Backbone.View.extend({
         events: {
             'click .select-layer': 'onSelectLayer',
@@ -283,7 +282,7 @@
             var strategyId = jQuery(srcElement).data("id");
             this.currentStrategy = this.strategies.getByDataId(strategyId);
             
-            this.render();
+            this.renderStrategy();
         },
         onHideStrategy: function(evt) {
             var self = this;

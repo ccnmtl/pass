@@ -10,6 +10,7 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function () {
+        Backbone.Tastypie.doGetOnEmptyPostResponse = false;
         var view = new CareerLocationView({
             current_state_id: '{% get_user_state_id request.user %}',
             view_type: '{{block.view}}',
