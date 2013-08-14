@@ -2,7 +2,7 @@
 
 <script src="/site_media/js/json2.js" type="text/javascript" ></script>
 <script src="/site_media/js/underscore/underscore-min.js" type="text/javascript" ></script>
-<script src="/site_media/js/backbone/backbone.js" type="text/javascript" ></script>
+<script src="/site_media/js/backbone/backbone-min.js" type="text/javascript" ></script>
 <script src="/site_media/js/backbone-tastypie.js" type="text/javascript" ></script>
 
 <script src="/_careerlocation/media/js/models.js?version=1" type="text/javascript" ></script>
@@ -16,6 +16,8 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function () {
+        Backbone.Tastypie.doGetOnEmptyPostResponse = false;
+        
         var options = {
             current_state_id: "{% get_user_state_id request.user %}",
             view_type: "{{block.view}}",
@@ -66,7 +68,7 @@
     <img id="x" class="btn cancel all-strategies" src="/site_media/img/close.png" />
 
     <div>
-        <h1>You've viewed all the strategies. Click Select Strategy to continue</h1>
+        <h1>You have viewed all of the strategies. When you are ready, click "Select strategy" at the bottom of the page to continue.</h1>
     </div>
 </script>
 

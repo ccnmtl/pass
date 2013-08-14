@@ -71,6 +71,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.request',
+    'stagingcontext.staging_processor',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -81,7 +82,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware'
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'waffle.middleware.WaffleMiddleware',
 )
 
 ROOT_URLCONF = 'pass_app.urls'
@@ -91,7 +93,7 @@ TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), "templates"),
 )
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -121,8 +123,9 @@ INSTALLED_APPS = (
     'django_statsd',
     'pass_app.careerlocation',
     'django_jenkins',
-    'smoketest'
-)
+    'smoketest',
+    'waffle'
+]
 
 STATSD_CLIENT = 'statsd.client'
 STATSD_PREFIX = 'pass'
