@@ -151,7 +151,7 @@ def module_three(request, path):
 @rendered_with('main/admin_page.html')
 def reports(request, path):
     if not request.user.is_staff:
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
 
     hierarchy = get_hierarchy('reports')
     return process_page(request, path, hierarchy)
@@ -229,7 +229,7 @@ def process_page(request, path, hierarchy):
 @rendered_with("main/instructor_page.html")
 def instructor_page(request, path):
     if not request.user.is_superuser:
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
 
     hierarchy_name, slash, section_path = path.partition('/')
     section = get_section_from_path(section_path, hierarchy=hierarchy_name)
@@ -619,7 +619,7 @@ def all_results_key(request):
     """
 
     if not request.user.is_staff:
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
 
     response = HttpResponse(mimetype='text/csv')
     response[
@@ -669,7 +669,7 @@ def all_results(request):
     """
 
     if not request.user.is_staff:
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
 
     if not request.GET.get('format', 'html') == 'csv':
         return dict()
@@ -708,7 +708,7 @@ def all_results(request):
 @rendered_with('main/edit_page.html')
 def edit_page(request, path):
     if not request.user.is_superuser:
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
 
     hierarchy_name, slash, section_path = path.partition('/')
 
@@ -726,7 +726,7 @@ def edit_page(request, path):
 @login_required
 def exporter(request):
     if not request.user.is_superuser:
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
 
     hierarchy = request.get_host()
     section = get_section_from_path('/', hierarchy=hierarchy)
@@ -745,7 +745,7 @@ def exporter(request):
 @login_required
 def importer(request):
     if not request.user.is_superuser:
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
 
     if request.method == "GET":
         return {}
@@ -789,7 +789,7 @@ def demographic_survey_complete(request):
 
 def clear_state(request):
     if not request.user.is_superuser:
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
 
     try:
         request.user.get_profile().delete()
