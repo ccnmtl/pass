@@ -9,3 +9,4 @@ local_settings.py
 .settings/
 uploads
 reports
+.DS_Store
