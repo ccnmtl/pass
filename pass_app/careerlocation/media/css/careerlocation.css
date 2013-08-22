@@ -710,28 +710,32 @@ div.strategies h4 {
 }
 
 div.strategy-state {
-	-webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
-    width: 19px;
-    height: 19px; 
-    padding: 5px;
+    width: 30px;
+    height: 23px; 
+    padding: 7px 0 0 0;
     text-align: center;
-    border: 1px solid gray;
+    border: 0;
     margin: 8px 8px 8px 0;
     cursor: pointer;
+    background: url('/site_media/img/icon_strategy_state.jpg') 0 0 no-repeat;
+    font-family: 'arial black', arial, sans-serif;
+    font-weight: 900;
+    color: #999;
+    font-size: 16px !important;
 }
 
 div.strategy-state.viewed {
-	background-color: green;
+    color: #339900;
+    background: url('/site_media/img/icon_strategy_state_viewed.jpg') 0 0 no-repeat;
 }
 
 div.strategy-state.selected {
-	background-color: red;
+    color: #cc0000;
+    background: url('/site_media/img/icon_strategy_state_selected.jpg') 0 0 no-repeat;
 }
 
 div.strategies div.strategy-state:hover {
-	background-color: #ccc;
+    color: #000;
 }
 
 div.strategy {
