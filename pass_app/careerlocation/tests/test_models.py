@@ -191,3 +191,21 @@ class CareerLocationStrategyBlockTest(TestCase):
         # with a state, but no strategies
         CareerLocationState.objects.create(user=u)
         self.assertTrue(clsb.unlocked(u))
+
+        # for a non VS, we need a selected strategy
+        clsb.view = "BD"
+        self.assertFalse(clsb.unlocked(u))
+
+    def test_layers(self):
+        m = MapLayer.objects.create(
+            name="test name", display_name="test display name")
+        clsb = CareerLocationStrategyBlock.objects.create(
+            base_layer=m, view="VS")
+        self.assertEqual(list(clsb.layers()), [])
+
+    def test_questions(self):
+        m = MapLayer.objects.create(
+            name="test name", display_name="test display name")
+        clsb = CareerLocationStrategyBlock.objects.create(
+            base_layer=m, view="VS")
+        self.assertEqual(clsb.questions(), None)
