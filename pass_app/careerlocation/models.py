@@ -17,9 +17,6 @@ GRID_ROWS = 8
 
 
 class MapLayer(models.Model):
-    def __unicode__(self):
-        return self.display_name
-
     name = models.CharField(max_length=255)
     display_name = models.CharField(max_length=255)
     legend = models.TextField(null=True, blank=True)
@@ -28,8 +25,14 @@ class MapLayer(models.Model):
     z_index = models.IntegerField(default=999)
     transparency = models.IntegerField(default=50)
 
+    def __unicode__(self):
+        return self.display_name
+
 
 class ActorQuestion(models.Model):
+    question = models.TextField()
+    answer = models.TextField(null=True, blank=True)
+
     def __unicode__(self):
         s = ""
         if self.question:
@@ -42,15 +45,8 @@ class ActorQuestion(models.Model):
     class Meta:
         ordering = ['question']
 
-    question = models.TextField()
-    answer = models.TextField(null=True, blank=True)
-
 
 class Actor(models.Model):
-    def __unicode__(self):
-        d = dict(VIEW_CHOICES)
-        return d[self.type] + ': ' + self.name
-
     name = models.CharField(max_length=255)
     title = models.CharField(max_length=255, null=True, blank=True)
     type = models.CharField(max_length=2, choices=VIEW_CHOICES)
@@ -62,24 +58,22 @@ class Actor(models.Model):
     image = models.FileField(
         upload_to="layers/%Y/%m/%d/", null=True, blank=True)
 
+    def __unicode__(self):
+        d = dict(VIEW_CHOICES)
+        return d[self.type] + ': ' + self.name
+
 
 class ActorResponse(models.Model):
-    def __unicode__(self):
-        return "%s [%s : %s]" % (self.user.username, self.actor, self.question)
-
     user = models.ForeignKey(User, related_name="actor_state_user")
     actor = models.ForeignKey(Actor)
     question = models.ForeignKey(ActorQuestion)
     long_response = models.TextField(null=True, blank=True)
 
+    def __unicode__(self):
+        return "%s [%s : %s]" % (self.user.username, self.actor, self.question)
+
 
 class Strategy(models.Model):
-    def __unicode__(self):
-        return "%s. %s" % (self.ordinal, self.title)
-
-    class Meta:
-        ordering = ['ordinal']
-
     ordinal = models.PositiveIntegerField()
     title = models.CharField(max_length=256)
     summary = models.TextField()
@@ -90,11 +84,14 @@ class Strategy(models.Model):
     example = models.URLField(null=True, blank=True)
     question = models.ForeignKey(ActorQuestion, null=True, blank=True)
 
+    def __unicode__(self):
+        return "%s. %s" % (self.ordinal, self.title)
+
+    class Meta:
+        ordering = ['ordinal']
+
 
 class CareerLocationState(models.Model):
-    def __unicode__(self):
-        return self.user.username
-
     user = models.ForeignKey(User, related_name="career_location_state")
     layers = models.ManyToManyField(MapLayer, null=True, blank=True)
     actors = models.ManyToManyField(Actor, null=True, blank=True)
@@ -109,6 +106,9 @@ class CareerLocationState(models.Model):
     strategy_responses = models.ManyToManyField(
         ActorResponse, null=True, blank=True,
         related_name="strategy_responses")
+
+    def __unicode__(self):
+        return self.user.username
 
     def get_response(self, question):
         a = self.responses.filter(question=question)
