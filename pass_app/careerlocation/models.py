@@ -181,7 +181,7 @@ class CareerLocationBlock(models.Model):
             return False
 
         state = a[0]
-
+        self.stakeholders = Actor.objects.filter(type="IV")
         stakeholders = state.actors.filter(
             id__in=[s.id for s in self.stakeholders])
         if len(stakeholders) < 4:
