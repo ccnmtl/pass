@@ -4,6 +4,8 @@ from pass_app.careerlocation.models import MapLayer, ActorQuestion
 from pass_app.careerlocation.models import Actor, ActorResponse
 from pass_app.careerlocation.models import Strategy, CareerLocationState
 from pass_app.careerlocation.models import CareerLocationBlock
+from pass_app.careerlocation.models import CareerLocationSummaryBlock
+from pass_app.careerlocation.models import CareerLocationStrategyBlock
 
 
 class MapLayerTest(TestCase):
@@ -137,3 +139,55 @@ class CareerLocationBlockTest(TestCase):
             name="test name", display_name="test display name")
         clb = CareerLocationBlock.objects.create(base_layer=m, view='IV')
         self.assertEqual(clb.practice_location_report(), [0] * 112)
+
+
+class CareerLocationSummaryBlockTest(TestCase):
+    def test_needs_submit(self):
+        clsb = CareerLocationSummaryBlock()
+        self.assertFalse(clsb.needs_submit())
+
+    def test_unlocked(self):
+        clsb = CareerLocationSummaryBlock()
+        self.assertTrue(clsb.unlocked(None))
+
+    def test_boardmembers(self):
+        clsb = CareerLocationSummaryBlock()
+        self.assertEqual(list(clsb.boardmembers()), [])
+
+    def test_add_form(self):
+        f = CareerLocationSummaryBlock.add_form()
+        self.assertTrue(hasattr(f, 'fields'))
+
+    def test_edit_form(self):
+        clsb = CareerLocationSummaryBlock()
+        f = clsb.edit_form()
+        self.assertTrue(hasattr(f, 'fields'))
+
+
+class CareerLocationStrategyBlockTest(TestCase):
+    def test_needs_submit(self):
+        clsb = CareerLocationStrategyBlock()
+        self.assertFalse(clsb.needs_submit())
+
+    def test_add_form(self):
+        f = CareerLocationStrategyBlock.add_form()
+        self.assertTrue(hasattr(f, 'fields'))
+
+    def test_edit_form(self):
+        clsb = CareerLocationStrategyBlock()
+        f = clsb.edit_form()
+        self.assertTrue(hasattr(f, 'fields'))
+
+    def test_unlocked(self):
+        m = MapLayer.objects.create(
+            name="test name", display_name="test display name")
+        clsb = CareerLocationStrategyBlock.objects.create(
+            base_layer=m, view="VS")
+        # no state yet, so can't be unlocked
+        self.assertFalse(clsb.unlocked(None))
+
+        u = User.objects.create(username="testuser")
+
+        # with a state, but no strategies
+        CareerLocationState.objects.create(user=u)
+        self.assertTrue(clsb.unlocked(u))
