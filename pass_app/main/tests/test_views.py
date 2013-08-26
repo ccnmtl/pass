@@ -58,6 +58,15 @@ class BasicTest(TestCase):
         response = self.c.get("/instructor/module-one/")
         self.assertEqual(response.status_code, 200)
 
+    def test_instructor_page_post(self):
+        self.u.is_superuser = True
+        self.u.save()
+        response = self.c.post("/instructor/module-one/")
+        self.assertEqual(response.status_code, 200)
+        response = self.c.post("/instructor/module-one/",
+                               dict(clear=0))
+        self.assertEqual(response.status_code, 404)
+
     def test_edit_page(self):
         response = self.c.get("/edit/module-one/")
         self.assertEqual(response.status_code, 403)
@@ -73,12 +82,26 @@ class BasicTest(TestCase):
         self.u.save()
         response = self.c.get("/admin/allresults/")
         self.assertEqual(response.status_code, 200)
+        h = Hierarchy.objects.create(name="main", base_url="")
+        h.get_root().add_child_section_from_dict(
+            {'label': "One", 'slug': "socialwork",
+             'children': [{'label': "Three", 'slug': "introduction"}]
+             })
+        response = self.c.get("/admin/allresults/?format=csv")
+        self.assertEqual(response.status_code, 200)
 
     def test_all_results_key(self):
         response = self.c.get("/admin/allresultskey/")
         self.assertEqual(response.status_code, 403)
         self.u.is_staff = True
         self.u.save()
+        response = self.c.get("/admin/allresultskey/")
+        self.assertEqual(response.status_code, 200)
+        h = Hierarchy.objects.create(name="main", base_url="")
+        h.get_root().add_child_section_from_dict(
+            {'label': "One", 'slug': "socialwork",
+             'children': [{'label': "Three", 'slug': "introduction"}]
+             })
         response = self.c.get("/admin/allresultskey/")
         self.assertEqual(response.status_code, 200)
 
