@@ -68,18 +68,18 @@
     <img id="x" class="btn cancel all-strategies" src="/site_media/img/close.png" />
 
     <div>
-        <h1>You have viewed all of the strategies. When you are ready, click "Select strategy" at the bottom of the page to continue.</h1>
+        <h1>You've viewed all of the strategies.</h1>
+        <p>When you are ready, click "Select strategy" at the bottom of the page to continue.</p>
     </div>
 </script>
 
 <script type="text/template" id="select-strategy-template">
     <div class="instructions">
         <% if (strategy_selected) { %>
-            You've selected <%= strategy_selected.title %>. Please click the Defend Strategy to continue.
-        <% } else { %>
-            Some short text here recapping what happened and what user should do next... please choose your proposal:<br />
-            Also, it's important to inform user that he/she will be asked to defend the choice, and that the selection cannot be changed
-            after submission.
+            You've selected Strategy #<%= strategy_selected.ordinal %>. Click Defend Selection to continue.
+            <p style="font-size: 14px; margin-top: 10px !important;">
+            <em>After you answer a few additional questions, you will have an opportunity to reflect on your choice and 
+            select a different strategy.<br /></em></p>
         <% } %>            
     </div>
     <% for (var i=0; i < strategies.length; i++) { %>
@@ -103,7 +103,7 @@
         <% if (defenseComplete) { %>
             You've completed the questions. Click View Pros & Cons to continue.
         <% } else { %>
-            You've selected <%= strategy_selected.title %>. Please answer the following questions
+            You've selected <%= strategy_selected.title %>. Please answer the following questions.
         <% } %>
     </div>
     <div>

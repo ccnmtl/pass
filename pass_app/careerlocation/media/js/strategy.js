@@ -168,10 +168,10 @@
                     !this.complete && this.is_complete()) {
                 this.complete = true;
                 var elt = jQuery("div.strategy");
-                this.toggleOverlay();
                 var markup = this.allStrategiesTemplate({});
                 jQuery(elt).html(markup);
                 jQuery(elt).fadeIn("slow");
+                this.maybeUnlock();
                 this.delegateEvents();
             }
         },
@@ -308,7 +308,6 @@
         },
         onHideAllStrategies: function(evt) {
             var self = this;
-            this.toggleOverlay();
             jQuery("div.strategy").fadeOut("slow", function() {
                 jQuery(this).html("");
                 self.delegateEvents();

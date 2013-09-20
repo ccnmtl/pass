@@ -1,7 +1,7 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import Client
-from django.contrib.auth.models import User
-from pagetree.models import Hierarchy
+from pagetree.models import Hierarchy, Section
 from pass_app.main.views import Column
 
 
@@ -120,6 +120,10 @@ class ColumnTest(TestCase):
              'children': [{'label': "Three", 'slug': "introduction"}]
              })
 
+    def tearDown(self):
+        Section.objects.all().delete()
+        Hierarchy.objects.all().delete()
+
     def test_create(self):
         c = Column(self.h)
         self.assertTrue(c is not None)
@@ -138,16 +142,19 @@ class ColumnTest(TestCase):
             question = "a question"
 
         c = Column(self.h)
-        self.assertEqual(
-            c.key_row(),
-            ['1_last_visited', u'One', 'short text', 'Last Visited Date'])
+        key_row = c.key_row()
+        self.assertTrue(key_row[0].endswith('last_visited'))
+        self.assertEqual(key_row[1], u'One')
+        self.assertEqual(key_row[2], 'short text')
+        self.assertEqual(key_row[3], 'Last Visited Date')
+
         c = Column(self.h, actor=Actor("DS"), actor_question=AQ())
-        self.assertEqual(
-            c.key_row(),
-            ['1_defend_strategy_bar', u'One', 'short text', 'a question'])
+        key_row = c.key_row()
+        self.assertTrue(key_row[0].endswith('defend_strategy_bar'))
+        self.assertEqual(key_row[1], u'One')
+        self.assertEqual(key_row[2], 'short text')
+        self.assertEqual(key_row[3], 'a question')
 
     def test_header_column(self):
         c = Column(self.h)
-        self.assertEqual(
-            c.header_column(),
-            ['1_last_visited'])
+        self.assertTrue(c.header_column()[0].endswith('last_visited'))
