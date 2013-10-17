@@ -2,7 +2,7 @@ from django.conf.urls.defaults import include, patterns
 from django.contrib import admin
 from django.conf import settings
 import os.path
-from django.views.generic.simple import direct_to_template
+from django.views.generic import TemplateView
 admin.autodiscover()
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -11,10 +11,8 @@ urlpatterns = patterns(
     '',
     (r'^$', 'pass_app.main.views.intro'),
 
-    (r'^about/',
-     direct_to_template, {'template': 'main/about.html'}),
-    (r'^help/',
-     direct_to_template, {'template': 'main/help.html'}),
+    (r'^about/', TemplateView.as_view(template_name='main/about.html')),
+    (r'^help/', TemplateView.as_view(template_name='main/help.html')),
 
     (r'^export/$', 'pass_app.main.views.exporter'),
     (r'^import/$', 'pass_app.main.views.importer'),
@@ -38,8 +36,7 @@ urlpatterns = patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^_careermap/', include('careermapblock.urls')),
     (r'^_careerlocation/', include('pass_app.careerlocation.urls')),
-    (r'^_stats/',
-     direct_to_template, {'template': 'main/stats.html'}),
+    (r'^_stats/$', TemplateView.as_view(template_name="main/stats.html")),
     (r'^edit/(?P<path>.*)$',
      'pass_app.main.views.edit_page', {}, 'edit-page'),
     (r'^instructor/(?P<path>.*)$',

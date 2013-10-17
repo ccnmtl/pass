@@ -10,7 +10,7 @@
 {% block js %}
     <script type="text/javascript">
         var saveOrderOfChildren = function() {
-            var url = "{% url reorder-section-children section.id %}?";
+            var url = "{% url 'reorder-section-children' section.id %}?";
             var worktodo = 0;
             jQuery("#children-order-list li").each(function(index,element) {
                worktodo = 1;
@@ -25,7 +25,7 @@
         };
 
         var saveOrderOfPageBlocks = function() {
-            var url = "{% url reorder-pageblocks section.id %}?";
+            var url = "{% url 'reorder-pageblocks' section.id %}?";
             var worktodo = 0;
             jQuery("#edit-blocks-tab div").each(function(index,element) {
               worktodo = 1;
@@ -153,7 +153,7 @@
                                     {{block.edit_label}}
                                 </td>
                                 <td align="right">
-                                    <form action="{% url delete-pageblock block.id %}" method="post">
+                                    <form action="{% url 'delete-pageblock' block.id %}" method="post">
                                     <input type="submit" value="delete block {{block.ordinality}}" />
                                     </form>
                                 </td>
@@ -161,17 +161,17 @@
                             <tr>
                                 <td>
                                     {% if block.block.exportable %}
-                                    <a href="{% url export-pageblock-json block.id %}">export json</a>
+                                    <a href="{% url 'export-pageblock-json' block.id %}">export json</a>
                                     {% endif %}
                                 </td>
                                 <td>
                                 {% if block.block.importable %}
-                                <a href="{% url import-pageblock-json block.id %}">import json</a>
+                                <a href="{% url 'import-pageblock-json' block.id %}">import json</a>
                                 {% endif %}
                                 </td>
                             </tr>
                         </table>
-                        <form action="{% url edit-pageblock block.id %}" method="post"
+                        <form action="{% url 'edit-pageblock' block.id %}" method="post"
                             {% if block.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>
                             <table width="100%">
                                 {{ block.default_edit_form.as_table }}
@@ -195,7 +195,7 @@
         <div id="add-pageblock-tab">
             {% for blocktype in section.available_pageblocks %}
                 {% if blocktype %}
-                    <form action="{% url add-pageblock section.id %}"
+                    <form action="{% url 'add-pageblock' section.id %}"
                         {% if blocktype.add_form.is_multipart %}
                             enctype="multipart/form-data"
                         {% endif %}
@@ -231,7 +231,7 @@
             {% endif %}
     
             <h3>Create Child</h3>
-            <form action="{% url add-child-section section.id %}" method="post">        
+            <form action="{% url 'add-child-section' section.id %}" method="post">        
                 <fieldset>                
                     <p>
                     {{ section.add_child_section_form.as_p }}
@@ -242,11 +242,11 @@
         </div>        
         
         <div id="edit-page-tab">
-            <form action="{% url delete-section section.id %}" method="post">
+            <form action="{% url 'delete-section' section.id %}" method="post">
                 <input type="submit" value="delete this page" />
             </form>
         
-            <form action="{% url edit-section section.id %}" method="post">
+            <form action="{% url 'edit-section' section.id %}" method="post">
                 <fieldset><legend>Edit Page</legend>
                     <table>
                         {{ section.edit_form.as_table }}
@@ -257,7 +257,7 @@
         </div>
 
         <div id="move-page-tab">
-            <form action="{% url move-section section.id %}" method="post">{% csrf_token %}        
+            <form action="{% url 'move-section' section.id %}" method="post">{% csrf_token %}        
                 <fieldset>
                     <legend>Move "{{section.label}}" Section To...</legend>
                     <p>
