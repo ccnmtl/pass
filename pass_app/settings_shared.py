@@ -108,7 +108,6 @@ INSTALLED_APPS = [
     'smartif',
     'template_utils',
     'typogrify',
-    'sentry.client',
     'munin',
     'bootstrapform',
     'pagetree',

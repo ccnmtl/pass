@@ -1,6 +1,5 @@
 from pass_app.main.models import UserVisited, UserProfile
 from django.contrib import admin
-from pagetree.models import Hierarchy
 
 admin.site.register(UserProfile)
 
@@ -19,5 +18,3 @@ class UserVisitedAdmin(admin.ModelAdmin):
     list_display = ("user", "section", section_hierarchy_name, "visited_time")
 
 admin.site.register(UserVisited, UserVisitedAdmin)
-
-admin.site.register(Hierarchy)

@@ -82,6 +82,7 @@ class BasicTest(TestCase):
         self.u.save()
         response = self.c.get("/admin/allresults/")
         self.assertEqual(response.status_code, 200)
+        Hierarchy.objects.all().delete()
         h = Hierarchy.objects.create(name="main", base_url="")
         h.get_root().add_child_section_from_dict(
             {'label': "One", 'slug': "socialwork",
@@ -95,11 +96,14 @@ class BasicTest(TestCase):
         self.assertEqual(response.status_code, 403)
         self.u.is_staff = True
         self.u.save()
+        Hierarchy.objects.all().delete()
         response = self.c.get("/admin/allresultskey/")
         self.assertEqual(response.status_code, 200)
+        Hierarchy.objects.all().delete()
         h = Hierarchy.objects.create(name="main", base_url="")
         h.get_root().add_child_section_from_dict(
             {'label': "One", 'slug': "socialwork",
+             'pageblocks': [],
              'children': [{'label': "Three", 'slug': "introduction"}]
              })
         response = self.c.get("/admin/allresultskey/")
