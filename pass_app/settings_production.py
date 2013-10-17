@@ -31,11 +31,16 @@ SENTRY_REMOTE_URL = 'http://sentry.ccnmtl.columbia.edu/sentry/store/'
 SENTRY_SITE = 'pass'
 
 if 'migrate' not in sys.argv:
+    INSTALLED_APPS.append('raven.contrib.django')
+
     import logging
-    from sentry.client.handlers import SentryHandler
+    from raven.contrib.django.handlers import SentryHandler
     logger = logging.getLogger()
-    if SentryHandler not in map(lambda x: x.__class__, logger.handlers):
+    # ensure we havent already registered the handler
+    if SentryHandler not in map(type, logger.handlers):
         logger.addHandler(SentryHandler())
+
+        # Add StreamHandler to sentry's default so you can catch missed exceptions
         logger = logging.getLogger('sentry.errors')
         logger.propagate = False
         logger.addHandler(logging.StreamHandler())
