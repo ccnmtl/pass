@@ -7,7 +7,13 @@ from tastypie.resources import ModelResource
 
 
 class UsernameAuthorization(Authorization):
-    def apply_limits(self, request, object_list):
+
+    def read_detail(self, object_list, bundle):
+        lst = self.read_list(object_list, bundle)
+        return len(lst) > 0
+
+    def read_list(self, object_list, bundle):
+        request = bundle.request
         if request and hasattr(request, 'user'):
             return object_list.filter(username=request.user.username)
 
@@ -15,7 +21,12 @@ class UsernameAuthorization(Authorization):
 
 
 class UserAuthorization(Authorization):
-    def apply_limits(self, request, object_list):
+    def read_detail(self, object_list, bundle):
+        lst = self.read_list(object_list, bundle)
+        return len(lst) > 0
+
+    def read_list(self, object_list, bundle):
+        request = bundle.request
         if request and hasattr(request, 'user'):
             return object_list.filter(user=request.user)
 
