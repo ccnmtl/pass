@@ -68,11 +68,11 @@ class BasicTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_edit_page(self):
-        response = self.c.get("/edit/module-one/")
+        response = self.c.get("/module-one/edit/")
         self.assertEqual(response.status_code, 403)
         self.u.is_superuser = True
         self.u.save()
-        response = self.c.get("/edit/module-one/")
+        response = self.c.get("/module-one/edit/")
         self.assertEqual(response.status_code, 200)
 
     def test_all_results(self):

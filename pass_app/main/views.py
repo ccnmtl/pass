@@ -717,16 +717,12 @@ def all_results(request):
 
 @login_required
 @rendered_with('main/edit_page.html')
-def edit_page(request, path):
+def edit_page(request, hierarchy, path):
     if not request.user.is_superuser:
         return HttpResponseForbidden()
 
-    hierarchy_name, slash, section_path = path.partition('/')
-
-    section = get_section_from_path(section_path, hierarchy=hierarchy_name)
-
+    section = get_section_from_path(path, hierarchy)
     root = section.hierarchy.get_root()
-
     return dict(section=section,
                 can_edit=True,
                 module=get_module(section),

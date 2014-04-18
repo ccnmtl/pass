@@ -37,8 +37,10 @@ urlpatterns = patterns(
     (r'^_careermap/', include('careermapblock.urls')),
     (r'^_careerlocation/', include('pass_app.careerlocation.urls')),
     (r'^_stats/$', TemplateView.as_view(template_name="main/stats.html")),
-    (r'^edit/(?P<path>.*)$',
-     'pass_app.main.views.edit_page', {}, 'edit-page'),
+
+    (r'^(?P<hierarchy>[\w\-]+)/edit/(?P<path>.*)$',
+     'pass_app.main.views.edit_page'),
+
     (r'^instructor/(?P<path>.*)$',
      'pass_app.main.views.instructor_page'),
     (r'^demographic/(?P<path>.*)$',
