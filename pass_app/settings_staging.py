@@ -12,6 +12,8 @@ DATABASES = {
     }
 }
 
+COMPRESS_ROOT = "/var/www/pass/pass/media/"
+
 TEMPLATE_DIRS = (
     "/var/www/pass/pass/pass_app/templates",
 )

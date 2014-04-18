@@ -2,6 +2,7 @@
 import os.path
 import sys
 
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -123,7 +124,8 @@ INSTALLED_APPS = [
     'pass_app.careerlocation',
     'django_jenkins',
     'smoketest',
-    'waffle'
+    'waffle',
+    'compressor',
 ]
 
 STATSD_CLIENT = 'statsd.client'
@@ -156,6 +158,9 @@ THUMBNAIL_SUBDIR = "thumbs"
 EMAIL_SUBJECT_PREFIX = "[pass] "
 EMAIL_HOST = 'localhost'
 SERVER_EMAIL = "pass@ccnmtl.columbia.edu"
+
+COMPRESS_URL = "/site_media/"
+COMPRESS_ROOT = "media/"
 
 # put any static media here to override app served static media
 STATICMEDIA_MOUNTS = (

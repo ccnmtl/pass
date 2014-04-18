@@ -47,4 +47,5 @@ urlpatterns = patterns(
     (r'^module-one/(?P<path>.*)$', 'pass_app.main.views.module_one'),
     (r'^module-two/(?P<path>.*)$', 'pass_app.main.views.module_two'),
     (r'^module-three/(?P<path>.*)$', 'pass_app.main.views.module_three'),
+    (r'^module-four/(?P<path>.*)$', 'pass_app.main.views.module_four')
 )

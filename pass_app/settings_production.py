@@ -5,6 +5,8 @@ TEMPLATE_DIRS = (
     "/var/www/pass/pass/pass_app/templates",
 )
 
+COMPRESS_ROOT = "/var/www/pass/pass/media/"
+
 MEDIA_ROOT = '/var/www/pass/uploads/'
 # put any static media here to override app served static media
 STATICMEDIA_MOUNTS = (

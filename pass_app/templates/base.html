@@ -12,7 +12,8 @@
 
 	{% block feeds %}{% endblock %}
 </head>
-<body class="one_column {% block widthtype %}fixed{% endblock %} {% ifequal module.slug 'young-children' %}no_bootstrap{% endifequal %}">
+
+<body  id="{% block bodyid %}{% endblock %}"class="one_column fixed {% block bodyclass %}{% endblock %} {% ifequal module.slug 'young-children' %}no_bootstrap{% endifequal %}">
 {% comment %}
 ###### FOR WIDTH TYPE--
    fixed : fixed width, doesn't change with browser resize
@@ -100,9 +101,6 @@
         </div><!-- id="leftside/rightside" -->
     </div><!-- id="primarynav" -->
 {% endblock %}
-
-
-{% comment %} not using this now <div id="breadcrumbs">{% block breadcrumbs %}{% endblock %}</div> {% endcomment %}
 
 
 	<!-- ###### Page: Sidebars and Content ###### -->
