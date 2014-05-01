@@ -1,4 +1,4 @@
-Django==1.5.4
+Django==1.5.7
 lxml==3.2.3
 httplib2==0.8
 restclient==0.9.9
@@ -18,7 +18,12 @@ fuzzywuzzy==0.1
 sure==1.1.7
 ipython==0.13.1
 ipdb==0.7
-lettuce==0.2.14
+extras==0.0.3
+python-mimeparse==0.1.4
+testtools==0.9.35
+testscenarios==0.4
+python-subunit==0.0.18
+lettuce==0.2.19ccnmtl
 selenium==2.29.0
 coverage==3.5.3
 logilab-common==0.59.0
