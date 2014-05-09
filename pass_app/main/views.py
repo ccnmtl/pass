@@ -200,22 +200,7 @@ def process_page(request, path, hierarchy):
             return HttpResponseRedirect(first_leaf.get_absolute_url())
 
     if request.method == "POST":
-        # user has submitted a form. deal with it
-        if request.POST.get('action', '') == 'reset':
-            section.reset(request.user)
-            return HttpResponseRedirect(section.get_absolute_url())
-
-        section.submit(request.POST, request.user)
-
-        if hierarchy.name == 'demographic' and path.startswith("survey"):
-            return HttpResponseRedirect("/")
-
-        next_section = section.get_next()
-        if next_section:
-            # ignoring proceed and always pushing them along. see PMT #77454
-            return HttpResponseRedirect(next_section.get_absolute_url())
-        else:
-            return HttpResponseRedirect("/")
+        return handle_page_post(request, section, hierarchy, path)
     else:
         instructor_link = has_responses(section)
         allow_next_link = not needs_submit(
@@ -234,6 +219,25 @@ def process_page(request, path, hierarchy):
                     next_unlocked=_unlocked(
                         user_profile, section.get_next())
                     )
+
+
+def handle_page_post(request, section, hierarchy, path):
+    # user has submitted a form. deal with it
+    if request.POST.get('action', '') == 'reset':
+        section.reset(request.user)
+        return HttpResponseRedirect(section.get_absolute_url())
+
+    section.submit(request.POST, request.user)
+
+    if hierarchy.name == 'demographic' and path.startswith("survey"):
+        return HttpResponseRedirect("/")
+
+    next_section = section.get_next()
+    if next_section:
+        # ignoring proceed and always pushing them along. see PMT #77454
+        return HttpResponseRedirect(next_section.get_absolute_url())
+    else:
+        return HttpResponseRedirect("/")
 
 
 @login_required

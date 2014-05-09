@@ -176,7 +176,6 @@ class CareerLocationBlock(models.Model):
 
         '''
         NUM_STAKEHOLDERS_REQUIRED = 4
-        NUM_BOARDMEMBERS_REQUIRED = 6
         NUM_ACTORS_IN_STAKEHOLDERS = 3
         a = CareerLocationState.objects.filter(user=user)
         if a.count() < 1:
@@ -189,29 +188,35 @@ class CareerLocationBlock(models.Model):
         if stakeholders.count() < NUM_STAKEHOLDERS_REQUIRED:
             return False
 
-        for actor in stakeholders:
-            r = state.responses.filter(actor=actor)
-            if r.count() < NUM_ACTORS_IN_STAKEHOLDERS:
-                return False
+        counts = [
+            state.responses.filter(
+                actor=actor).count() < NUM_ACTORS_IN_STAKEHOLDERS
+            for actor in stakeholders]
+        if any(counts):
+            return False
 
         if self.view == "LC" or self.view == "BD":
             if state.practice_location_row is None or \
                     state.practice_location_column is None:
                 return False
+        if self.boardmembers_check(state):
+            return True
+        return True
 
+    def boardmembers_check(self, state):
+        NUM_BOARDMEMBERS_REQUIRED = 6
         if self.view == "BD":
             boardmembers = state.actors.filter(
                 id__in=[b.id for b in self.boardmembers])
             if boardmembers.count() < NUM_BOARDMEMBERS_REQUIRED:
-                return False
-
-            for actor in boardmembers:
-                r = state.responses.filter(actor=actor)
-
-                if r.count() > 0 and len(r[0].long_response) < 1:
-                    return False
-
-        return True
+                return True
+            rs = [state.responses.filter(actor=actor)
+                  for actor in boardmembers]
+            counts = [r.count() > 0 and len(r[0].long_response) < 1 for
+                      r in rs]
+            if any(counts):
+                return True
+        return False
 
     def layers(self):
         return self.optional_layers.all()
