@@ -175,7 +175,9 @@ class CareerLocationBlock(models.Model):
                 The user has selected 4 stakeholders
 
         '''
-
+        NUM_STAKEHOLDERS_REQUIRED = 4
+        NUM_BOARDMEMBERS_REQUIRED = 6
+        NUM_ACTORS_IN_STAKEHOLDERS = 3
         a = CareerLocationState.objects.filter(user=user)
         if a.count() < 1:
             return False
@@ -184,12 +186,12 @@ class CareerLocationBlock(models.Model):
         self.stakeholders = Actor.objects.filter(type="IV")
         stakeholders = state.actors.filter(
             id__in=[s.id for s in self.stakeholders])
-        if stakeholders.count() < 4:
+        if stakeholders.count() < NUM_STAKEHOLDERS_REQUIRED:
             return False
 
         for actor in stakeholders:
             r = state.responses.filter(actor=actor)
-            if r.count() < 3:
+            if r.count() < NUM_ACTORS_IN_STAKEHOLDERS:
                 return False
 
         if self.view == "LC" or self.view == "BD":
@@ -200,7 +202,7 @@ class CareerLocationBlock(models.Model):
         if self.view == "BD":
             boardmembers = state.actors.filter(
                 id__in=[b.id for b in self.boardmembers])
-            if boardmembers.count() < 6:
+            if boardmembers.count() < NUM_BOARDMEMBERS_REQUIRED:
                 return False
 
             for actor in boardmembers:
