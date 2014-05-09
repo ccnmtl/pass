@@ -376,36 +376,55 @@ class Column(object):
             return ""
 
         state = a[0]
-
-        if self.strategy and self.actor_question:
-            responses = state.strategy_responses.filter(
-                question=self.actor_question)
-            if responses.count() > 0:
-                return responses[0].long_response
-        elif (self.actor and
-              self.actor_question and
-              self.actor.type == "DS"):
-            responses = state.strategy_responses.filter(
-                actor=self.actor, question=self.actor_question)
-            if responses.count() > 0:
-                return responses[0].long_response
-        elif self.actor and self.actor_question:
-            responses = state.responses.filter(
-                actor=self.actor, question=self.actor_question)
-            if responses.count() > 0:
-                return self.actor_question.id
-        elif self.actor:
-            responses = state.responses.filter(actor=self.actor)
-            if responses.count() > 0:
-                return responses[0].long_response
-        elif self.location:
-            return state.grid_cell()
-        elif self.notes:
-            return state.notes
-        elif self.strategy:
-            return state.strategy_selected \
-                if state.strategy_selected is not None else ""
+        dispatch = [
+            (self.strategy and self.actor_question,
+             lambda: self.first_strategy_long_response()),
+            (self.has_actor_question_and_ds(),
+             lambda: self.first_actor_strategy_long_response()),
+            (self.actor and self.actor_question,
+             lambda: self.first_actor_question_id()),
+            (self.actor, lambda: self.first_long_response()),
+            (self.location, lambda: state.grid_cell()),
+            (self.notes, lambda: state.notes),
+            (self.strategy and state.strategy_selected is not None,
+             lambda: state.strategy_selected)
+        ]
+        for c, v in dispatch:
+            if c:
+                return v()
         return ""
+
+    def first_strategy_long_response(self):
+        responses = state.strategy_responses.filter(
+            question=self.actor_question)
+        if responses.count() > 0:
+            return responses[0].long_response
+        return ""
+
+    def first_actor_strategy_long_response(self):
+        responses = state.strategy_responses.filter(
+            actor=self.actor, question=self.actor_question)
+        if responses.count() > 0:
+            return responses[0].long_response
+        return ""
+
+    def first_actor_question_id(self):
+        responses = state.responses.filter(
+            actor=self.actor, question=self.actor_question)
+        if responses.count() > 0:
+            return self.actor_question.id
+        return ""
+
+    def first_long_response(self):
+        responses = state.responses.filter(actor=self.actor)
+        if responses.count() > 0:
+            return responses[0].long_response
+        return ""
+
+    def has_actor_question_and_ds(self):
+        return (self.actor and
+                self.actor_question and
+                self.actor.type == "DS")
 
     def user_value(self, user):
         if self.question:
