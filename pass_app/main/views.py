@@ -378,12 +378,12 @@ class Column(object):
         state = a[0]
         dispatch = [
             (self.strategy and self.actor_question,
-             lambda: self.first_strategy_long_response()),
+             lambda: self.first_strategy_long_response(state)),
             (self.has_actor_question_and_ds(),
-             lambda: self.first_actor_strategy_long_response()),
+             lambda: self.first_actor_strategy_long_response(state)),
             (self.actor and self.actor_question,
-             lambda: self.first_actor_question_id()),
-            (self.actor, lambda: self.first_long_response()),
+             lambda: self.first_actor_question_id(state)),
+            (self.actor, lambda: self.first_long_response(state)),
             (self.location, lambda: state.grid_cell()),
             (self.notes, lambda: state.notes),
             (self.strategy and state.strategy_selected is not None,
@@ -394,28 +394,28 @@ class Column(object):
                 return v()
         return ""
 
-    def first_strategy_long_response(self):
+    def first_strategy_long_response(self, state):
         responses = state.strategy_responses.filter(
             question=self.actor_question)
         if responses.count() > 0:
             return responses[0].long_response
         return ""
 
-    def first_actor_strategy_long_response(self):
+    def first_actor_strategy_long_response(self, state):
         responses = state.strategy_responses.filter(
             actor=self.actor, question=self.actor_question)
         if responses.count() > 0:
             return responses[0].long_response
         return ""
 
-    def first_actor_question_id(self):
+    def first_actor_question_id(self, state):
         responses = state.responses.filter(
             actor=self.actor, question=self.actor_question)
         if responses.count() > 0:
             return self.actor_question.id
         return ""
 
-    def first_long_response(self):
+    def first_long_response(self, state):
         responses = state.responses.filter(actor=self.actor)
         if responses.count() > 0:
             return responses[0].long_response
@@ -434,46 +434,55 @@ class Column(object):
         else:
             return self.cached_user_value(user)
 
-    def key_row(self):
-        if self.question:
-            row = [self.question_id(), self.module_name,
-                   self.question.question_type,
-                   clean_header(self.question.text)]
-            if self.answer:
-                row.append(self.answer.id)
-                row.append(clean_header(self.answer.label))
-        elif self.actor and self.actor.type == "DS":
-            row = [self.actor_answer_id(), self.module_name, "short text",
-                   clean_header(self.actor_question.question)]
-        elif self.actor and len(self.actor.questions.all()) > 1:
-            row = [self.actor_id(), self.module_name,
-                   "multiple choice", clean_header(self.actor.name)]
-            row.append(self.actor_question.id)
-            row.append(clean_header(self.actor_question.question))
-        elif self.actor and len(self.actor.questions.all()) == 1:
-            row = [self.actor_id(), self.module_name, "short text",
-                   clean_header(self.actor_question.question)]
-        elif self.location:
-            row = [self.location_id(), self.module_name,
-                   "grid cell", self.location]
-        elif self.notes:
-            row = [self.notes_id(), self.module_name, "long text", self.notes]
-        elif self.strategy and self.actor_question:
-            row = [self.strategy_question_id(),
-                   self.module_name,
-                   "short text",
-                   clean_header(self.actor_question.question)]
-        elif self.strategy:
-            row = [self.select_strategy_id(), self.module_name,
-                   "single choice", "Select a strategy",
-                   self.strategy.id,
-                   clean_header(self.strategy.title)]
-        else:
-            row = [self.last_visited_id(),
-                   self.module_name,
-                   "short text",
-                   "Last Visited Date"]
+    def make_question_row(self):
+        row = [self.question_id(), self.module_name,
+               self.question.question_type,
+               clean_header(self.question.text)]
+        if self.answer:
+            row.append(self.answer.id)
+            row.append(clean_header(self.answer.label))
         return row
+
+    def key_row(self):
+        dispatch = [
+            (self.question,
+             lambda: self.make_question_row()),
+            (self.actor and self.actor.type == "DS",
+             lambda: [self.actor_answer_id(), self.module_name, "short text",
+                      clean_header(self.actor_question.question)]),
+            ((self.actor and hasattr(self.actor, 'questions')
+              and len(self.actor.questions.all()) > 1),
+             lambda: [self.actor_id(), self.module_name,
+                      "multiple choice", clean_header(self.actor.name),
+                      self.actor_question.id,
+                      clean_header(self.actor_question.question)]),
+            ((self.actor and hasattr(self.actor, 'questions')
+              and len(self.actor.questions.all()) == 1),
+             lambda: [self.actor_id(), self.module_name, "short text",
+                      clean_header(self.actor_question.question)]),
+            (self.location,
+             lambda: [self.location_id(), self.module_name,
+                      "grid cell", self.location]),
+            (self.notes,
+             lambda: [self.notes_id(), self.module_name,
+                      "long text", self.notes]),
+            (self.strategy and self.actor_question,
+             lambda: [self.strategy_question_id(),
+                      self.module_name, "short text",
+                      clean_header(self.actor_question.question)]),
+            (self.strategy,
+             lambda: [self.select_strategy_id(), self.module_name,
+                      "single choice", "Select a strategy",
+                      self.strategy.id,
+                      clean_header(self.strategy.title)]),
+        ]
+        for c, v in dispatch:
+            if c:
+                return v()
+        return [self.last_visited_id(),
+                self.module_name,
+                "short text",
+                "Last Visited Date"]
 
     def header_column(self):
         conds = [
