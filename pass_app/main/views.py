@@ -372,7 +372,7 @@ class Column(object):
 
     def cached_user_value(self, user):
         a = self._state_cache.filter(user=user)
-        if len(a) > 0:
+        if a.count() > 0:
             state = a[0]
 
             if self.strategy and self.actor_question:
