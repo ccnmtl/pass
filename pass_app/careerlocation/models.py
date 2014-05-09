@@ -177,19 +177,19 @@ class CareerLocationBlock(models.Model):
         '''
 
         a = CareerLocationState.objects.filter(user=user)
-        if len(a) < 1:
+        if a.count() < 1:
             return False
 
         state = a[0]
         self.stakeholders = Actor.objects.filter(type="IV")
         stakeholders = state.actors.filter(
             id__in=[s.id for s in self.stakeholders])
-        if len(stakeholders) < 4:
+        if stakeholders.count() < 4:
             return False
 
         for actor in stakeholders:
             r = state.responses.filter(actor=actor)
-            if len(r) < 3:
+            if r.count() < 3:
                 return False
 
         if self.view == "LC" or self.view == "BD":
@@ -200,13 +200,13 @@ class CareerLocationBlock(models.Model):
         if self.view == "BD":
             boardmembers = state.actors.filter(
                 id__in=[b.id for b in self.boardmembers])
-            if len(boardmembers) < 6:
+            if boardmembers.count() < 6:
                 return False
 
             for actor in boardmembers:
                 r = state.responses.filter(actor=actor)
 
-                if len(r) > 0 and len(r[0].long_response) < 1:
+                if r.count() > 0 and len(r[0].long_response) < 1:
                     return False
 
         return True
