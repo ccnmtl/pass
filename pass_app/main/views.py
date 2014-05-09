@@ -460,24 +460,22 @@ class Column(object):
         return row
 
     def header_column(self):
-        if self.question and self.answer:
-            return [self.question_answer_id()]
-        elif self.question:
-            return [self.question_id()]
-        elif self.actor and self.actor_question:
-            return [self.actor_answer_id()]
-        elif self.actor:
-            return [self.actor_id()]
-        elif self.location:
-            return [self.location_id()]
-        elif self.notes:
-            return [self.notes_id()]
-        elif self.strategy and self.actor_question:
-            return [self.strategy_question_id()]
-        elif self.strategy:
-            return [self.select_strategy_id()]
-        else:
-            return [self.last_visited_id()]
+        conds = [
+            (self.question and self.answer, lambda: self.question_answer_id()),
+            (self.question, lambda: self.question_id()),
+            (self.actor and self.actor_question, lambda: self.actor_answer_id()),
+            (self.actor, lambda: self.actor_id()),
+            (self.location, lambda: self.location_id()),
+            (self.notes, lambda: self.notes_id()),
+            (self.strategy and self.actor_questions,
+             lambda: self.strategy_question_id()),
+            (self.strategy, lambda: self.select_strategy_id()),
+        ]
+
+        for c, v in conds:
+            if c:
+                return v()
+        return [self.last_visited_id()]
 
 
 def _get_quiz_key(h, s):
