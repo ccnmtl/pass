@@ -42,19 +42,14 @@ def _unlocked(profile, section):
     """ if the user can proceed past this section """
     if profile is None:
         return False
-    if not section:
-        return True
-    if section.is_root():
-        return True
-    if profile.has_visited(section):
+    if not section or section.is_root() or profile.has_visited(section):
         return True
 
     previous = section.get_previous()
     if not previous:
         return True
-    else:
-        if not profile.has_visited(previous):
-            return False
+    if not profile.has_visited(previous):
+        return False
 
     # if the previous page had blocks to submit
     # we only let them by if they submitted
