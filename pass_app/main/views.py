@@ -372,38 +372,39 @@ class Column(object):
 
     def cached_user_value(self, user):
         a = self._state_cache.filter(user=user)
-        if a.count() > 0:
-            state = a[0]
+        if a.count() == 0:
+            return ""
 
-            if self.strategy and self.actor_question:
-                responses = state.strategy_responses.filter(
-                    question=self.actor_question)
-                if len(responses) > 0:
-                    return responses[0].long_response
-            elif (self.actor and
-                  self.actor_question and
-                  self.actor.type == "DS"):
-                responses = state.strategy_responses.filter(
-                    actor=self.actor, question=self.actor_question)
-                if len(responses) > 0:
-                    return responses[0].long_response
-            elif self.actor and self.actor_question:
-                responses = state.responses.filter(
-                    actor=self.actor, question=self.actor_question)
-                if len(responses) > 0:
-                    return self.actor_question.id
-            elif self.actor:
-                responses = state.responses.filter(actor=self.actor)
-                if len(responses) > 0:
-                    return responses[0].long_response
-            elif self.location:
-                return state.grid_cell()
-            elif self.notes:
-                return state.notes
-            elif self.strategy:
-                return state.strategy_selected \
-                    if state.strategy_selected is not None else ""
-        return ""
+        state = a[0]
+
+        if self.strategy and self.actor_question:
+            responses = state.strategy_responses.filter(
+                question=self.actor_question)
+            if len(responses) > 0:
+                return responses[0].long_response
+        elif (self.actor and
+              self.actor_question and
+              self.actor.type == "DS"):
+            responses = state.strategy_responses.filter(
+                actor=self.actor, question=self.actor_question)
+            if len(responses) > 0:
+                return responses[0].long_response
+        elif self.actor and self.actor_question:
+            responses = state.responses.filter(
+                actor=self.actor, question=self.actor_question)
+            if len(responses) > 0:
+                return self.actor_question.id
+        elif self.actor:
+            responses = state.responses.filter(actor=self.actor)
+            if len(responses) > 0:
+                return responses[0].long_response
+        elif self.location:
+            return state.grid_cell()
+        elif self.notes:
+            return state.notes
+        elif self.strategy:
+            return state.strategy_selected \
+                if state.strategy_selected is not None else ""
 
     def user_value(self, user):
         if self.question:
