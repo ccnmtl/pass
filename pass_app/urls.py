@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import include, patterns
+from django.conf.urls import include, patterns
 from django.contrib import admin
 from django.conf import settings
 import os.path
@@ -24,7 +24,6 @@ urlpatterns = patterns(
     (r'^registration/', include('registration.urls')),
     ('^accounts/', include('djangowind.urls')),
     (r'^admin/', include(admin.site.urls)),
-    (r'^munin/', include('munin.urls')),
     (r'^pagetree/', include('pagetree.urls')),
     (r'^logout/$',
      'django.contrib.auth.views.logout', {'next_page': '/'}),

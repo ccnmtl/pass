@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import include, patterns
+from django.conf.urls import include, patterns
 from pass_app.careerlocation.api import ActorResource, ActorResponseResource, \
     ActorQuestionResource, CareerLocationStateResource, MapLayerResource, \
     UserResource, StrategyResource
