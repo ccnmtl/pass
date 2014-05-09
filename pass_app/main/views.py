@@ -436,9 +436,9 @@ class Column(object):
 
     def key_row(self):
         if self.question:
-            row = [self.question_id(
-            ), self.module_name, self.question.question_type,
-                clean_header(self.question.text)]
+            row = [self.question_id(), self.module_name,
+                   self.question.question_type,
+                   clean_header(self.question.text)]
             if self.answer:
                 row.append(self.answer.id)
                 row.append(clean_header(self.answer.label))
@@ -454,8 +454,8 @@ class Column(object):
             row = [self.actor_id(), self.module_name, "short text",
                    clean_header(self.actor_question.question)]
         elif self.location:
-            row = [self.location_id(
-            ), self.module_name, "grid cell", self.location]
+            row = [self.location_id(), self.module_name,
+                   "grid cell", self.location]
         elif self.notes:
             row = [self.notes_id(), self.module_name, "long text", self.notes]
         elif self.strategy and self.actor_question:
@@ -479,7 +479,8 @@ class Column(object):
         conds = [
             (self.question and self.answer, lambda: self.question_answer_id()),
             (self.question, lambda: self.question_id()),
-            (self.actor and self.actor_question, lambda: self.actor_answer_id()),
+            (self.actor and self.actor_question,
+             lambda: self.actor_answer_id()),
             (self.actor, lambda: self.actor_id()),
             (self.location, lambda: self.location_id()),
             (self.notes, lambda: self.notes_id()),
@@ -534,23 +535,36 @@ def _get_career_location_results(h, s):
     columns = []
     for p in s.pageblock_set.filter(content_type=careerlocation_type):
         if p.block().view == "IV":
-            # career location state
-            for a in p.block().stakeholders:
-                for q in a.questions.all():
-                    columns.append(Column(
-                        hierarchy=h, actor=a, actor_question=q))
+            columns = iv_columns(p, h, columns)
         elif p.block().view == "LC":
-            # practice location - cell number
-            columns.append(Column(hierarchy=h,
-                           location="Practice Location Grid Number"))
+            columns = lc_columns(h, columns)
         elif p.block().view == "BD":
-            # boardmembers
-            for a in Actor.objects.filter(type="BD").order_by("order"):
-                columns.append(Column(hierarchy=h, actor=a))
+            columns = boardmembers_columns(h, columns)
 
-            # notes
-            columns.append(Column(hierarchy=h, notes="Interview Notes"))
+    return columns
 
+
+def lc_columns(h, columns):
+    # practice location - cell number
+    columns.append(Column(hierarchy=h,
+                   location="Practice Location Grid Number"))
+    return columns
+
+
+def boardmembers_columns(h, columns):
+    # boardmembers
+    for a in Actor.objects.filter(type="BD").order_by("order"):
+        columns.append(Column(hierarchy=h, actor=a))
+    # notes
+    columns.append(Column(hierarchy=h, notes="Interview Notes"))
+    return columns
+
+
+def iv_columns(p, h, columns):
+    # career location state
+    for a in p.block().stakeholders:
+        for q in a.questions.all():
+            columns.append(Column(hierarchy=h, actor=a, actor_question=q))
     return columns
 
 
@@ -561,15 +575,9 @@ def _get_career_location_key(h, s):
 
     for p in s.pageblock_set.filter(content_type=careerlocation_type):
         if p.block().view == "IV":
-            # career location state
-            for a in p.block().stakeholders:
-                for q in a.questions.all():
-                    columns.append(Column(
-                        hierarchy=h, actor=a, actor_question=q))
+            columns = iv_columns(p, h, columns)
         elif p.block().view == "LC":
-            # practice location - cell number
-            columns.append(Column(hierarchy=h,
-                           location="Practice Location Grid Number"))
+            columns = lc_columns(h, columns)
         elif p.block().view == "BD":
             # board members
             for a in Actor.objects.filter(type="BD").order_by("order"):
