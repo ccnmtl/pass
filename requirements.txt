@@ -1,4 +1,4 @@
-Django==1.6.4
+Django==1.6.5
 lxml==3.2.3
 httplib2==0.8
 restclient==0.9.9
