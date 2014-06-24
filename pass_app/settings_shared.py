@@ -126,6 +126,7 @@ INSTALLED_APPS = [
     'smoketest',
     'waffle',
     'compressor',
+    'pass_app.supportservices'
 ]
 
 STATSD_CLIENT = 'statsd.client'
@@ -150,8 +151,8 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'proxyblock.ProxyBlock',
               'careerlocation.CareerLocationBlock',
               'careerlocation.CareerLocationSummaryBlock',
-              'careerlocation.CareerLocationStrategyBlock'
-              ]
+              'careerlocation.CareerLocationStrategyBlock',
+              'supportservices.SupportServiceBlock']
 
 
 THUMBNAIL_SUBDIR = "thumbs"

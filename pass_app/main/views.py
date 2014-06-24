@@ -808,9 +808,7 @@ def clear_state(request):
     # clear quiz
     import quizblock
     submissions = quizblock.models.Submission.objects.filter(user=request.user)
-    for s in submissions:
-        s.response_set.all().delete()
-    quizblock.models.Submission.objects.filter(user=request.user).delete()
+    submissions.delete()
 
     # clear careerlocationstate
     ActorResponse.objects.filter(user=request.user).delete()

@@ -36,6 +36,7 @@ urlpatterns = patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^_careermap/', include('careermapblock.urls')),
     (r'^_careerlocation/', include('pass_app.careerlocation.urls')),
+    (r'^_supportservices/', include('pass_app.supportservices.urls')),
     (r'^_stats/$', TemplateView.as_view(template_name="main/stats.html")),
 
     (r'^(?P<hierarchy>[\w\-]+)/edit/(?P<path>.*)$',
