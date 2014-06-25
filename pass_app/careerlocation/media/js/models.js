@@ -5,11 +5,11 @@
     BOARDMEMBER_LIMIT = 6;
 
     User = Backbone.Model.extend({
-        urlRoot: '/_careerlocation/api/v1/user/'
+        urlRoot: '/api/v1/user/'
     });
 
     MapLayer = Backbone.Model.extend({
-        urlRoot: '/_careerlocation/api/v1/map_layer/',
+        urlRoot: '/api/v1/map_layer/',
         toJSON: function() {
             return this.get('resource_uri');
         },
@@ -20,7 +20,7 @@
 
     MapLayerList = Backbone.Collection.extend({
         model: MapLayer,
-        urlRoot: '/_careerlocation/api/v1/map_layer/',
+        urlRoot: '/api/v1/map_layer/',
         initialize: function (lst) {
             if (lst !== undefined && lst instanceof Array) {
                 for (var i = 0; i < lst.length; i++) {
@@ -47,7 +47,7 @@
     });
 
     ActorQuestion = Backbone.Model.extend({
-        urlRoot: '/_careerlocation/api/v1/actor_question/',
+        urlRoot: '/api/v1/actor_question/',
         toJSON: function() {
             return this.get('resource_uri');
         },        
@@ -58,7 +58,7 @@
 
     ActorQuestionList = Backbone.Collection.extend({
         model: ActorQuestion,
-        urlRoot: '/_careerlocation/api/v1/actor_question/',
+        urlRoot: '/api/v1/actor_question/',
         initialize: function (lst) {
             if (lst !== undefined && lst instanceof Array) {
                 for (var i = 0; i < lst.length; i++) {
@@ -82,7 +82,7 @@
     });
 
     Actor = Backbone.Model.extend({
-        urlRoot: '/_careerlocation/api/v1/actor/',
+        urlRoot: '/api/v1/actor/',
         initialize: function(attributes) {
             if (attributes) {
                 Backbone.Model.prototype.initialize.apply(this, attributes);            
@@ -101,7 +101,7 @@
 
     ActorList = Backbone.Collection.extend({
         model: Actor,
-        urlRoot: '/_careerlocation/api/v1/actor/',
+        urlRoot: '/api/v1/actor/',
         getByDataId: function(id) {
             var internalId = this.urlRoot + id + '/';
             return this.get(internalId);
@@ -127,7 +127,7 @@
     });
 
     ActorResponse = Backbone.Model.extend({
-        urlRoot: '/_careerlocation/api/v1/actor_response/',
+        urlRoot: '/api/v1/actor_response/',
         initialize: function(attrs) {
             if (attrs) {
                 this.set("actor", new Actor(attrs.actor));
@@ -151,7 +151,7 @@
 
     ActorResponseList = Backbone.Collection.extend({
         model: ActorResponse,
-        urlRoot: '/_careerlocation/api/v1/actor_response/',
+        urlRoot: '/api/v1/actor_response/',
         getResponsesByActor: function(actor) {
             var responses = [];
             this.forEach(function(obj) {
@@ -174,7 +174,7 @@
     });
     
     Strategy = Backbone.Model.extend({
-        urlRoot: '/_careerlocation/api/v1/strategy/',
+        urlRoot: '/api/v1/strategy/',
         initialize: function(attrs) {
             if (attrs) {
                 this.set("question", new ActorQuestion(attrs.question));
@@ -197,7 +197,7 @@
     
     StrategyList = Backbone.Collection.extend({
         model: Strategy,
-        urlRoot: '/_careerlocation/api/v1/strategy/',
+        urlRoot: '/api/v1/strategy/',
         initialize: function (lst) {
             if (lst !== undefined && lst instanceof Array) {
                 for (var i = 0; i < lst.length; i++) {
@@ -229,7 +229,7 @@
             strategy_selected: new Strategy(),
             strategy_responses: new ActorResponseList()
         },
-        urlRoot: '/_careerlocation/api/v1/career_location_state/',
+        urlRoot: '/api/v1/career_location_state/',
         parse: function(response) {
             if (response) {
                 response.layers = new MapLayerList(response.layers);

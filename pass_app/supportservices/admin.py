@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from pass_app.supportservices.models import SupportService, \
-    SupportServiceCategory
+    SupportServiceCategory, SupportServiceState
 
 
 class SupportServiceForm(forms.ModelForm):
@@ -17,3 +17,4 @@ class SupportServiceAdmin(admin.ModelAdmin):
 
 admin.site.register(SupportService, SupportServiceAdmin)
 admin.site.register(SupportServiceCategory)
+admin.site.register(SupportServiceState)

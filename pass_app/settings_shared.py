@@ -52,7 +52,9 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pyflakes',
 )
 
-PROJECT_APPS = ['pass_app.main', 'pass_app.careerlocation', ]
+PROJECT_APPS = ['pass_app.main',
+                'pass_app.careerlocation',
+                'pass_app.supportservices']
 
 DEFAULT_FROM_EMAIL = 'pass@pass.ccnmtl.columbia.edu'
 TIME_ZONE = 'America/New_York'

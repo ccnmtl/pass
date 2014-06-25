@@ -1,11 +1,30 @@
+from django.conf import settings
 from django.conf.urls.defaults import include, patterns
 from django.contrib import admin
-from django.conf import settings
-import os.path
 from django.views.generic import TemplateView
+from pass_app.api import UserResource
+from pass_app.careerlocation.api import MapLayerResource, \
+    ActorQuestionResource, ActorResource, ActorResponseResource, \
+    CareerLocationStateResource, StrategyResource
+from pass_app.supportservices.api import SupportServiceResource, \
+    SupportServiceStateResource
+from tastypie.api import Api
+import os.path
 admin.autodiscover()
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
+
+v1_api = Api(api_name='v1')
+v1_api.register(UserResource())
+v1_api.register(MapLayerResource())
+v1_api.register(ActorQuestionResource())
+v1_api.register(ActorResource())
+v1_api.register(ActorResponseResource())
+v1_api.register(CareerLocationStateResource())
+v1_api.register(StrategyResource())
+v1_api.register(SupportServiceResource())
+v1_api.register(SupportServiceStateResource())
+
 
 urlpatterns = patterns(
     '',
@@ -36,7 +55,6 @@ urlpatterns = patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^_careermap/', include('careermapblock.urls')),
     (r'^_careerlocation/', include('pass_app.careerlocation.urls')),
-    (r'^_supportservices/', include('pass_app.supportservices.urls')),
     (r'^_stats/$', TemplateView.as_view(template_name="main/stats.html")),
 
     (r'^(?P<hierarchy>[\w\-]+)/edit/(?P<path>.*)$',
@@ -50,5 +68,7 @@ urlpatterns = patterns(
     (r'^module-one/(?P<path>.*)$', 'pass_app.main.views.module_one'),
     (r'^module-two/(?P<path>.*)$', 'pass_app.main.views.module_two'),
     (r'^module-three/(?P<path>.*)$', 'pass_app.main.views.module_three'),
-    (r'^module-four/(?P<path>.*)$', 'pass_app.main.views.module_four')
+    (r'^module-four/(?P<path>.*)$', 'pass_app.main.views.module_four'),
+
+    (r'^api/', include(v1_api.urls))
 )

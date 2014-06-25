@@ -691,6 +691,17 @@ a:visited
 	text-align: right;
 }
 
+#content .content-nav a.pager_button.disabled,
+#content .content-nav div.pager_button.disabled {
+    color: #999;
+}
+
+#content .content-nav a.pager_button.disabled:hover,
+#content .content-nav div.pager_button.disabled:hover {
+    background-color: white;
+    color: #999 !important;
+    text-decoration: none;
+}
 
 #content .content-nav a.pager_button,
 #content .content-nav div.pager_button

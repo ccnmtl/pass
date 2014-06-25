@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponseRedirect, HttpResponse, \
     HttpResponseForbidden, HttpResponseServerError
 from django.shortcuts import render_to_response, get_object_or_404
@@ -13,13 +15,12 @@ from pagetree_export.exportimport import export_zip, import_zip
 from pass_app.careerlocation.models import Actor, CareerLocationState, \
     ActorResponse, Strategy
 from pass_app.main.models import UserProfile, UserVisited
+from pass_app.supportservices.models import SupportServiceState
 from quizblock.models import Submission, Response
 from zipfile import ZipFile
 import csv
 import django.core.exceptions
 import os
-from django.core.servers.basehttp import FileWrapper
-from django.conf import settings
 
 
 def get_or_create_profile(user, section):
@@ -814,7 +815,8 @@ def clear_state(request):
     ActorResponse.objects.filter(user=request.user).delete()
     CareerLocationState.objects.filter(
         user=request.user).delete()
-
+    SupportServiceState.objects.filter(
+        user=request.user).delete()
     return HttpResponseRedirect("/")
 
 

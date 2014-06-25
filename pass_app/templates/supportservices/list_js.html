@@ -1,3 +1,5 @@
+{% load supportservices_state %}
+
 <script src="/site_media/js/json2.js" type="text/javascript" ></script>
 <script src="/site_media/js/underscore/underscore-min.js" type="text/javascript" ></script>
 <script src="/site_media/js/backbone/backbone-min.js" type="text/javascript" ></script>
@@ -9,19 +11,55 @@
     jQuery(document).ready(function () {
         Backbone.Tastypie.doGetOnEmptyPostResponse = false;
         var view = new SupportServicesView({
-            el: 'div.support-services'
+            el: 'div.support-services',
+            state_id: {% get_user_state_id request.user %}
         });
     });
 </script>
 
 <script type="text/template" id="services-template">
-    <% _.each(services, function(service) { %>
-        <div><a href="#" data-id="<%=service.id%>"><%= service.title %></a></div>
-        <div><%= service.phone %></div>
+    <h3>Oralington County Support Services</h3>
 
-        <div class="description" style="display: none">
-            <%= service.description %>
+    <div>
+        <div class="services-list pull-left">
+            <% var category = ""; %>
+            <% _.each(services, function(service) { %>
+                <% if (category !== service.category.name) { %>
+                    <h4><%= service.category.name %></h4>
+                    <% category = service.category.name; %>
+                <% } %>
+                <div>
+                    <a href="#" data-service-id="<%=service.id%>" class="support-service">
+                        <i class="icon-ok"></i> <%= service.title %>
+                    </a>
+                </div>
+                <div><%= service.phone %></div>
+                <br />
+            <% }); %>
         </div>
-        <br />
-    <% }); %>
+
+        <div class="service-description-list pull-left well" style="display: none">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+
+            <% _.each(services, function(service) { %>
+                <div class="description" data-service-description="<%=service.id%>" style="display: none">
+                    <h5><%= service.title %></h5>
+                    <div><%= service.description %></div>
+                </div>
+            <% }); %>
+        </div>
+    <div>
+    <div class="clearfix"></div>
+
+    <div>
+        <div class="pull-left">Services Explored: </div>    
+        <ul class="support-service-progress">
+            <% _.each(services, function(service) { %>
+                <li data-service-id="<%=service.id%>"></li>
+            <% }); %>
+        </ul>
+    </div>
+    
 </script>
+
+

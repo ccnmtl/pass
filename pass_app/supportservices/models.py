@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.db import models
 from pagetree.models import PageBlock
@@ -65,3 +66,11 @@ class SupportServiceBlock(models.Model):
 class SupportServiceBlockForm(forms.ModelForm):
     class Meta:
         model = SupportServiceBlock
+
+
+class SupportServiceState(models.Model):
+    user = models.ForeignKey(User, related_name="support_service_state")
+    services = models.ManyToManyField(SupportService, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.user.username

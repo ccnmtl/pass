@@ -4,7 +4,6 @@ httplib2==0.8
 restclient==0.9.9
 feedparser==4.1
 Markdown==2.3.1
-simplejson==3.3.0
 smartypants==1.6.0.2
 uuid==1.30
 psycopg2==2.5.1
@@ -63,3 +62,4 @@ django-careermapblock==0.2.16
 django-stagingcontext==0.1.0
 django-waffle==0.9.0 
 raven==4.0.3
+factory_boy==2.1.1
