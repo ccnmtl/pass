@@ -15,7 +15,7 @@ from pagetree_export.exportimport import export_zip, import_zip
 from pass_app.careerlocation.models import Actor, CareerLocationState, \
     ActorResponse, Strategy
 from pass_app.main.models import UserProfile, UserVisited
-from pass_app.supportservices.models import SupportServiceState
+from pass_app.supportservices.models import SupportServiceState, SupportService
 from quizblock.models import Submission, Response
 from zipfile import ZipFile
 import csv
@@ -286,7 +286,7 @@ def clean_header(s):
 class Column(object):
     def __init__(self, hierarchy, question=None, answer=None, actor=None,
                  actor_question=None, location=None, notes=None,
-                 strategy=None):
+                 strategy=None, service=None):
         self.hierarchy = hierarchy
         self.question = question
         self.answer = answer
@@ -296,6 +296,7 @@ class Column(object):
         self.location = location
         self.notes = notes
         self.strategy = strategy
+        self.service = service
 
         if self.question:
             self._submission_cache = Submission.objects.filter(
@@ -343,6 +344,9 @@ class Column(object):
     def notes_id(self):
         return "%s_careerlocation_notes" % (self.hierarchy.id)
 
+    def service_id(self):
+        return "%s_service_%s" % (self.hierarchy.id, self.service.id)
+
     def last_visited_value(self, user):
         uv = UserVisited.objects.filter(
             user__user=user,
@@ -370,6 +374,13 @@ class Column(object):
                     if a.value == r[0].value:
                         return a.id
         return ''
+
+    def service_value(self, user):
+        try:
+            state = SupportServiceState.objects.get(user=user)
+            return state.services.filter(id=self.service.id).count() > 0
+        except SupportServiceState.DoesNotExist:
+            return False
 
     def cached_user_value(self, user):
         a = self._state_cache.filter(user=user)
@@ -430,6 +441,8 @@ class Column(object):
     def user_value(self, user):
         if self.question:
             return self.question_value(user)
+        elif self.service:
+            return self.service_value(user)
         elif not hasattr(self, "_state_cache"):
             return self.last_visited_value(user)
         else:
@@ -476,6 +489,9 @@ class Column(object):
                       "single choice", "Select a strategy",
                       self.strategy.id,
                       clean_header(self.strategy.title)]),
+            (self.service,
+             lambda: [self.service_id(), self.module_name,
+                      "boolean", clean_header(self.service.title)]),
         ]
         for c, v in dispatch:
             if c:
@@ -487,7 +503,8 @@ class Column(object):
 
     def header_column(self):
         conds = [
-            (self.question and self.answer, lambda: self.question_answer_id()),
+            (self.question and self.answer,
+             lambda: self.question_answer_id()),
             (self.question, lambda: self.question_id()),
             (self.actor and self.actor_question,
              lambda: self.actor_answer_id()),
@@ -497,6 +514,7 @@ class Column(object):
             (self.strategy and self.actor_question,
              lambda: self.strategy_question_id()),
             (self.strategy, lambda: self.select_strategy_id()),
+            (self.service, lambda: self.service_id()),
         ]
 
         for c, v in conds:
@@ -648,6 +666,16 @@ def _get_career_strategy_key(h, s):
     return columns
 
 
+def _get_support_services_columns(h, s):
+    supportservice_type = ContentType.objects.filter(
+        name='support service block')
+    columns = []
+    for p in s.pageblock_set.filter(content_type=supportservice_type):
+        for service in SupportService.objects.all():
+            columns.append(Column(hierarchy=h, service=service))
+    return columns
+
+
 @login_required
 def all_results_key(request):
     """
@@ -683,6 +711,7 @@ def all_results_key(request):
             columns = columns + _get_quiz_key(h, s)
             columns = columns + _get_career_location_key(h, s)
             columns = columns + _get_career_strategy_key(h, s)
+            columns = columns + _get_support_services_columns(h, s)
 
     for column in columns:
         try:
@@ -728,6 +757,7 @@ def all_results(request):
             columns = columns + _get_quiz_results(h, s)
             columns = columns + _get_career_location_results(h, s)
             columns = columns + _get_career_strategy_results(h, s)
+            columns = columns + _get_support_services_columns(h, s)
 
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=pass_responses.csv'
