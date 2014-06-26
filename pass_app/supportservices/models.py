@@ -30,7 +30,9 @@ class SupportServiceBlock(models.Model):
 
     display_name = "Support Services View"
 
-    def get_services(self):
+    allow_redo = False
+
+    def services(self):
         return SupportService.objects.all().order_by('category__name', 'title')
 
     def pageblock(self):
@@ -40,7 +42,21 @@ class SupportServiceBlock(models.Model):
         return unicode(self.pageblock())
 
     def needs_submit(self):
-        return False
+        return True
+
+    def unlocked(self, user):
+        try:
+            state = SupportServiceState.objects.get(user=user)
+            return state.services.count() == len(self.services())
+        except SupportServiceState.DoesNotExist:
+            return False
+
+    def clear_user_submissions(self, user):
+        try:
+            state = SupportServiceState.objects.get(user=user)
+            state.delete()
+        except SupportServiceState.DoesNotExist:
+            pass  # calling reset before they've done anything
 
     @classmethod
     def add_form(self):
@@ -58,9 +74,6 @@ class SupportServiceBlock(models.Model):
         form = SupportServiceBlockForm(data=vals, files=files, instance=self)
         if form.is_valid():
             form.save()
-
-    def unlocked(self, user):
-        return True
 
 
 class SupportServiceBlockForm(forms.ModelForm):

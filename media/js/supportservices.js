@@ -84,6 +84,12 @@
             this.state.fetch();
         },
         render: function() {
+            var selected = this.state.get('services').length;
+            var elts = jQuery("ul.support-service-progress li");
+            for (var i=0; i < selected; i++) {
+                jQuery(elts[i]).addClass("selected");
+            }
+
             this.state.get('services').forEach(function (service) {
                 jQuery('[data-service-id="' + service.get('id') + '"]').addClass("selected");
             });

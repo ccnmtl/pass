@@ -1,6 +1,19 @@
 {% load smartif %}
+{% load unlocked %}
 
 
 <div class="support-services"></div>
 
-<div class="visualclear"></div>
+<div class="visualclear"></div><br /><br />
+
+{% if request.user.is_superuser %}
+    {% ifunlocked section %}
+        <form action="." method="post">
+        <input type="hidden" name="action" value="reset" />
+        <input type="submit" value="Clear (superusers only)" class="btn btn-default" />
+        </form>
+    {% else %}
+    {% endifunlocked %}
+{% endif %}
+    
+
