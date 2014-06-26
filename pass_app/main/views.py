@@ -494,14 +494,14 @@ class Column(object):
             (self.actor, lambda: self.actor_id()),
             (self.location, lambda: self.location_id()),
             (self.notes, lambda: self.notes_id()),
-            (self.strategy and self.actor_questions,
+            (self.strategy and self.actor_question,
              lambda: self.strategy_question_id()),
             (self.strategy, lambda: self.select_strategy_id()),
         ]
 
         for c, v in conds:
             if c:
-                return v()
+                return [v()]
         return [self.last_visited_id()]
 
 
