@@ -1,5 +1,4 @@
-from django.conf import settings
-from django.conf.urls.defaults import include, patterns
+from django.conf.urls import include, patterns
 from django.contrib import admin
 from django.views.generic import TemplateView
 from pass_app.api import UserResource
@@ -10,6 +9,7 @@ from pass_app.supportservices.api import SupportServiceResource, \
     SupportServiceStateResource
 from tastypie.api import Api
 import os.path
+from django.views.generic import TemplateView
 admin.autodiscover()
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -43,7 +43,6 @@ urlpatterns = patterns(
     (r'^registration/', include('registration.urls')),
     ('^accounts/', include('djangowind.urls')),
     (r'^admin/', include(admin.site.urls)),
-    (r'^munin/', include('munin.urls')),
     (r'^pagetree/', include('pagetree.urls')),
     (r'^logout/$',
      'django.contrib.auth.views.logout', {'next_page': '/'}),

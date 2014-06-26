@@ -10,3 +10,4 @@ local_settings.py
 uploads
 reports
 .DS_Store
+media/CACHE

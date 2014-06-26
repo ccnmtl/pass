@@ -43,19 +43,14 @@ def _unlocked(profile, section):
     """ if the user can proceed past this section """
     if profile is None:
         return False
-    if not section:
-        return True
-    if section.is_root():
-        return True
-    if profile.has_visited(section):
+    if not section or section.is_root() or profile.has_visited(section):
         return True
 
     previous = section.get_previous()
     if not previous:
         return True
-    else:
-        if not profile.has_visited(previous):
-            return False
+    if not profile.has_visited(previous):
+        return False
 
     # if the previous page had blocks to submit
     # we only let them by if they submitted
@@ -201,22 +196,7 @@ def process_page(request, path, hierarchy):
             return HttpResponseRedirect(first_leaf.get_absolute_url())
 
     if request.method == "POST":
-        # user has submitted a form. deal with it
-        if request.POST.get('action', '') == 'reset':
-            section.reset(request.user)
-            return HttpResponseRedirect(section.get_absolute_url())
-
-        section.submit(request.POST, request.user)
-
-        if hierarchy.name == 'demographic' and path.startswith("survey"):
-            return HttpResponseRedirect("/")
-
-        next_section = section.get_next()
-        if next_section:
-            # ignoring proceed and always pushing them along. see PMT #77454
-            return HttpResponseRedirect(next_section.get_absolute_url())
-        else:
-            return HttpResponseRedirect("/")
+        return handle_page_post(request, section, hierarchy, path)
     else:
         instructor_link = has_responses(section)
         allow_next_link = not needs_submit(
@@ -235,6 +215,25 @@ def process_page(request, path, hierarchy):
                     next_unlocked=_unlocked(
                         user_profile, section.get_next())
                     )
+
+
+def handle_page_post(request, section, hierarchy, path):
+    # user has submitted a form. deal with it
+    if request.POST.get('action', '') == 'reset':
+        section.reset(request.user)
+        return HttpResponseRedirect(section.get_absolute_url())
+
+    section.submit(request.POST, request.user)
+
+    if hierarchy.name == 'demographic' and path.startswith("survey"):
+        return HttpResponseRedirect("/")
+
+    next_section = section.get_next()
+    if next_section:
+        # ignoring proceed and always pushing them along. see PMT #77454
+        return HttpResponseRedirect(next_section.get_absolute_url())
+    else:
+        return HttpResponseRedirect("/")
 
 
 @login_required
@@ -374,38 +373,59 @@ class Column(object):
 
     def cached_user_value(self, user):
         a = self._state_cache.filter(user=user)
-        if len(a) > 0:
-            state = a[0]
+        if a.count() == 0:
+            return ""
 
-            if self.strategy and self.actor_question:
-                responses = state.strategy_responses.filter(
-                    question=self.actor_question)
-                if len(responses) > 0:
-                    return responses[0].long_response
-            elif (self.actor and
-                  self.actor_question and
-                  self.actor.type == "DS"):
-                responses = state.strategy_responses.filter(
-                    actor=self.actor, question=self.actor_question)
-                if len(responses) > 0:
-                    return responses[0].long_response
-            elif self.actor and self.actor_question:
-                responses = state.responses.filter(
-                    actor=self.actor, question=self.actor_question)
-                if len(responses) > 0:
-                    return self.actor_question.id
-            elif self.actor:
-                responses = state.responses.filter(actor=self.actor)
-                if len(responses) > 0:
-                    return responses[0].long_response
-            elif self.location:
-                return state.grid_cell()
-            elif self.notes:
-                return state.notes
-            elif self.strategy:
-                return state.strategy_selected \
-                    if state.strategy_selected is not None else ""
+        state = a[0]
+        dispatch = [
+            (self.strategy and self.actor_question,
+             lambda: self.first_strategy_long_response(state)),
+            (self.has_actor_question_and_ds(),
+             lambda: self.first_actor_strategy_long_response(state)),
+            (self.actor and self.actor_question,
+             lambda: self.first_actor_question_id(state)),
+            (self.actor, lambda: self.first_long_response(state)),
+            (self.location, lambda: state.grid_cell()),
+            (self.notes, lambda: state.notes),
+            (self.strategy and state.strategy_selected is not None,
+             lambda: state.strategy_selected)
+        ]
+        for c, v in dispatch:
+            if c:
+                return v()
         return ""
+
+    def first_strategy_long_response(self, state):
+        responses = state.strategy_responses.filter(
+            question=self.actor_question)
+        if responses.count() > 0:
+            return responses[0].long_response
+        return ""
+
+    def first_actor_strategy_long_response(self, state):
+        responses = state.strategy_responses.filter(
+            actor=self.actor, question=self.actor_question)
+        if responses.count() > 0:
+            return responses[0].long_response
+        return ""
+
+    def first_actor_question_id(self, state):
+        responses = state.responses.filter(
+            actor=self.actor, question=self.actor_question)
+        if responses.count() > 0:
+            return self.actor_question.id
+        return ""
+
+    def first_long_response(self, state):
+        responses = state.responses.filter(actor=self.actor)
+        if responses.count() > 0:
+            return responses[0].long_response
+        return ""
+
+    def has_actor_question_and_ds(self):
+        return (self.actor and
+                self.actor_question and
+                self.actor.type == "DS")
 
     def user_value(self, user):
         if self.question:
@@ -415,66 +435,74 @@ class Column(object):
         else:
             return self.cached_user_value(user)
 
-    def key_row(self):
-        if self.question:
-            row = [self.question_id(
-            ), self.module_name, self.question.question_type,
-                clean_header(self.question.text)]
-            if self.answer:
-                row.append(self.answer.id)
-                row.append(clean_header(self.answer.label))
-        elif self.actor and self.actor.type == "DS":
-            row = [self.actor_answer_id(), self.module_name, "short text",
-                   clean_header(self.actor_question.question)]
-        elif self.actor and len(self.actor.questions.all()) > 1:
-            row = [self.actor_id(), self.module_name,
-                   "multiple choice", clean_header(self.actor.name)]
-            row.append(self.actor_question.id)
-            row.append(clean_header(self.actor_question.question))
-        elif self.actor and len(self.actor.questions.all()) == 1:
-            row = [self.actor_id(), self.module_name, "short text",
-                   clean_header(self.actor_question.question)]
-        elif self.location:
-            row = [self.location_id(
-            ), self.module_name, "grid cell", self.location]
-        elif self.notes:
-            row = [self.notes_id(), self.module_name, "long text", self.notes]
-        elif self.strategy and self.actor_question:
-            row = [self.strategy_question_id(),
-                   self.module_name,
-                   "short text",
-                   clean_header(self.actor_question.question)]
-        elif self.strategy:
-            row = [self.select_strategy_id(), self.module_name,
-                   "single choice", "Select a strategy",
-                   self.strategy.id,
-                   clean_header(self.strategy.title)]
-        else:
-            row = [self.last_visited_id(),
-                   self.module_name,
-                   "short text",
-                   "Last Visited Date"]
+    def make_question_row(self):
+        row = [self.question_id(), self.module_name,
+               self.question.question_type,
+               clean_header(self.question.text)]
+        if self.answer:
+            row.append(self.answer.id)
+            row.append(clean_header(self.answer.label))
         return row
 
+    def key_row(self):
+        dispatch = [
+            (self.question,
+             lambda: self.make_question_row()),
+            (self.actor and self.actor.type == "DS",
+             lambda: [self.actor_answer_id(), self.module_name, "short text",
+                      clean_header(self.actor_question.question)]),
+            ((self.actor and hasattr(self.actor, 'questions')
+              and len(self.actor.questions.all()) > 1),
+             lambda: [self.actor_id(), self.module_name,
+                      "multiple choice", clean_header(self.actor.name),
+                      self.actor_question.id,
+                      clean_header(self.actor_question.question)]),
+            ((self.actor and hasattr(self.actor, 'questions')
+              and len(self.actor.questions.all()) == 1),
+             lambda: [self.actor_id(), self.module_name, "short text",
+                      clean_header(self.actor_question.question)]),
+            (self.location,
+             lambda: [self.location_id(), self.module_name,
+                      "grid cell", self.location]),
+            (self.notes,
+             lambda: [self.notes_id(), self.module_name,
+                      "long text", self.notes]),
+            (self.strategy and self.actor_question,
+             lambda: [self.strategy_question_id(),
+                      self.module_name, "short text",
+                      clean_header(self.actor_question.question)]),
+            (self.strategy,
+             lambda: [self.select_strategy_id(), self.module_name,
+                      "single choice", "Select a strategy",
+                      self.strategy.id,
+                      clean_header(self.strategy.title)]),
+        ]
+        for c, v in dispatch:
+            if c:
+                return v()
+        return [self.last_visited_id(),
+                self.module_name,
+                "short text",
+                "Last Visited Date"]
+
     def header_column(self):
-        if self.question and self.answer:
-            return [self.question_answer_id()]
-        elif self.question:
-            return [self.question_id()]
-        elif self.actor and self.actor_question:
-            return [self.actor_answer_id()]
-        elif self.actor:
-            return [self.actor_id()]
-        elif self.location:
-            return [self.location_id()]
-        elif self.notes:
-            return [self.notes_id()]
-        elif self.strategy and self.actor_question:
-            return [self.strategy_question_id()]
-        elif self.strategy:
-            return [self.select_strategy_id()]
-        else:
-            return [self.last_visited_id()]
+        conds = [
+            (self.question and self.answer, lambda: self.question_answer_id()),
+            (self.question, lambda: self.question_id()),
+            (self.actor and self.actor_question,
+             lambda: self.actor_answer_id()),
+            (self.actor, lambda: self.actor_id()),
+            (self.location, lambda: self.location_id()),
+            (self.notes, lambda: self.notes_id()),
+            (self.strategy and self.actor_questions,
+             lambda: self.strategy_question_id()),
+            (self.strategy, lambda: self.select_strategy_id()),
+        ]
+
+        for c, v in conds:
+            if c:
+                return v()
+        return [self.last_visited_id()]
 
 
 def _get_quiz_key(h, s):
@@ -517,23 +545,36 @@ def _get_career_location_results(h, s):
     columns = []
     for p in s.pageblock_set.filter(content_type=careerlocation_type):
         if p.block().view == "IV":
-            # career location state
-            for a in p.block().stakeholders:
-                for q in a.questions.all():
-                    columns.append(Column(
-                        hierarchy=h, actor=a, actor_question=q))
+            columns = iv_columns(p, h, columns)
         elif p.block().view == "LC":
-            # practice location - cell number
-            columns.append(Column(hierarchy=h,
-                           location="Practice Location Grid Number"))
+            columns = lc_columns(h, columns)
         elif p.block().view == "BD":
-            # boardmembers
-            for a in Actor.objects.filter(type="BD").order_by("order"):
-                columns.append(Column(hierarchy=h, actor=a))
+            columns = boardmembers_columns(h, columns)
 
-            # notes
-            columns.append(Column(hierarchy=h, notes="Interview Notes"))
+    return columns
 
+
+def lc_columns(h, columns):
+    # practice location - cell number
+    columns.append(Column(hierarchy=h,
+                   location="Practice Location Grid Number"))
+    return columns
+
+
+def boardmembers_columns(h, columns):
+    # boardmembers
+    for a in Actor.objects.filter(type="BD").order_by("order"):
+        columns.append(Column(hierarchy=h, actor=a))
+    # notes
+    columns.append(Column(hierarchy=h, notes="Interview Notes"))
+    return columns
+
+
+def iv_columns(p, h, columns):
+    # career location state
+    for a in p.block().stakeholders:
+        for q in a.questions.all():
+            columns.append(Column(hierarchy=h, actor=a, actor_question=q))
     return columns
 
 
@@ -544,15 +585,9 @@ def _get_career_location_key(h, s):
 
     for p in s.pageblock_set.filter(content_type=careerlocation_type):
         if p.block().view == "IV":
-            # career location state
-            for a in p.block().stakeholders:
-                for q in a.questions.all():
-                    columns.append(Column(
-                        hierarchy=h, actor=a, actor_question=q))
+            columns = iv_columns(p, h, columns)
         elif p.block().view == "LC":
-            # practice location - cell number
-            columns.append(Column(hierarchy=h,
-                           location="Practice Location Grid Number"))
+            columns = lc_columns(h, columns)
         elif p.block().view == "BD":
             # board members
             for a in Actor.objects.filter(type="BD").order_by("order"):

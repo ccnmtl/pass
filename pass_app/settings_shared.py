@@ -47,7 +47,6 @@ NOSE_ARGS = [
 JENKINS_TASKS = (
     'django_jenkins.tasks.run_pylint',
     'django_jenkins.tasks.with_coverage',
-    'django_jenkins.tasks.django_tests',
     'django_jenkins.tasks.run_pep8',
     'django_jenkins.tasks.run_pyflakes',
 )
@@ -102,16 +101,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'django.contrib.markup',
     'django.contrib.humanize',
-    'staticmedia',
     'sorl.thumbnail',
     'django.contrib.admin',
     'tagging',
     'smartif',
     'template_utils',
     'typogrify',
-    'munin',
     'bootstrapform',
     'pagetree',
     'pageblocks',
@@ -128,14 +124,13 @@ INSTALLED_APPS = [
     'smoketest',
     'waffle',
     'compressor',
-    'pass_app.supportservices'
+    'django_markwhat',
 ]
 
 STATSD_CLIENT = 'statsd.client'
 STATSD_PREFIX = 'pass'
 STATSD_HOST = 'localhost'
 STATSD_PORT = 8125
-STATSD_PATCHES = ['django_statsd.patches.db', ]
 
 SOUTH_AUTO_FREEZE_APP = True
 ACCOUNT_ACTIVATION_DAYS = 7
