@@ -1,8 +1,7 @@
 from django.test import TestCase
-from pass_app.supportservices.models import SupportServiceBlock, \
-    SupportService
+from pass_app.supportservices.models import SupportServiceBlock, SupportService
 from pass_app.supportservices.tests.factories import SupportServiceFactory, \
-    SupportServiceStateFactory
+    SupportServiceStateFactory, UserFactory
 
 
 class SupportServiceBlockTest(TestCase):
@@ -12,7 +11,7 @@ class SupportServiceBlockTest(TestCase):
 
     def test_needs_submit(self):
         block = SupportServiceBlock()
-        self.assertTrue(block.needs_submit())
+        self.assertFalse(block.needs_submit())
 
     def test_add_form(self):
         f = SupportServiceBlock.add_form()
@@ -25,12 +24,17 @@ class SupportServiceBlockTest(TestCase):
 
     def test_unlocked(self):
         block = SupportServiceBlock()
+        user = UserFactory()
+        self.assertTrue(block.unlocked(user))
+
+    def test_clear_submissions(self):
         state = SupportServiceStateFactory()
-        self.assertFalse(block.unlocked(state.user))
-
-        for service in SupportService.objects.all():
+        all_services = SupportService.objects.all()
+        for service in all_services:
             state.services.add(service)
-        self.assertTrue(block.unlocked(state.user))
 
+        self.assertEquals(state.services.count(), all_services.count())
+
+        block = SupportServiceBlock()
         block.clear_user_submissions(state.user)
-        self.assertFalse(block.unlocked(state.user))
+        self.assertEquals(state.services.count(), 0)

@@ -42,14 +42,10 @@ class SupportServiceBlock(models.Model):
         return unicode(self.pageblock())
 
     def needs_submit(self):
-        return True
+        return False
 
     def unlocked(self, user):
-        try:
-            state = SupportServiceState.objects.get(user=user)
-            return state.services.count() == len(self.services())
-        except SupportServiceState.DoesNotExist:
-            return False
+        return True
 
     def clear_user_submissions(self, user):
         try:
