@@ -125,6 +125,7 @@ INSTALLED_APPS = [
     'waffle',
     'compressor',
     'django_markwhat',
+    'pass_app.supportservices'
 ]
 
 STATSD_CLIENT = 'statsd.client'

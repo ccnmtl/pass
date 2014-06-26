@@ -1,6 +1,7 @@
+from django.conf import settings
 from django.conf.urls import include, patterns
 from django.contrib import admin
-from django.views.generic import TemplateView
+from django.views.generic.base import TemplateView
 from pass_app.api import UserResource
 from pass_app.careerlocation.api import MapLayerResource, \
     ActorQuestionResource, ActorResource, ActorResponseResource, \
@@ -9,7 +10,6 @@ from pass_app.supportservices.api import SupportServiceResource, \
     SupportServiceStateResource
 from tastypie.api import Api
 import os.path
-from django.views.generic import TemplateView
 admin.autodiscover()
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
