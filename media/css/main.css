@@ -817,6 +817,14 @@ a:visited
     font-style: italic;
 }
 
+.large-pullquote .pullquote {
+    display: block;
+    margin: 10px 0;
+    padding: 38px 45px 10px;
+    background-color: #fff;
+    background: url("/site_media/img/quotes.png") no-repeat scroll left top transparent;
+}    
+
 table td.noborder
 {
 	border-bottom: 0;
