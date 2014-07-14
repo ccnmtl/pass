@@ -125,7 +125,8 @@ INSTALLED_APPS = [
     'waffle',
     'compressor',
     'django_markwhat',
-    'pass_app.supportservices'
+    'pass_app.supportservices',
+    'pass_app.infographic'
 ]
 
 STATSD_CLIENT = 'statsd.client'
@@ -150,7 +151,8 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'careerlocation.CareerLocationBlock',
               'careerlocation.CareerLocationSummaryBlock',
               'careerlocation.CareerLocationStrategyBlock',
-              'supportservices.SupportServiceBlock']
+              'supportservices.SupportServiceBlock',
+              'infographic.InfographicBlock']
 
 
 THUMBNAIL_SUBDIR = "thumbs"
