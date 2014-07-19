@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<form action="" method="post">{% csrf_token %}
+    <h2>Infographic Items</h2>
+    
+    <div><a href="/_infographic/{{object.id}}/add/item/">Add Infographic Item</a></div>
+
+    {% for item in object.infographicitem_set.all %}
+        <div>
+            {{item.label}}
+            <a href="/_infographic/edit/item/{{item.id}}/">Edit</a>
+            <a href="/_infographic/delete/item/{{item.id}}/">Delete</a>
+            
+        </div>
+    {% endfor %}
+</form>
+
+{% endblock %}

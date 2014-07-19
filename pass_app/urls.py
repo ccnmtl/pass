@@ -52,7 +52,7 @@ urlpatterns = patterns(
      {'document_root': settings.MEDIA_ROOT}),
     (r'^_quiz/', include('quizblock.urls')),
     (r'^quizblock/', include('quizblock.urls')),
-    (r'^infographic/', include('pass_app.infographic.urls')),
+    (r'^_infographic/', include('pass_app.infographic.urls')),
     (r'^_careermap/', include('careermapblock.urls')),
     (r'^_careerlocation/', include('pass_app.careerlocation.urls')),
     (r'^_stats/$', TemplateView.as_view(template_name="main/stats.html")),
