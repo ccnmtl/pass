@@ -7,7 +7,11 @@
 {% block content %}
 
     <ul class="breadcrumb">
-        <li><a href="/_infographic/{{form.initial.infographic.id}}/">{{form.initial.infographic}}</a>
+        {% if object and object.infographic %}
+            <li><a href="/_infographic/{{object.infographic.id}}/">{{object.infographic}}</a>
+        {% else %}
+            <li><a href="/_infographic/{{form.initial.infographic.id}}/">{{form.initial.infographic}}</a>
+        {% endif %}
             <span class="divider">/</span>
         </li>
         <li>Add Infographic Item</li>
