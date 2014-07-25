@@ -30,7 +30,10 @@ jQuery(document).ready(function() {
   
   function progress() {
     var percentDone = Math.round(100 * itemsClicked/itemsTotal);
-    console.log(percentDone);
+    if (percentDone >= 100) {
+      percentDone = 100;
+    }
+    var barSelector = jQuery('.bar').attr('style','width: '+percentDone+'%;');
   }
   
   function saveItem(x) {

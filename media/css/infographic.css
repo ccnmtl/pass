@@ -6,6 +6,29 @@
   position: relative;
 }
 
+.progressbar_set {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  height: 40px;
+  width: 800px;
+}
+
+.progress_title {
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: bold;
+  float: left;
+  width: 140px;
+  text-align: center;
+}
+
+.progressbar {
+  float: left;
+  padding-top: 2px;
+  width: 660px;
+}
+
 .chartnav {
   display: block;
   height: 200px;
