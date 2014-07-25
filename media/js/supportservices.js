@@ -35,6 +35,9 @@
                 a.push(item.toTemplate());
             });
             return a;
+        },
+        comparator: function(service) {
+            return [service.get('category').name, service.get('title')]
         }
     });
 
