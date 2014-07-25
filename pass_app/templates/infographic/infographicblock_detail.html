@@ -17,7 +17,7 @@
 {% block content %}
 <form action="" method="post">{% csrf_token %}
     <h2>Infographic Items</h2>
- <p>{{infographic.label}}</p>
+ <p><a href="{{object.pageblock.section.get_edit_url}}">{{object.pageblock.section.label}}</a></p>
    
     <div><a href="/_infographic/{{object.id}}/add/item/" class="btn btn-sml btn-default">Add Infographic Item</a></div>
     <br />

@@ -1,33 +1,61 @@
+{% load infographicstate %}
 <script type="text/javascript" language="javascript">
 jQuery(document).ready(function() {
-
-  var ItemContent;
-  var ItemPosition;
-  var ItemImage;
-
+  
+  var itemContent;
+  var itemPosition;
+  var itemImage;
+  var itemsTotal = jQuery("area[data-class='item']").length;
+  var itemsClicked = 0;
 
   function identifyItem(x) {
-    ItemContent = jQuery(x).attr('href');
-    ItemPosition = 'item_position_'+ItemContent;
-    ItemImage = 'item_image_'+ItemContent;
+    itemContent = jQuery(x).attr('href');
+    itemPosition = 'item_position_'+itemContent;
+    itemImage = 'item_image_'+itemContent;
   }
   
+  function changeItemState(x) {
+    identifyItem(x);
+    var itemContentModal = '#item_content_'+itemContent;
+    jQuery(itemContentModal).fadeIn('fast');
+    jQuery('.content_overlay').fadeIn('fast');
+    jQuery('#'+itemPosition).addClass(itemImage+'-visited');
+  }
+  
+  function maybeNextUnlocked() {
+    if (itemsClicked >= itemsTotal) {
+      jQuery("#next").removeClass("disabled");
+    }
+  }
+  
+  function saveItem(x) {
+    var itemId = jQuery(x).data('id')
+    jQuery.ajax({
+        type: "POST",
+        url: '/_infographic/save/item/',
+        data: {'item_id':itemId},
+        success: function(response) {
+          changeItemState(x);
+          itemsClicked++;
+          maybeNextUnlocked();
+        },                                                                                                                              
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert('An error has occurred. Please try again.');
+        }
+    });
+  }
 
   jQuery('#imageMapArea area').hover(function() {
     identifyItem(this);
-    jQuery('#'+ItemPosition).addClass(ItemImage+'-hover');
+    jQuery('#'+itemPosition).addClass(itemImage+'-hover');
   },
   function() {
     identifyItem(this);
-    if (jQuery('#'+ItemPosition).hasClass(ItemImage+'-hover')) {
-      jQuery('#'+ItemPosition).removeClass(ItemImage+'-hover');
+    if (jQuery('#'+itemPosition).hasClass(itemImage+'-hover')) {
+      jQuery('#'+itemPosition).removeClass(itemImage+'-hover');
     }
   }).click(function() {
-    identifyItem(this);
-    var ItemContentModal = '#item_content_'+ItemContent;
-    jQuery(ItemContentModal).fadeIn('fast');
-    jQuery('#'+ItemPosition).addClass(ItemImage+'-visited');
-    jQuery('.content_overlay').fadeIn('fast');
+    saveItem(this);
     return false;
   });
 
@@ -36,6 +64,19 @@ jQuery(document).ready(function() {
     jQuery('.content_modal').fadeOut('fast');
     jQuery('.content_overlay').fadeOut('fast');
   });
+
+// initialize
+  jQuery("#next").addClass("disabled");
+  
+  var visited = {% get_user_state %};
+  
+  for (var i=0; i < visited.length; i++) {
+    itemsClicked++; 
+    var selector = "area[data-id='" + visited[i] + "']";
+    var x = jQuery(selector)[0];
+    identifyItem(x);
+    jQuery('#'+itemPosition).addClass(itemImage+'-visited');
+  }
 
 });
 </script>
