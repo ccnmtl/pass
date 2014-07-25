@@ -28,6 +28,11 @@ jQuery(document).ready(function() {
     }
   }
   
+  function progress() {
+    var percentDone = Math.round(100 * itemsClicked/itemsTotal);
+    console.log(percentDone);
+  }
+  
   function saveItem(x) {
     var itemId = jQuery(x).data('id')
     jQuery.ajax({
@@ -38,6 +43,7 @@ jQuery(document).ready(function() {
           changeItemState(x);
           itemsClicked++;
           maybeNextUnlocked();
+          progress();
         },                                                                                                                              
         error: function(xhr, ajaxOptions, thrownError) {
             alert('An error has occurred. Please try again.');
@@ -77,6 +83,10 @@ jQuery(document).ready(function() {
     identifyItem(x);
     jQuery('#'+itemPosition).addClass(itemImage+'-visited');
   }
+  
+  maybeNextUnlocked();
+  
+  progress();
 
 });
 </script>
