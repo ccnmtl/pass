@@ -5,7 +5,6 @@ from django.views.generic.edit import DeleteView, CreateView, UpdateView
 from pass_app.mixins import JSONResponseMixin
 from pass_app.infographic.models import InfographicItem, InfographicItemForm, \
     InfographicBlock, InfographicState
-from django.shortcuts import get_object_or_404
 
 
 class InfographicDetailView(DetailView):
@@ -40,7 +39,7 @@ class UpdateInfographicItemView(UpdateView):
         return "/_infographic/%s/" % self.object.infographic.id
 
 
-class SaveInfographicState(JSONResponseMixin,View):
+class SaveInfographicState(JSONResponseMixin, View):
     def post(self, request):
         state, created = InfographicState.objects.get_or_create(
             user=request.user)

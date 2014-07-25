@@ -1,6 +1,6 @@
 from django import template
 from pass_app.infographic.models import InfographicState
-from django.utils.importlib import import_module
+
 
 register = template.Library()
 
@@ -16,5 +16,3 @@ class GetUserState(template.Node):
 @register.tag('get_user_state')
 def get_user_state(parser, token):
     return GetUserState()
-
-
