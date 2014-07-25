@@ -1,5 +1,5 @@
 from .views import CreateInfographicItemView, UpdateInfographicItemView, \
-    DeleteInfographicItemView, InfographicDetailView
+    DeleteInfographicItemView, InfographicDetailView, SaveInfographicState
 from django.conf.urls import patterns
 
 urlpatterns = patterns(
@@ -11,4 +11,6 @@ urlpatterns = patterns(
     (r'^edit/item/(?P<pk>[0-9]+)/$', UpdateInfographicItemView.as_view(), {},
      'infographicitem-update'),
     (r'^delete/item/(?P<pk>[0-9]+)/$', DeleteInfographicItemView.as_view(), {},
-     'infographicitem-delete'),)
+     'infographicitem-delete'),
+    (r'^save/item/$', SaveInfographicState.as_view(), {},
+     'infographicitem-save'),)

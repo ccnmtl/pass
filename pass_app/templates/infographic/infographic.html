@@ -20,7 +20,7 @@
 
   <map name="imageMapArea" id="imageMapArea">
     {% for item in block.infographicitem_set.all %}
-    <area shape="{{item.map_area_shape}}" coords="{{item.coordinates}}" href="{{item.label}}">
+    <area shape="{{item.map_area_shape}}" coords="{{item.coordinates}}" href="{{item.label}}" data-id="{{item.id}}" data-class="item">
     {% endfor %}
   </map>
 

@@ -694,6 +694,7 @@ a:visited
 #content .content-nav a.pager_button.disabled,
 #content .content-nav div.pager_button.disabled {
     color: #999;
+    cursor: not-allowed;
 }
 
 #content .content-nav a.pager_button.disabled:hover,
