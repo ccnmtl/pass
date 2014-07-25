@@ -1,13 +1,13 @@
 <div class="infographic">
   <div class="chartnav">
     <img name="imagemap_shim" id="imagemap_shim" usemap="#imageMapArea" src="/site_media/img/infographic/shim.gif" />
-    {% for item in block.items.all %}
+    {% for item in block.infographicitem_set.all %}
     <div id="item_position_{{item.label}}" class="item_image_{{item.label}}"></div><!-- /.item_image_{{item.label}} -->
     {% endfor %}
   </div><!-- /.chartnav -->
 
   <div class="charttext">
-    {% for item in block.items.all %}
+    {% for item in block.infographicitem_set.all %}
     <div id="item_content_{{item.label}}" class="content_modal">
       {{item.content|safe}}
       <div class="closeoverlay">
@@ -19,7 +19,7 @@
 
 
   <map name="imageMapArea" id="imageMapArea">
-    {% for item in block.items.all %}
+    {% for item in block.infographicitem_set.all %}
     <area shape="{{item.map_area_shape}}" coords="{{item.coordinates}}" href="{{item.label}}">
     {% endfor %}
   </map>
