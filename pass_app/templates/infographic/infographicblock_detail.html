@@ -1,21 +1,47 @@
 {% extends 'base.html' %}
+{% block js %}
+{{ block.super }}
+    {% ifnotequal module.slug 'young-children' %}
+        <script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
+    {% endifnotequal %}
+{% endblock %}
+{% block css %}
+{{ block.super }}
+
+    {% ifnotequal module.slug 'young-children' %}
+        <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+    {% endifnotequal %}
+{% endblock %}
 
 
 {% block content %}
-
 <form action="" method="post">{% csrf_token %}
     <h2>Infographic Items</h2>
-    
-    <div><a href="/_infographic/{{object.id}}/add/item/">Add Infographic Item</a></div>
+ <p>{{infographic.label}}</p>
+   
+    <div><a href="/_infographic/{{object.id}}/add/item/" class="btn btn-sml btn-default">Add Infographic Item</a></div>
+    <br />
+
+
+<table>
+    <tr>
+      <th>Item name</th>
+      <th>Item ID</th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+    </tr>
 
     {% for item in object.infographicitem_set.all %}
-        <div>
-            {{item.label}}
-            <a href="/_infographic/edit/item/{{item.id}}/">Edit</a>
-            <a href="/_infographic/delete/item/{{item.id}}/">Delete</a>
+        <tr>
+            <td>{{item.label_name}}</td>
+            <td>{{item.label}}</td>
+            <td><a href="/_infographic/edit/item/{{item.id}}/" class="btn btn-sml btn-success">Edit</a></td>
+            <td><a href="/_infographic/delete/item/{{item.id}}/"  class="btn btn-sml btn-danger">Delete</a></td>
             
-        </div>
+        </tr>
     {% endfor %}
+
+</table>
 </form>
 
 {% endblock %}
