@@ -12,6 +12,36 @@
   border: 0;
   height: 40px;
   width: 800px;
+  display: none;
+}
+
+.progressbar_set_initial,
+.progressbar_set_done {
+  margin: 0;
+  padding: 5px;
+  border: 2px solid #fff;
+  height: auto;
+  width: 300px;
+  display: none;
+  background-color: #000;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  color: #fff;
+  position: absolute;
+  left: 250px;
+  bottom: 10px;
+  opacity: 0.6;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  -webkit-background-clip: padding-box;
+     -moz-background-clip: padding-box;
+          background-clip: padding-box;
 }
 
 .progress_title {
@@ -29,14 +59,18 @@
   width: 660px;
 }
 
+.progress {
+  border: 1px solid #ccc;
+}
+
 .chartnav {
   display: block;
   height: 200px;
   width: 400px;
   border: 1px solid #ccc;
   position: absolute;
-  top: 100px;
-  left: 100px;
+  top: 200px;
+  left: 200px;
   z-index: 200;
 }
 
@@ -55,14 +89,40 @@
 
 .content_modal {
   position: absolute;
-  left: 10px;
-  top: 10px;
-  border: 1px solid #f00;
+  left: 20px;
+  top: 20px;
   background-color: #fff;
-  height: 150px;
-  width: 300px;
   display: none;
   z-index: 900;
+  width: 760px;
+  border: 1px solid #666;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  -webkit-background-clip: padding-box;
+     -moz-background-clip: padding-box;
+          background-clip: padding-box;
+}
+
+.content_modal_header {
+  padding: 10px 5px 10px 15px;
+  border-bottom: 1px solid #ccc;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 24px;
+}
+
+.content_modal_body {
+  padding: 10px 15px;
+  margin: 0;
+  min-height: 70px;
+}
+
+.content_modal_footer {
+  padding: 10px 10px 10px 15px;
 }
 
 .content_overlay {
@@ -80,8 +140,21 @@
 
 .closeoverlay {
   cursor: pointer;
-  width: 50px;
-  border: 1px solid #000;
+}
+
+.icon-close {
+  margin: 2px 0 0 0;
+  padding: 0;
+  border: 0;
+  float: right;
+  cursor: pointer;
+  width: 27px;
+  height: 27px;
+  background: transparent url('/site_media/img/infographic/icon-close.png') 0px 0px no-repeat;
+}
+
+.icon-close:hover {
+  background: transparent url('/site_media/img/infographic/icon-close-hover.png') 0px 0px no-repeat;
 }
 
 #item_position_redcircle {
@@ -110,15 +183,18 @@
   border: 0;
 }
 
-#text_redcircle {
+
+#item_position_greencircle {
   position: absolute;
-  left: 10px;
-  top: 10px;
-  background: #f00;
-  height: 150px;
-  width: 350px;
-  background-color: red;
-  z-index: 800;
+  left: 200px;
+  top: 30px;
+  z-index: 30;
+  width: 50px;
+  height: 50px;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .item_image_redcircle {background: url('/site_media/img/infographic/circ1.png') no-repeat 0px 0px;}
@@ -128,3 +204,21 @@
 .item_image_bluecircle {background: url('/site_media/img/infographic/circ2.png') no-repeat 0px 0px;}
 .item_image_bluecircle-visited {background: url('/site_media/img/infographic/circ2.png') no-repeat -140px 0px;}
 .item_image_bluecircle-hover {background: url('/site_media/img/infographic/circ2.png') no-repeat -70px 0px;}
+
+
+.item_image_greencircle {background: url('/site_media/img/infographic/circ3.png') no-repeat 0px 0px;}
+.item_image_greencircle-visited {background: url('/site_media/img/infographic/circ3.png') no-repeat -140px 0px;}
+.item_image_greencircle-hover {background: url('/site_media/img/infographic/circ3.png') no-repeat -70px 0px;}
+
+
+/* DRESSER ACTIVITY */
+
+.dresser .infographic {
+  height: 556px;
+  background: transparent url('/site_media/img/infographic/dresser_bg.jpg') 0px 0px no-repeat;
+}
+
+.dresser .content_overlay {
+  height: 556px;
+}
+

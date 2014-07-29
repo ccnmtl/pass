@@ -30,6 +30,14 @@ jQuery(document).ready(function() {
   
   function progress() {
     var percentDone = Math.round(100 * itemsClicked/itemsTotal);
+    if (percentDone == 0) {
+      jQuery(".progressbar_set_initial").fadeIn('fast');
+      jQuery(".progressbar_set").hide();
+    }
+    else {
+      jQuery(".progressbar_set_initial").hide();
+      jQuery(".progressbar_set").show();
+    }
     if (percentDone >= 100) {
       percentDone = 100;
     }

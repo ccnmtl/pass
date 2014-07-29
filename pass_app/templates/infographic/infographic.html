@@ -9,10 +9,19 @@
   <div class="charttext">
     {% for item in block.infographicitem_set.all %}
     <div id="item_content_{{item.label}}" class="content_modal">
-      {{item.content|safe}}
-      <div class="closeoverlay">
-      Close##
-      </div>
+      <div class="content_modal_header">
+        {{item.label_name}}
+        <div class="closeoverlay icon-close"></div>
+      </div><!-- ./content_modal_header -->
+      <div class="content_modal_body">
+        {{item.content|safe}}
+      </div><!-- ./content_modal_body -->
+      <div class="content_modal_footer clearfix">
+        <div class="closeoverlay btn btn-info pull-right">Close</div>
+      </div><!-- ./content_modal_footer -->
+     
+      
+      
     </div><!-- /#item_content_{{item.label}} -->
     {% endfor %}
   </div><!-- /.charttext -->
@@ -25,6 +34,12 @@
   </map>
 
   <div class="content_overlay"></div><!-- /.overlay -->
+  <div class="progressbar_set_initial">
+    You've not started this activity yet.<br />Click on any of the items to begin.
+  </div><!-- ./progressbar_set_initial -->
+  <div class="progressbar_set_done">
+    DONE!
+  </div><!-- ./progressbar_set_done -->
 </div><!-- /.infographic -->
 
 <div class="progressbar_set">
@@ -36,5 +51,5 @@
       <div class="bar" style="width: 5%;"></div>
     </div>
   </div><!-- ./progress_title -->
-</div><!-- ./progressbar -->
+</div><!-- ./progressbar_set -->
 
