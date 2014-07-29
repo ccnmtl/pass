@@ -40,6 +40,7 @@ jQuery(document).ready(function() {
     }
     if (percentDone >= 100) {
       percentDone = 100;
+      jQuery(".progressbar_set_done").show();
     }
     var barSelector = jQuery('.bar').attr('style','width: '+percentDone+'%;');
   }
