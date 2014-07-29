@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <ul class="breadcrumb">
+        {% if object and object.infographic %}
+            <li><a href="/_infographic/{{object.infographic.id}}/">{{object.infographic}}</a>
+        {% else %}
+            <li><a href="/_infographic/{{form.initial.infographic.id}}/">{{form.initial.infographic}}</a>
+        {% endif %}
+            <span class="divider">/</span>
+        </li>
+        <li>Add Infographic Item</li>
+    </ul>
+
+    <form action="" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save" />
+    </form>
+{% endblock %}

@@ -1,51 +1,104 @@
+{% load infographicstate %}
 <script type="text/javascript" language="javascript">
-
 jQuery(document).ready(function() {
-    
-    var altText;
-    var navDivId;
-    var navDivClass;
+  
+  var itemContent;
+  var itemPosition;
+  var itemImage;
+  var itemsTotal = jQuery("area[data-class='item']").length;
+  var itemsClicked = 0;
 
-    function resetNav() {
-        jQuery('#imageMapArea area').each(function(){
-            var thisAltText = jQuery(this).attr('alt');
-            var thisNavDivId = 'chart_nav'+thisAltText;
-            jQuery('#'+thisNavDivId).removeClass().addClass('nav'+thisAltText);
-        });
+  function identifyItem(x) {
+    itemContent = jQuery(x).attr('href');
+    itemPosition = 'item_position_'+itemContent;
+    itemImage = 'item_image_'+itemContent;
+  }
+  
+  function changeItemState(x) {
+    identifyItem(x);
+    var itemContentModal = '#item_content_'+itemContent;
+    jQuery(itemContentModal).fadeIn('fast');
+    jQuery('.content_overlay').fadeIn('fast');
+    jQuery('#'+itemPosition).addClass(itemImage+'-visited');
+  }
+  
+  function maybeNextUnlocked() {
+    if (itemsClicked >= itemsTotal) {
+      jQuery("#next").removeClass("disabled");
     }
-
-    function resetText() {
-        jQuery('#charttext div').each(function(){
-            if (jQuery(this).hasClass('textactive')) {
-                jQuery(this).removeClass('textactive');
-            }
-        });
+  }
+  
+  function progress() {
+    var percentDone = Math.round(100 * itemsClicked/itemsTotal);
+    if (percentDone == 0) {
+      jQuery(".progressbar_set_initial").fadeIn('fast');
+      jQuery(".progressbar_set").hide();
     }
-
-    function identifySet(x) {
-        altText = jQuery(x).attr('alt');
-        navDivId = 'chart_nav'+altText;
-        navDivClass = 'nav'+altText;
+    else {
+      jQuery(".progressbar_set_initial").hide();
+      jQuery(".progressbar_set").show();
     }
-
-    jQuery('#imageMapArea area').hover(function() {
-        identifySet(this);
-        if (!(jQuery('#'+navDivId).hasClass(navDivClass+'-active'))) {
-            jQuery('#'+navDivId).removeClass().addClass(navDivClass+'-hover');
+    if (percentDone >= 100) {
+      percentDone = 100;
+      jQuery(".progressbar_set_done").show();
+    }
+    var barSelector = jQuery('.bar').attr('style','width: '+percentDone+'%;');
+  }
+  
+  function saveItem(x) {
+    var itemId = jQuery(x).data('id')
+    jQuery.ajax({
+        type: "POST",
+        url: '/_infographic/save/item/',
+        data: {'item_id':itemId},
+        success: function(response) {
+          changeItemState(x);
+          itemsClicked++;
+          maybeNextUnlocked();
+          progress();
+        },                                                                                                                              
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert('An error has occurred. Please try again.');
         }
-    },
-    function() {
-        identifySet(this);
-        if (jQuery('#'+navDivId).hasClass(navDivClass+'-hover')) {
-            jQuery('#'+navDivId).removeClass().addClass(navDivClass);
-        }
-    }).click(function(){
-        resetNav();
-        resetText();
-        identifySet(this);
-        var textDivClass = 'text'+altText;
-        jQuery('#'+navDivId).addClass(navDivClass+'-active');
-        jQuery('.'+textDivClass).addClass('textactive');
     });
+  }
+
+  jQuery('#imageMapArea area').hover(function() {
+    identifyItem(this);
+    jQuery('#'+itemPosition).addClass(itemImage+'-hover');
+  },
+  function() {
+    identifyItem(this);
+    if (jQuery('#'+itemPosition).hasClass(itemImage+'-hover')) {
+      jQuery('#'+itemPosition).removeClass(itemImage+'-hover');
+    }
+  }).click(function() {
+    saveItem(this);
+    return false;
+  });
+
+
+  jQuery('.closeoverlay').click(function(){
+    jQuery('.content_modal').fadeOut('fast');
+    jQuery('.content_overlay').fadeOut('fast');
+  });
+
+// initialize
+  jQuery("#next").addClass("disabled");
+  
+  var visited = {% get_user_state %};
+  
+  for (var i=0; i < visited.length; i++) {
+    itemsClicked++; 
+    var selector = "area[data-id='" + visited[i] + "']";
+    var x = jQuery(selector)[0];
+    identifyItem(x);
+    jQuery('#'+itemPosition).addClass(itemImage+'-visited');
+  }
+  
+  maybeNextUnlocked();
+  
+  progress();
+
 });
 </script>

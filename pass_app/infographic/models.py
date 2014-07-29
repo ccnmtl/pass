@@ -1,8 +1,8 @@
 from django import forms
-from django.db import models
 from django.contrib.auth.models import User
-from pagetree.models import PageBlock
 from django.contrib.contenttypes import generic
+from django.db import models
+from pagetree.models import PageBlock
 
 
 class InfographicBlock(models.Model):
@@ -28,7 +28,7 @@ class InfographicBlock(models.Model):
 
     def edit_form(self):
         form = InfographicForm(instance=self)
-        alt = "<a href='/infographic/edit/%s/'>Manage Items</a>" % self.id
+        alt = "<a href='/_infographic/%s/'>Manage Items</a>" % self.id
         form.alt_text = alt
         return form
 
@@ -61,6 +61,13 @@ class InfographicItem(models.Model):
 class InfographicItemForm(forms.ModelForm):
     class Meta:
         model = InfographicItem
+
+    def __init__(self, *args, **kwargs):
+        super(InfographicItemForm, self).__init__(*args, **kwargs)
+        # hides the select dropdown
+        self.fields['infographic'].widget.attrs['style'] = "display: none"
+        # hides the label
+        self.fields['infographic'].widget.is_hidden = True
 
 
 class InfographicForm(forms.ModelForm):
