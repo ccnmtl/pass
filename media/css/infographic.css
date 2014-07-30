@@ -4,6 +4,10 @@
   width: 800px;
   background: transparent url('/site_media/img/infographic/background_travel001.png') 0px 0px no-repeat;
   position: relative;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
 }
 
 .progressbar_set {
