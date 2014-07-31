@@ -1,11 +1,75 @@
+/* ----- OVERALL SETUP --------------- */
+
 .infographic {
   display: block;
+  position: relative;
   height: 600px;
   width: 800px;
-  position: relative;
 }
 
-.progressbar_set {
+.chart-items {
+  display: block;
+  position: absolute;
+  top: 200px;
+  left: 200px;
+  z-index: 200;
+  height: 200px;
+  width: 400px;
+  border: 1px solid #ccc;
+}
+
+#imagemap-shim {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  height: 200px;
+  width: 400px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.content-modal {
+  display: none;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  z-index: 900;
+  width: 760px;
+  border: 1px solid #666;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  -webkit-background-clip: padding-box;
+     -moz-background-clip: padding-box;
+          background-clip: padding-box;
+  background-color: #fff;
+}
+
+.content-modal-header {
+  padding: 10px 5px 10px 15px;
+  border-bottom: 1px solid #ccc;
+  font: 18px;
+  font-weight: bold;
+  line-height: 24px;
+}
+
+.content-modal-body {
+  min-height: 70px;
+  margin: 0;
+  padding: 10px 15px;
+}
+
+.content-modal-footer {
+  padding: 10px 10px 10px 15px;
+}
+
+.progressbar-set {
   margin: 0;
   padding: 0;
   border: 0;
@@ -14,12 +78,13 @@
   display: none;
 }
 
-.progressbar_set_initial,
-.progressbar_set_done {
+.progressbar-set-initial,
+.progressbar-set-done {
   margin: 0;
   padding: 5px;
   border: 2px solid #fff;
   height: auto;
+  min-height: 20px;
   width: 300px;
   display: none;
   background-color: #000;
@@ -43,7 +108,15 @@
           background-clip: padding-box;
 }
 
-.progress_title {
+.progressbar-set-initial {
+  background: #000 url('/site_media/img/icon-warning.png') 5px center no-repeat;
+}
+
+.progressbar-set-done {
+  background: #000 url('/site_media/img/icon-ok.png') 5px center no-repeat;
+}
+
+.progress-title {
   font-size: 14px;
   line-height: 24px;
   font-weight: bold;
@@ -62,72 +135,10 @@
   border: 1px solid #ccc;
 }
 
-.chartnav {
-  display: block;
-  height: 200px;
-  width: 400px;
-  border: 1px solid #ccc;
+.content-overlay {
   position: absolute;
-  top: 200px;
-  left: 200px;
-  z-index: 200;
-}
-
-#imagemap_shim {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  height: 200px;
-  width: 400px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  z-index: 300;
-  display: block;
-}
-
-.content_modal {
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  background-color: #fff;
-  display: none;
-  z-index: 900;
-  width: 760px;
-  border: 1px solid #666;
-  -webkit-border-radius: 6px;
-     -moz-border-radius: 6px;
-          border-radius: 6px;
-  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-          box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-  -webkit-background-clip: padding-box;
-     -moz-background-clip: padding-box;
-          background-clip: padding-box;
-}
-
-.content_modal_header {
-  padding: 10px 5px 10px 15px;
-  border-bottom: 1px solid #ccc;
-  font-size: 18px;
-  font-weight: bold;
-  line-height: 24px;
-}
-
-.content_modal_body {
-  padding: 10px 15px;
-  margin: 0;
-  min-height: 70px;
-}
-
-.content_modal_footer {
-  padding: 10px 10px 10px 15px;
-}
-
-.content_overlay {
-  position: absolute;
-  left: 0px;
-  top: 0px;
+  left: 0;
+  top: 0;
   height: 600px;
   width: 800px;
   background-color: #666666;
@@ -149,14 +160,14 @@
   cursor: pointer;
   width: 27px;
   height: 27px;
-  background: transparent url('/site_media/img/infographic/icon-close.png') 0px 0px no-repeat;
+  background: transparent url('/site_media/img/infographic/icon-close.png') 0 0 no-repeat;
 }
 
 .icon-close:hover {
-  background: transparent url('/site_media/img/infographic/icon-close-hover.png') 0px 0px no-repeat;
+  background: transparent url('/site_media/img/infographic/icon-close-hover.png') 0 0 no-repeat;
 }
 
-#item_position_redcircle {
+#item-position-redcircle {
   position: absolute;
   left: 10px;
   top: 50px;
@@ -169,7 +180,7 @@
   border: 0;
 }
 
-#item_position_bluecircle {
+#item-position-bluecircle {
   position: absolute;
   left: 100px;
   top: 70px;
@@ -183,7 +194,7 @@
 }
 
 
-#item_position_greencircle {
+#item-position-greencircle {
   position: absolute;
   left: 200px;
   top: 30px;
@@ -196,37 +207,42 @@
   border: 0;
 }
 
-.item_image_redcircle {background: url('/site_media/img/infographic/circ1.png') no-repeat 0px 0px;}
-.item_image_redcircle-visited {background: url('/site_media/img/infographic/circ1.png') no-repeat -140px 0px; cursor: pointer;}
-.item_image_redcircle-hover {background: url('/site_media/img/infographic/circ1.png') no-repeat -70px 0px; cursor: pointer;}
+.item-image-redcircle {background: url('/site_media/img/infographic/circ1.png') no-repeat 0 0;}
+.item-image-redcircle-visited {background: url('/site_media/img/infographic/circ1.png') no-repeat -140px 0; cursor: pointer;}
+.item-image-redcircle-hover {background: url('/site_media/img/infographic/circ1.png') no-repeat -70px 0; cursor: pointer;}
 
-.item_image_bluecircle {background: url('/site_media/img/infographic/circ2.png') no-repeat 0px 0px;}
-.item_image_bluecircle-visited {background: url('/site_media/img/infographic/circ2.png') no-repeat -140px 0px;}
-.item_image_bluecircle-hover {background: url('/site_media/img/infographic/circ2.png') no-repeat -70px 0px;}
-
-
-.item_image_greencircle {background: url('/site_media/img/infographic/circ3.png') no-repeat 0px 0px;}
-.item_image_greencircle-visited {background: url('/site_media/img/infographic/circ3.png') no-repeat -140px 0px;}
-.item_image_greencircle-hover {background: url('/site_media/img/infographic/circ3.png') no-repeat -70px 0px;}
+.item-image-bluecircle {background: url('/site_media/img/infographic/circ2.png') no-repeat 0 0;}
+.item-image-bluecircle-visited {background: url('/site_media/img/infographic/circ2.png') no-repeat -140px 0;}
+.item-image-bluecircle-hover {background: url('/site_media/img/infographic/circ2.png') no-repeat -70px 0;}
 
 
-/* DRESSER ACTIVITY */
+.item-image-greencircle {background: url('/site_media/img/infographic/circ3.png') no-repeat 0 0;}
+.item-image-greencircle-visited {background: url('/site_media/img/infographic/circ3.png') no-repeat -140px 0;}
+.item-image-greencircle-hover {background: url('/site_media/img/infographic/circ3.png') no-repeat -70px 0;}
+
+
+/* ----- DRESSER ACTIVITY --------------- */
 
 .dresser .infographic {
   height: 556px;
-  background: transparent url('/site_media/img/infographic/dressertop-withitems800px.jpg') 0px 0px no-repeat;
+  background: transparent url('/site_media/img/infographic/dressertop-withitems800px.jpg') 0 0 no-repeat;
 }
 
-.dresser .content_overlay {
+.dresser .content-overlay {
   height: 556px;
 }
 
-.dresser .chartnav {
-  height: 390px;
-  width: 705px;
+.dresser .chart-items {
   top: 80px;
   left: 19px;
   z-index: 200;
+  height: 390px;
+  width: 705px;
+}
+
+.dresser #imagemap-shim {
+  height: 390px;
+  width: 705px;
 }
 
 

@@ -10,15 +10,15 @@ jQuery(document).ready(function() {
 
   function identifyItem(x) {
     itemContent = jQuery(x).attr('href');
-    itemPosition = 'item_position_'+itemContent;
-    itemImage = 'item_image_'+itemContent;
+    itemPosition = 'item-position-'+itemContent;
+    itemImage = 'item-image-'+itemContent;
   }
   
   function changeItemState(x) {
     identifyItem(x);
-    var itemContentModal = '#item_content_'+itemContent;
+    var itemContentModal = '#item-content-'+itemContent;
     jQuery(itemContentModal).fadeIn('fast');
-    jQuery('.content_overlay').fadeIn('fast');
+    jQuery('.content-overlay').fadeIn('fast');
     jQuery('#'+itemPosition).addClass(itemImage+'-visited');
   }
   
@@ -31,16 +31,16 @@ jQuery(document).ready(function() {
   function progress() {
     var percentDone = Math.round(100 * itemsClicked/itemsTotal);
     if (percentDone == 0) {
-      jQuery(".progressbar_set_initial").fadeIn('fast');
-      jQuery(".progressbar_set").hide();
+      jQuery(".progressbar-set-initial").fadeIn('fast');
+      jQuery(".progressbar-set").hide();
     }
     else {
-      jQuery(".progressbar_set_initial").hide();
-      jQuery(".progressbar_set").show();
+      jQuery(".progressbar-set-initial").hide();
+      jQuery(".progressbar-set").show();
     }
     if (percentDone >= 100) {
       percentDone = 100;
-      jQuery(".progressbar_set_done").show();
+      jQuery(".progressbar-set-done").show();
     }
     var barSelector = jQuery('.bar').attr('style','width: '+percentDone+'%;');
   }
@@ -79,8 +79,8 @@ jQuery(document).ready(function() {
 
 
   jQuery('.closeoverlay').click(function(){
-    jQuery('.content_modal').fadeOut('fast');
-    jQuery('.content_overlay').fadeOut('fast');
+    jQuery('.content-modal').fadeOut('fast');
+    jQuery('.content-overlay').fadeOut('fast');
   });
 
 // initialize
