@@ -23,7 +23,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 300;
+  z-index: 700;
   height: 200px;
   width: 400px;
   margin: 0;
@@ -235,7 +235,6 @@
 .dresser .chart-items {
   top: 80px;
   left: 19px;
-  z-index: 200;
   height: 390px;
   width: 705px;
 }
@@ -245,4 +244,53 @@
   width: 705px;
 }
 
+#item-position-werthers {
+  display: block;
+  position: absolute;
+  top: 178px;
+  left: 1px;
+  z-index: 300;
+  height: 127px;
+  width: 159px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 
+#item-position-nephew {
+  display: block;
+  position: absolute;
+  top: 50px;
+  left: 57px;
+  z-index: 290;
+  height: 185px;
+  width: 165px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#item-position-gmonitor {
+  display: block;
+  position: absolute;
+  top: 282px;
+  left: 140px;
+  z-index: 280;
+  height: 94px;
+  width: 138px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.item-image-werthers {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
+.item-image-werthers-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
+.item-image-werthers-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+
+.item-image-nephew {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
+.item-image-nephew-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
+.item-image-nephew-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+
+.item-image-gmonitor {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
+.item-image-gmonitor-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
+.item-image-gmonitor-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
