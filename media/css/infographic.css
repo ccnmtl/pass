@@ -2,7 +2,6 @@
   display: block;
   height: 600px;
   width: 800px;
-  background: transparent url('/site_media/img/infographic/background_travel001.png') 0px 0px no-repeat;
   position: relative;
 }
 
@@ -215,10 +214,19 @@
 
 .dresser .infographic {
   height: 556px;
-  background: transparent url('/site_media/img/infographic/dresser_bg.jpg') 0px 0px no-repeat;
+  background: transparent url('/site_media/img/infographic/dressertop-withitems800px.jpg') 0px 0px no-repeat;
 }
 
 .dresser .content_overlay {
   height: 556px;
 }
+
+.dresser .chartnav {
+  height: 390px;
+  width: 705px;
+  top: 80px;
+  left: 19px;
+  z-index: 200;
+}
+
 
