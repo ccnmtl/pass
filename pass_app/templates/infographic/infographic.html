@@ -2,7 +2,7 @@
   <div class="chart-items">
     <img name="imagemap-shim" id="imagemap-shim" usemap="#imageMapArea" src="/site_media/img/infographic/shim.gif" />
     {% for item in block.infographicitem_set.all %}
-    <div id="item-position-{{item.label}}" class="item-image-{{item.label}}"></div><!-- /.item-image-{{item.label}} -->
+    <div id="item-position-{{item.label}}" class="item-image item-image-{{item.label}}"></div><!-- /.item-image-{{item.label}} -->
     {% endfor %}
   </div><!-- /.chart-items -->
 
