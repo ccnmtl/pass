@@ -1,11 +1,13 @@
 {% load markup %}
-
+{% if not response %}<div class="selection-list">{% endif %}
     {% for answer in question.answer_set.all %}
+    
         {% if block.rhetorical %}
             <div><input name="question{{question.id}}" value="{{answer.label}}" type="radio" />{{answer.label}}</div>
         {% else %}
             {% if response %}
                 {% ifequal response.value answer.value %}
+                <div class="your-choice choice-header">Your concern is...</div>
                     <div class="selection-block highlighted">
                     <h3>{{answer.label}}</h3>
                     
@@ -18,10 +20,12 @@
                 value="{{answer.value}}" type="radio" />{{answer.label}}</label>
             {% endif %}
         {% endif %}
+   
     {% endfor %}
+{% if not response %}</div>{% endif %}
 
 {% if response %}<hr />
-<div class="other-choices">Let’s look at the other choices.</div>
+<div class="other-choices choice-header">Let’s look at the other choices...</div>
 {% endif %}
 
     {% for answer in question.answer_set.all %}

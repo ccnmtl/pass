@@ -1767,3 +1767,75 @@ input[type="radio"], input[type="checkbox"] {
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.response-prioritized {
+  margin-bottom: 0;
+}
+
+.response-prioritized .cases {
+  border: 0px;
+  padding: 0px;
+  margin: 0;
+  -webkit-border-radius: 0px;
+     -moz-border-radius: 0px;
+          border-radius: 0px;
+}
+
+.response-prioritized .casetitle {
+  display: none;
+}
+
+.response-prioritized .casecontent {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.response-prioritized .selection-block {
+  background-color: #efefef;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  padding: 10px;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+
+.response-prioritized .selection-block h3 {
+  margin: 0 0 10px 0 !important;
+  padding: 0 !important;
+  color: #333;
+  border-bottom: 1px solid #ccc;
+  font-weight: normal !important;
+  font-size: 16px !important;
+}
+
+.response-prioritized .highlighted {
+  background-color: #e6f2d8;
+}
+
+.response-prioritized .highlighted h3 {
+  color: #009999;
+  border-bottom: 1px solid #099;
+}
+
+.response-prioritized .casequestion-text {
+  font-size: 16px !important;
+}
+
+.response-prioritized .selection-list {
+  width: 400px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+
+.response-prioritized label {
+  line-height: 24px;
+}
+
+.response-prioritized .choice-header {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
