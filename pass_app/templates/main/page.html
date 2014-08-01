@@ -141,7 +141,7 @@
                     {% if next_unlocked %}
                         <a href="{{ next.get_absolute_url}}" id="next" class="pager_button">{{next.label}} <b>&rarr;</b></a>
                     {% else %}
-                        <div id="next" class="pager_button">{{next.label}} <b>&rarr;</b></div>
+                        <div id="next" class="pager_button disabled">{{next.label}} <b>&rarr;</b></div>
                         <input type="hidden" id="next_url" value="{{next.get_absolute_url}}" />
                     {% endif %}
                 {% endif %}
