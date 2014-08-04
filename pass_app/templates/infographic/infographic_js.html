@@ -16,9 +16,6 @@ jQuery(document).ready(function() {
   
   function changeItemState(x) {
     identifyItem(x);
-    if (!jQuery('#'+itemPosition).hasClass(itemImage+'-visited')) {
-      itemsClicked++;
-    }
     var itemContentModal = '#item-content-'+itemContent;
     jQuery(itemContentModal).fadeIn('fast');
     jQuery('.content-overlay').fadeIn('fast');
@@ -56,6 +53,7 @@ jQuery(document).ready(function() {
         data: {'item_id':itemId},
         success: function(response) {
           changeItemState(x);
+          itemsClicked++;
           maybeNextUnlocked();
           progress();
         },                                                                                                                              
