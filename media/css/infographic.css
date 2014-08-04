@@ -5,15 +5,10 @@
   position: relative;
   height: 600px;
   width: 800px;
-<<<<<<< HEAD
-  background: transparent url('/site_media/img/infographic/background_travel001.png') 0px 0px no-repeat;
-  position: relative;
   border: 1px solid #ccc;
   -webkit-border-radius: 6px;
      -moz-border-radius: 6px;
           border-radius: 6px;
-=======
->>>>>>> bcba03a6f8d8420cdec7524dbf1e7bf06df06fa8
 }
 
 .chart-items {
@@ -368,3 +363,111 @@
 .item-image-medicard {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
 .item-image-medicard-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
 .item-image-medicard-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+
+
+/* ----- FRIDGE ACTIVITY --------------- */
+
+.fridge .infographic {
+  height: 598px;
+  background: transparent url('/site_media/img/infographic/fridge-withitems800px.jpg') 0 0 no-repeat;
+}
+
+.fridge .content-overlay {
+  height: 598px;
+}
+
+.fridge .chart-items {
+  top: 8px;
+  left: 56px;
+  height: 590px;
+  width: 567px;
+}
+
+.fridge #imagemap-shim {
+  height: 590px;
+  width: 567px;
+}
+
+#item-position-fastfood {
+  top: 237px;
+  left: 311px;
+  z-index: 220;
+  height: 101px;
+  width: 113px;
+}
+
+#item-position-applejuice {
+  top: 219px;
+  left: 446px;
+  z-index: 230;
+  height: 115px;
+  width: 65px;
+}
+
+#item-position-fruits {
+  top: 345px;
+  left: 364px;
+  z-index: 240;
+  height: 58px;
+  width: 139px;
+}
+
+#item-position-walker {
+  top: 307px;
+  left: 1px;
+  z-index: 250;
+  height: 284px;
+  width: 277px;
+}
+
+#item-position-seniorservices {
+  top: 2px;
+  left: 369px;
+  z-index: 260;
+  height: 113px;
+  width: 85px;
+}
+
+#item-position-busroute {
+  top: 51px;
+  left: 312px;
+  z-index: 270;
+  height: 110px;
+  width: 73px;
+}
+
+#item-position-duebills {
+  top: 38px;
+  left: 431px;
+  z-index: 280;
+  height: 131px;
+  width: 135px;
+}
+
+.item-image-fastfood {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
+.item-image-fastfood-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
+.item-image-fastfood-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+
+.item-image-applejuice {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
+.item-image-applejuice-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
+.item-image-applejuice-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+
+.item-image-fruits {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
+.item-image-fruits-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
+.item-image-fruits-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+
+.item-image-walker {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
+.item-image-walker-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
+.item-image-walker-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+
+.item-image-seniorservices {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
+.item-image-seniorservices-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
+.item-image-seniorservices-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+
+.item-image-busroute {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
+.item-image-busroute-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
+.item-image-busroute-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+
+.item-image-duebills {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
+.item-image-duebills-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
+.item-image-duebills-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
