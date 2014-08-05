@@ -1839,3 +1839,13 @@ input[type="radio"], input[type="checkbox"] {
   font-size: 18px;
   margin-bottom: 10px;
 }
+
+a.btn-default {
+  color: #333;
+}
+
+a.btn-info,
+a.btn-success,
+a.btn-danger {
+  color: #fff;
+}

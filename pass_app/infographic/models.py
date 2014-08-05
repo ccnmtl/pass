@@ -28,7 +28,7 @@ class InfographicBlock(models.Model):
 
     def edit_form(self):
         form = InfographicForm(instance=self)
-        alt = "<a href='/_infographic/%s/'>Manage Items</a>" % self.id
+        alt = "<a href='/_infographic/%s/' class='btn btn-default'>Manage infographic items</a>" % self.id
         form.alt_text = alt
         return form
 

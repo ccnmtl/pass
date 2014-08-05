@@ -1,4 +1,10 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Manage Infographic Items{% endblock %}
+{% block bodyclass %}edit module-{{module.slug}}{% endblock %}
+{% block projectbanner %}{% endblock %}
+{% block primarynavtabs %}{% endblock %}
+{% block mode-view %}{% endblock %}
+{% block mode-edit %} class="active"{% endblock %}
 {% block js %}
 {{ block.super }}
     {% ifnotequal module.slug 'young-children' %}
@@ -16,16 +22,16 @@
 
 {% block content %}
 <form action="" method="post">{% csrf_token %}
-    <h2>Infographic Items</h2>
- <p><a href="{{object.pageblock.section.get_edit_url}}">{{object.pageblock.section.label}}</a></p>
- <p>
- <a href="{{object.pageblock.section.get_absolute_url}}">{{object.pageblock.section.label}}</a>
+    <h2>Manage Infographic Items</h2>
+
+ <p><a href="{{object.pageblock.section.get_edit_url}}" class="btn btn-sml btn-default">Edit “{{object.pageblock.section.label}}” page blocks</a> <a href="{{object.pageblock.section.get_absolute_url}}" class="btn btn-sml btn-default">View “{{object.pageblock.section.label}}” page</a>
  </p>
    
-    <div><a href="/_infographic/{{object.id}}/add/item/" class="btn btn-sml btn-default">Add Infographic Item</a></div>
+    <div><a href="/_infographic/{{object.id}}/add/item/" class="btn btn-sml btn-default"><i class="icon-plus"></i> Add infographic item</a></div>
     <br />
 
 
+{% if object.infographicitem_set.all %}
 <table>
     <tr>
       <th>Item name</th>
@@ -33,8 +39,8 @@
       <th>&nbsp;</th>
       <th>&nbsp;</th>
     </tr>
-
-    {% for item in object.infographicitem_set.all %}
+    
+      {% for item in object.infographicitem_set.all %}
         <tr>
             <td>{{item.label_name}}</td>
             <td>{{item.label}}</td>
@@ -45,6 +51,9 @@
     {% endfor %}
 
 </table>
+{% else %}
+<p>There are no items in your infographic.</p>
+{% endif %}
 </form>
 
 {% endblock %}
