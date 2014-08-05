@@ -16,6 +16,10 @@ jQuery(document).ready(function() {
   
   function changeItemState(x) {
     identifyItem(x);
+    // zm's solution
+    if (!jQuery('#'+itemPosition).hasClass(itemImage+'-visited')) {
+      itemsClicked++;
+    }
     var itemContentModal = '#item-content-'+itemContent;
     jQuery(itemContentModal).fadeIn('fast');
     jQuery('.content-overlay').fadeIn('fast');
@@ -53,7 +57,6 @@ jQuery(document).ready(function() {
         data: {'item_id':itemId},
         success: function(response) {
           changeItemState(x);
-          itemsClicked++;
           maybeNextUnlocked();
           progress();
         },                                                                                                                              
@@ -86,8 +89,8 @@ jQuery(document).ready(function() {
 // initialize
   jQuery("#next").addClass("disabled");
   
-  var visited = {% get_user_state %};
-  
+  var visited = {% get_user_state block %};
+
   for (var i=0; i < visited.length; i++) {
     itemsClicked++; 
     var selector = "area[data-id='" + visited[i] + "']";

@@ -19,7 +19,7 @@
   z-index: 200;
   height: 200px;
   width: 400px;
-  border: 1px solid #ccc;
+  border: 0;
 }
 
 #imagemap-shim {
