@@ -64,9 +64,21 @@
 }
 
 .content-modal-body {
-  min-height: 70px;
-  margin: 0;
-  padding: 10px 15px;
+  margin: 0 0 0 160px;
+  padding: 15px 15px 0 15px;
+}
+
+.content-modal-thumbnail {
+  height: 140px;
+  width: 140px;
+  margin: 15px;
+  padding: 0;
+  border: 1px solid #999;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  background-color: #ccc;
+  float: left;
 }
 
 .content-modal-footer {
@@ -327,6 +339,33 @@
   height: 98px;
   width: 142px;
 }
+
+#thumbnail-candies {
+background: #ccc url('/site_media/img/infographic/dresser_candies_t.png') no-repeat center center;}
+
+#thumbnail-familyphoto {
+background: #ccc url('/site_media/img/infographic/dresser_familyphoto_t.png') no-repeat center center;}
+
+#thumbnail-gmonitor {
+background: #ccc url('/site_media/img/infographic/dresser_gmonitor_t.png') no-repeat center center;}
+
+#thumbnail-dentures {
+background: #ccc url('/site_media/img/infographic/dresser_dentures_t.png') no-repeat center center;}
+
+#thumbnail-appointment {
+background: #ccc url('/site_media/img/infographic/dresser_appointment_t.png') no-repeat center center;}
+
+#thumbnail-pillbottles {
+background: #ccc url('/site_media/img/infographic/dresser_pillbottles_t.png') no-repeat center center;}
+
+#thumbnail-weddingphoto {
+background: #ccc url('/site_media/img/infographic/dresser_weddingphoto_t.png') no-repeat center center;}
+
+#thumbnail-cream {
+background: #ccc url('/site_media/img/infographic/dresser_cream_t.png') no-repeat center center;}
+
+#thumbnail-medicard {
+background: #ccc url('/site_media/img/infographic/dresser_medicard_t.png') no-repeat center center;}
 
 .item-image-candies {background: url('/site_media/img/infographic/dresser_candies.png') no-repeat 0 0;}
 .item-image-candies-visited {background: url('/site_media/img/infographic/dresser_candies.png') no-repeat -314px 0;}

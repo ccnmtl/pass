@@ -13,7 +13,9 @@
         {{item.label_name}}
         <div class="closeoverlay icon-close"></div>
       </div><!-- ./content-modal-header -->
-      <div class="content-modal-body">
+      <div class="content-modal-thumbnail" id="thumbnail-{{item.label}}">
+      </div>
+      <div class="content-modal-body clearfix">
         {{item.content|safe}}
       </div><!-- ./content-modal-body -->
       <div class="content-modal-footer clearfix">
