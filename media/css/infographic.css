@@ -130,6 +130,7 @@
   -webkit-background-clip: padding-box;
      -moz-background-clip: padding-box;
           background-clip: padding-box;
+  z-index: 300;
 }
 
 .progressbar-set-initial {
@@ -190,59 +191,6 @@
 .icon-close:hover {
   background: transparent url('/site_media/img/infographic/icon-close-hover.png') 0 0 no-repeat;
 }
-
-#item-position-redcircle {
-  position: absolute;
-  left: 10px;
-  top: 50px;
-  z-index: 10;
-  width: 50px;
-  height: 50px;
-  display: block;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-#item-position-bluecircle {
-  position: absolute;
-  left: 100px;
-  top: 70px;
-  z-index: 20;
-  width: 50px;
-  height: 50px;
-  display: block;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-
-#item-position-greencircle {
-  position: absolute;
-  left: 200px;
-  top: 30px;
-  z-index: 30;
-  width: 50px;
-  height: 50px;
-  display: block;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.item-image-redcircle {background: url('/site_media/img/infographic/circ1.png') no-repeat 0 0;}
-.item-image-redcircle-visited {background: url('/site_media/img/infographic/circ1.png') no-repeat -140px 0; cursor: pointer;}
-.item-image-redcircle-hover {background: url('/site_media/img/infographic/circ1.png') no-repeat -70px 0; cursor: pointer;}
-
-.item-image-bluecircle {background: url('/site_media/img/infographic/circ2.png') no-repeat 0 0;}
-.item-image-bluecircle-visited {background: url('/site_media/img/infographic/circ2.png') no-repeat -140px 0;}
-.item-image-bluecircle-hover {background: url('/site_media/img/infographic/circ2.png') no-repeat -70px 0;}
-
-
-.item-image-greencircle {background: url('/site_media/img/infographic/circ3.png') no-repeat 0 0;}
-.item-image-greencircle-visited {background: url('/site_media/img/infographic/circ3.png') no-repeat -140px 0;}
-.item-image-greencircle-hover {background: url('/site_media/img/infographic/circ3.png') no-repeat -70px 0;}
 
 
 /* ----- DRESSER ACTIVITY --------------- */
@@ -408,7 +356,7 @@ background: #ccc url('/site_media/img/infographic/dresser_medicard_t.png') no-re
 
 .fridge .infographic {
   height: 598px;
-  background: transparent url('/site_media/img/infographic/fridge-withitems800px.jpg') 0 0 no-repeat;
+  background: transparent url('/site_media/img/infographic/fridge_bg.jpg') 0 0 no-repeat;
 }
 
 .fridge .content-overlay {
@@ -435,10 +383,10 @@ background: #ccc url('/site_media/img/infographic/dresser_medicard_t.png') no-re
 
 #item-position-fastfood {
   top: 237px;
-  left: 311px;
+  left: 310px;
   z-index: 220;
   height: 101px;
-  width: 113px;
+  width: 112px;
 }
 
 #item-position-applejuice {
@@ -451,14 +399,14 @@ background: #ccc url('/site_media/img/infographic/dresser_medicard_t.png') no-re
 
 #item-position-fruits {
   top: 345px;
-  left: 364px;
+  left: 365px;
   z-index: 240;
   height: 58px;
   width: 139px;
 }
 
 #item-position-walker {
-  top: 307px;
+  top: 306px;
   left: 1px;
   z-index: 250;
   height: 284px;
@@ -467,7 +415,7 @@ background: #ccc url('/site_media/img/infographic/dresser_medicard_t.png') no-re
 
 #item-position-seniorservices {
   top: 2px;
-  left: 369px;
+  left: 370px;
   z-index: 260;
   height: 113px;
   width: 85px;
@@ -478,41 +426,62 @@ background: #ccc url('/site_media/img/infographic/dresser_medicard_t.png') no-re
   left: 312px;
   z-index: 270;
   height: 110px;
-  width: 73px;
+  width: 74px;
 }
 
 #item-position-duebills {
   top: 38px;
-  left: 431px;
+  left: 432px;
   z-index: 280;
   height: 131px;
   width: 135px;
 }
 
-.item-image-fastfood {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
-.item-image-fastfood-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
-.item-image-fastfood-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+#thumbnail-fastfood {
+background: #ccc url('/site_media/img/infographic/fridge_fastfood_t.png') no-repeat center center;}
 
-.item-image-applejuice {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
-.item-image-applejuice-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
-.item-image-applejuice-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+#thumbnail-applejuice {
+background: #ccc url('/site_media/img/infographic/fridge_applejuice_t.png') no-repeat center center;}
 
-.item-image-fruits {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
-.item-image-fruits-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
-.item-image-fruits-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+#thumbnail-fruits {
+background: #ccc url('/site_media/img/infographic/fridge_fruits_t.png') no-repeat center center;}
 
-.item-image-walker {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
-.item-image-walker-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
-.item-image-walker-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+#thumbnail-walker {
+background: #ccc url('/site_media/img/infographic/fridge_walker_t.png') no-repeat center center;}
 
-.item-image-seniorservices {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
-.item-image-seniorservices-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
-.item-image-seniorservices-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+#thumbnail-seniorservices {
+background: #ccc url('/site_media/img/infographic/fridge_seniorservices_t.png') no-repeat center center;}
 
-.item-image-busroute {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
-.item-image-busroute-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
-.item-image-busroute-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+#thumbnail-busroute {
+background: #ccc url('/site_media/img/infographic/fridge_busroute_t.png') no-repeat center center;}
 
-.item-image-duebills {background: url('/site_media/img/infographic/temp.png') no-repeat 0 0;}
-.item-image-duebills-visited {background: url('/site_media/img/infographic/temp.png') no-repeat -672px 0;}
-.item-image-duebills-hover {background: url('/site_media/img/infographic/temp.png') no-repeat -336px 0;}
+#thumbnail-duebills {
+background: #ccc url('/site_media/img/infographic/fridge_duebills_t.png') no-repeat center center;}
+
+.item-image-fastfood {background: url('/site_media/img/infographic/fridge_fastfood.png') no-repeat 0 0;}
+.item-image-fastfood-visited {background: url('/site_media/img/infographic/fridge_fastfood.png') no-repeat -225px 0;}
+.item-image-fastfood-hover {background: url('/site_media/img/infographic/fridge_fastfood.png') no-repeat -112px 0;}
+
+.item-image-applejuice {background: url('/site_media/img/infographic/fridge_applejuice.png') no-repeat 0 0;}
+.item-image-applejuice-visited {background: url('/site_media/img/infographic/fridge_applejuice.png') no-repeat -128px 0;}
+.item-image-applejuice-hover {background: url('/site_media/img/infographic/fridge_applejuice.png') no-repeat -64px 0;}
+
+.item-image-fruits {background: url('/site_media/img/infographic/fridge_fruits.png') no-repeat 0 0;}
+.item-image-fruits-visited {background: url('/site_media/img/infographic/fridge_fruits.png') no-repeat -280px 0;}
+.item-image-fruits-hover {background: url('/site_media/img/infographic/fridge_fruits.png') no-repeat -140px 0;}
+
+.item-image-walker {background: url('/site_media/img/infographic/fridge_walker.png') no-repeat 0 0;}
+.item-image-walker-visited {background: url('/site_media/img/infographic/fridge_walker.png') no-repeat -554px 0;}
+.item-image-walker-hover {background: url('/site_media/img/infographic/fridge_walker.png') no-repeat -277px 0;}
+
+.item-image-seniorservices {background: url('/site_media/img/infographic/fridge_seniorservices.png') no-repeat 0 0;}
+.item-image-seniorservices-visited {background: url('/site_media/img/infographic/fridge_seniorservices.png') no-repeat -173px 0;}
+.item-image-seniorservices-hover {background: url('/site_media/img/infographic/fridge_seniorservices.png') no-repeat -86px 0;}
+
+.item-image-busroute {background: url('/site_media/img/infographic/fridge_busroute.png') no-repeat 0 0;}
+.item-image-busroute-visited {background: url('/site_media/img/infographic/fridge_busroute.png') no-repeat -148px 0;}
+.item-image-busroute-hover {background: url('/site_media/img/infographic/fridge_busroute.png') no-repeat -74px 0;}
+
+.item-image-duebills {background: url('/site_media/img/infographic/fridge_duebills.png') no-repeat 0 0;}
+.item-image-duebills-visited {background: url('/site_media/img/infographic/fridge_duebills.png') no-repeat -270px 0;}
+.item-image-duebills-hover {background: url('/site_media/img/infographic/fridge_duebills.png') no-repeat -135px 0;}
