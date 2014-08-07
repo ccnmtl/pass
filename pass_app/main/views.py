@@ -223,17 +223,22 @@ def handle_page_post(request, section, hierarchy, path):
         section.reset(request.user)
         return HttpResponseRedirect(section.get_absolute_url())
 
-    section.submit(request.POST, request.user)
+    proceed = section.submit(request.POST, request.user)
 
     if hierarchy.name == 'demographic' and path.startswith("survey"):
         return HttpResponseRedirect("/")
 
-    next_section = section.get_next()
-    if next_section:
-        # ignoring proceed and always pushing them along. see PMT #77454
-        return HttpResponseRedirect(next_section.get_absolute_url())
+    proceed = section.submit(request.POST, request.user)
+    if proceed:
+        next_section = section.get_next()
+        if next_section:
+            # ignoring proceed and always pushing them along. see PMT #77454
+            return HttpResponseRedirect(next_section.get_absolute_url())
+        else:
+            return HttpResponseRedirect("/")
     else:
-        return HttpResponseRedirect("/")
+        # giving them feedback before they proceed
+        return HttpResponseRedirect(section.get_absolute_url())
 
 
 @login_required
