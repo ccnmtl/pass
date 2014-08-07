@@ -228,7 +228,6 @@ def handle_page_post(request, section, hierarchy, path):
     if hierarchy.name == 'demographic' and path.startswith("survey"):
         return HttpResponseRedirect("/")
 
-    proceed = section.submit(request.POST, request.user)
     if proceed:
         next_section = section.get_next()
         if next_section:
