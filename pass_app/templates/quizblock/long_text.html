@@ -1,0 +1,18 @@
+{% load markup %}
+
+{% if block.rhetorical %}
+  <textarea rows="10" name="question{{question.id}}" class="form-control"></textarea>
+{% else %}
+  {% if response %}
+    {% if block.allow_redo %}
+    <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" class="form-control">{{response.value}}</textarea>
+    {% else %}
+    <div class="yours-lt">
+    <p><b>Your response:</b></p>
+    {{response.value|markdown}}
+    </div>
+    {% endif %}
+  {% else %}
+    <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" class="form-control"></textarea>
+  {% endif %}
+{% endif %}
