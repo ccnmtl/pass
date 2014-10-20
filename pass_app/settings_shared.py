@@ -64,6 +64,7 @@ MEDIA_ROOT = "/var/www/pass/uploads/"
 MEDIA_URL = '/uploads/'
 STATIC_URL = '/media/'
 SECRET_KEY = ')ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
+
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader'
@@ -73,6 +74,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.request',
+    'djangowind.context.context_processor',
     'stagingcontext.staging_processor',
 )
 
@@ -169,11 +171,9 @@ STATICMEDIA_MOUNTS = (
 )
 
 # WIND settings
-
-AUTHENTICATION_BACKENDS = ('djangowind.auth.WindAuthBackend',
-                           'django.contrib.auth.backends.ModelBackend',)
-WIND_BASE = "https://wind.columbia.edu/"
-WIND_SERVICE = "cnmtl_full_np"
+AUTHENTICATION_BACKENDS = ('djangowind.auth.SAMLAuthBackend',
+                           'django.contrib.auth.backends.ModelBackend', )
+CAS_BASE = "https://cas.columbia.edu/"
 WIND_PROFILE_HANDLERS = ['djangowind.auth.CDAPProfileHandler']
 WIND_AFFIL_HANDLERS = ['djangowind.auth.AffilGroupMapper',
                        'djangowind.auth.StaffMapper',

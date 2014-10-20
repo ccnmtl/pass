@@ -44,7 +44,7 @@
             {% else %}
                 Hello, {% if request.user.first_name or request.user.last_name %}{{request.user.first_name}}{% else %}{{ request.user.username }}{% endif %}
                 &nbsp;
-                <a href="/logout/" class="btn btn-mini btn-danger">Log out</a>
+                <a href="/accounts/logout/?next=/" class="btn btn-mini btn-danger">Log out</a>
             {% endif %}
             </div><!-- userstatus -->
         </div><!-- id="usernav" -->

@@ -25,9 +25,32 @@ v1_api.register(StrategyResource())
 v1_api.register(SupportServiceResource())
 v1_api.register(SupportServiceStateResource())
 
+redirect_after_logout = getattr(settings, 'LOGOUT_REDIRECT_URL', None)
+
+auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
+
+logout_page = (r'^accounts/logout/$',
+               'django.contrib.auth.views.logout',
+               {'next_page': redirect_after_logout})
+admin_logout_page = (r'^accounts/logout/$',
+                     'django.contrib.auth.views.logout',
+                     {'next_page': '/admin/'})
+
+if hasattr(settings, 'CAS_BASE'):
+    auth_urls = (r'^accounts/', include('djangowind.urls'))
+    logout_page = (r'^accounts/logout/$',
+                   'djangowind.views.logout',
+                   {'next_page': redirect_after_logout})
+    admin_logout_page = (r'^admin/logout/$',
+                         'djangowind.views.logout',
+                         {'next_page': redirect_after_logout})
+
 
 urlpatterns = patterns(
     '',
+    logout_page,
+    admin_logout_page,
+    auth_urls,
     (r'^$', 'pass_app.main.views.intro'),
 
     (r'^about/', TemplateView.as_view(template_name='main/about.html')),
@@ -41,11 +64,9 @@ urlpatterns = patterns(
     ('^admin/allresultskey/$', 'pass_app.main.views.all_results_key'),
     (r'^admin/reports/(?P<path>.*)$', 'pass_app.main.views.reports'),
     (r'^registration/', include('registration.urls')),
-    ('^accounts/', include('djangowind.urls')),
+
     (r'^admin/', include(admin.site.urls)),
     (r'^pagetree/', include('pagetree.urls')),
-    (r'^logout/$',
-     'django.contrib.auth.views.logout', {'next_page': '/'}),
     (r'^site_media/(?P<path>.*)$',
      'django.views.static.serve', {'document_root': site_media_root}),
     (r'^uploads/(?P<path>.*)$', 'django.views.static.serve',
