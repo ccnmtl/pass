@@ -151,20 +151,15 @@ function update_columns() {
         }
     }
     
-    //console.log (the_column_ids_in_order)
-    console.log (column_ids_to_show)
     show_only_stat_columns(column_indices_to_show);
     
 }
 
 
 function do_we_show_a_column_considering_basemaps (column_id, basemaps_to_county_stats, the_visible_basemap) {
-    //console.log ('Columns to show for each basemap: ' + JSON.stringify(basemaps_to_county_stats));
-    //console.log ('The visible basemap: ' + the_visible_basemap);
     bid = the_visible_basemap;
     if (basemaps_to_county_stats.hasOwnProperty(bid)) {
         if (basemaps_to_county_stats [bid].indexOf (column_id) != -1) {
-            //console.log ("Column " + column_id + " found in the list of columns " + basemaps_to_county_stats [bid] +  " for basemap " + bid );
             return true;
         }
     }
@@ -172,12 +167,10 @@ function do_we_show_a_column_considering_basemaps (column_id, basemaps_to_county
 }
 
 function do_we_show_a_column_considering_layers (column_id, layers_to_county_stats, the_visible_layers) {
-    //console.log ('Columns to show for each layer: ' + JSON.stringify(layers_to_county_stats));
     for (var i=0; i<the_visible_layers.length; i++) {
         lid = the_visible_layers[i];
         if (layers_to_county_stats.hasOwnProperty(lid)) {
             if (layers_to_county_stats [lid].indexOf (column_id) != -1) {
-                //console.log ("Column " + column_id + " found in the list of columns " + layers_to_county_stats [lid] +  " for layer " + lid );
                 return true;
             }
         }
@@ -193,11 +186,9 @@ function update_questions() {
     
     
     candidate_questions = []
-    //console.log ('basemap is '+ the_visible_basemap); 
     if (question_info['basemaps_to_questions'].hasOwnProperty (the_visible_basemap)) {
         candidate_questions = question_info['basemaps_to_questions'][the_visible_basemap]
     }
-    //console.log ('basemap questions are ' + candidate_questions)
     
     
     for (var i=0; i<the_visible_layers.length; i++) {
@@ -209,7 +200,6 @@ function update_questions() {
             }
         }
     }    
-    //console.log ('layer *and* basemap questions are  ' + candidate_questions)
     question_to_show = pick_one_item_at_random_from (candidate_questions);
     jQuery('.did_you_know_title').hide();
     jQuery('div#question_' + question_to_show).show()
