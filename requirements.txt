@@ -48,7 +48,7 @@ django-responseblock==0.1.5
 django-jenkins==0.15.0
 django-smoketest==0.2.2
 django-proxyblock==0.1.2
-South==0.8.4
+South==1.0.2
 django-statsd-mozilla==0.3.11
 django-nose==1.2
 django-appconf==0.4.1
