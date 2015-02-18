@@ -155,6 +155,17 @@ def module_four(request, path):
 
 
 @login_required
+@rendered_with('main/page.html')
+def module_five(request, path):
+    if not demographic_survey_complete(request):
+        hierarchy = get_hierarchy('demographic')
+        return HttpResponseRedirect(hierarchy.get_root().get_absolute_url())
+
+    hierarchy = get_hierarchy('module-five')
+    return process_page(request, path, hierarchy)
+
+
+@login_required
 @rendered_with('main/admin_page.html')
 def reports(request, path):
     if not request.user.is_staff:
