@@ -90,6 +90,7 @@ urlpatterns = patterns(
     (r'^module-two/(?P<path>.*)$', 'pass_app.main.views.module_two'),
     (r'^module-three/(?P<path>.*)$', 'pass_app.main.views.module_three'),
     (r'^module-four/(?P<path>.*)$', 'pass_app.main.views.module_four'),
+    (r'^module-five/(?P<path>.*)$', 'pass_app.main.views.module_five'),
 
     (r'^api/', include(v1_api.urls))
 )
