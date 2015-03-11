@@ -46,7 +46,7 @@ django-treebeard==2.0b2
 django-registration==1.0
 django-responseblock==0.1.5
 django-jenkins==0.15.0
-django-smoketest==0.2.2
+django-smoketest==0.3.0
 django-proxyblock==0.1.2
 South==1.0.2
 django-statsd-mozilla==0.3.11
