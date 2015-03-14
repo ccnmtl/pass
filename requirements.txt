@@ -41,7 +41,7 @@ typogrify==1.0
 django-indexer==0.2.1
 django-templatetag-sugar==0.1
 django-paging==0.2.2
-django-annoying==0.7.6
+django-annoying==0.8.0
 django-treebeard==2.0b2
 django-registration==1.0
 django-responseblock==0.1.5
