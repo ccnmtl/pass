@@ -21,7 +21,7 @@ testtools==0.9.35
 testscenarios==0.4
 python-subunit==0.0.18
 lettuce==0.2.19ccnmtl
-selenium==2.29.0
+selenium==2.45.0
 coverage==3.7.1
 logilab-common==0.59.0
 logilab-astng==0.24.1
