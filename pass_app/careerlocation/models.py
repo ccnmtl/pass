@@ -137,8 +137,6 @@ class CareerLocationBlock(models.Model):
     view = models.CharField(max_length=2, choices=VIEW_CHOICES)
 
     max_stakeholders = [0] * 4
-    stakeholders = Actor.objects.filter(type="IV")
-    boardmembers = Actor.objects.filter(type="BD").order_by("?")
 
     grid_columns = [0] * GRID_COLUMNS
     grid_rows = [0] * GRID_ROWS
@@ -151,6 +149,12 @@ class CareerLocationBlock(models.Model):
 
     def needs_submit(self):
         return False
+
+    def stakeholders(self):
+        return Actor.objects.filter(type="IV")
+
+    def boardmembers(self):
+        return Actor.objects.filter(type="BD").order_by("?")
 
     @classmethod
     def add_form(self):
@@ -182,9 +186,8 @@ class CareerLocationBlock(models.Model):
             return False
 
         state = a[0]
-        self.stakeholders = Actor.objects.filter(type="IV")
         stakeholders = state.actors.filter(
-            id__in=[s.id for s in self.stakeholders])
+            id__in=[s.id for s in self.stakeholders()])
         if stakeholders.count() < NUM_STAKEHOLDERS_REQUIRED:
             return False
 
@@ -207,7 +210,7 @@ class CareerLocationBlock(models.Model):
         NUM_BOARDMEMBERS_REQUIRED = 6
         if self.view == "BD":
             boardmembers = state.actors.filter(
-                id__in=[b.id for b in self.boardmembers])
+                id__in=[b.id for b in self.boardmembers()])
             if boardmembers.count() < NUM_BOARDMEMBERS_REQUIRED:
                 return True
             rs = [state.responses.filter(actor=actor)

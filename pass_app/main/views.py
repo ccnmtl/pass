@@ -711,7 +711,7 @@ def all_results_key(request):
     if not request.user.is_staff:
         return HttpResponseForbidden()
 
-    response = HttpResponse(mimetype='text/csv')
+    response = HttpResponse(content_type='text/csv')
     response[
         'Content-Disposition'] = 'attachment; filename=pass_response_key.csv'
     writer = csv.writer(response)
@@ -774,7 +774,7 @@ def all_results(request):
             columns = columns + _get_career_strategy_results(h, s)
             columns = columns + _get_support_services_columns(h, s)
 
-    response = HttpResponse(mimetype='text/csv')
+    response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=pass_responses.csv'
     writer = csv.writer(response)
 
