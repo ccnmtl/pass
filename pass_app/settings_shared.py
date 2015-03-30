@@ -117,7 +117,6 @@ INSTALLED_APPS = [
     'registration',
     'responseblock',
     'proxyblock',
-    'south',
     'django_statsd',
     'pass_app.careerlocation',
     'django_jenkins',
@@ -126,7 +125,7 @@ INSTALLED_APPS = [
     'compressor',
     'django_markwhat',
     'pass_app.supportservices',
-    'pass_app.infographic'
+    'pass_app.infographic',
 ]
 
 STATSD_CLIENT = 'statsd.client'
@@ -134,7 +133,6 @@ STATSD_PREFIX = 'pass'
 STATSD_HOST = 'localhost'
 STATSD_PORT = 8125
 
-SOUTH_AUTO_FREEZE_APP = True
 ACCOUNT_ACTIVATION_DAYS = 7
 AUTH_PROFILE_MODULE = 'main.UserProfile'
 

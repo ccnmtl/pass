@@ -5,4 +5,6 @@ sys.path.append('/var/www/pass/pass/')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'pass_app.settings_staging'
 
 import django.core.handlers.wsgi
+import django
+django.setup()
 application = django.core.handlers.wsgi.WSGIHandler()
