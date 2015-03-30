@@ -880,7 +880,7 @@ def clear_state(request):
         return HttpResponseForbidden()
 
     try:
-        request.user.get_profile().delete()
+        UserProfile.objects.get(user=request.user).delete()
     except UserProfile.DoesNotExist:
         pass
 
