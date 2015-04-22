@@ -14,7 +14,7 @@ class UnlockedNode(template.Node):
         s = context[self.section]
         r = context['request']
         u = r.user
-        if _unlocked(u.get_profile(), s):
+        if _unlocked(u.profile, s):
             return self.nodelist_true.render(context)
         else:
             return self.nodelist_false.render(context)

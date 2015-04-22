@@ -4,7 +4,7 @@ from pagetree.models import Section
 
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, related_name="application_user")
+    user = models.OneToOneField(User, related_name="profile")
     last_location = models.CharField(max_length=255, default="/")
 
     def __unicode__(self):
@@ -17,7 +17,7 @@ class UserProfile(models.Model):
         self.last_location = section.get_absolute_url()
         self.save()
         uv, created = UserVisited.objects.get_or_create(
-            user=self, section=section)
+            profile=self, section=section)
 
     def save_visits(self, sections):
         for s in sections:
@@ -25,10 +25,10 @@ class UserProfile(models.Model):
 
     def has_visited(self, section):
         return UserVisited.objects.filter(
-            user=self, section=section).count() > 0
+            profile=self, section=section).count() > 0
 
 
 class UserVisited(models.Model):
-    user = models.ForeignKey(UserProfile)
+    profile = models.ForeignKey(UserProfile)
     section = models.ForeignKey(Section)
     visited_time = models.DateTimeField(auto_now=True)

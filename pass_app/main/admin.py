@@ -15,8 +15,9 @@ class UserVisitedAdmin(admin.ModelAdmin):
     class Meta:
         model = UserVisited
 
-    search_fields = ["user__user__username"]
-    list_display = ("user", "section", section_hierarchy_name, "visited_time")
+    search_fields = ["profile__user__username"]
+    list_display = ("profile", "section",
+                    section_hierarchy_name, "visited_time")
 
 admin.site.register(UserVisited, UserVisitedAdmin)
 
