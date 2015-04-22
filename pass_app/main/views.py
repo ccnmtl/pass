@@ -364,7 +364,7 @@ class Column(object):
 
     def last_visited_value(self, user):
         uv = UserVisited.objects.filter(
-            user__user=user,
+            profile__user=user,
             section__hierarchy=self.hierarchy).order_by("-visited_time")[:1]
         if len(uv) > 0:
             return uv[0].visited_time.strftime("%m/%d/%y %H:%M:%S")
@@ -884,7 +884,7 @@ def clear_state(request):
     except UserProfile.DoesNotExist:
         pass
 
-    UserVisited.objects.filter(user=request.user).delete()
+    UserVisited.objects.filter(profile__user=request.user).delete()
 
     # clear quiz
     import quizblock
