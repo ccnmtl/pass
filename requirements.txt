@@ -46,7 +46,7 @@ django-annoying==0.8.0
 django-treebeard==2.0b2
 django-registration==1.1
 django-responseblock==0.1.5
-django-jenkins==0.16.3
+django-jenkins==0.17.0
 django-smoketest==0.3.0
 django-proxyblock==0.1.2
 django-statsd-mozilla==0.3.14
