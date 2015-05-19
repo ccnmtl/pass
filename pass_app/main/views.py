@@ -605,7 +605,7 @@ def boardmembers_columns(h, columns):
 
 def iv_columns(p, h, columns):
     # career location state
-    for a in p.block().stakeholders:
+    for a in p.block().stakeholders():
         for q in a.questions.all():
             columns.append(Column(hierarchy=h, actor=a, actor_question=q))
     return columns
