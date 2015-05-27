@@ -71,6 +71,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'djangowind.context.context_processor',
     'django.core.context_processors.static',
     'stagingcontext.staging_processor',
+    'pass_app.main.views.context_processor'
 )
 
 MIDDLEWARE_CLASSES = (

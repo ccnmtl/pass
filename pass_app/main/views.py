@@ -23,6 +23,12 @@ import django.core.exceptions
 import os
 
 
+def context_processor(request):
+    ctx = {}
+    ctx['MEDIA_URL'] = settings.MEDIA_URL
+    return ctx
+
+
 def get_or_create_profile(user, section):
     if user.is_anonymous():
         return None
