@@ -2,6 +2,7 @@
 {% load thumbnail %}
 {% load smartif %}
 {% load humanize %}
+{% load static %}
 
 <a href="#" onclick="return false" id="hide-show-label">Hide Map</a>
 
@@ -88,8 +89,8 @@
                 {% endfor %}
 
                 <!-- These are the layers that never get hidden: the borders of the counties and the general labels. -->
-                <img src="/site_media/img/county_borders.png" class="careermap-layer permanent" />
-                <img src="/site_media/img/general_labels.png" class="careermap-layer permanent" />
+                <img src="{% static url %}img/county_borders.png" class="careermap-layer permanent" />
+                <img src="{% static url %}img/general_labels.png" class="careermap-layer permanent" />
 
 
             </div> <!-- end careermap-base -->

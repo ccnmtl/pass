@@ -1,3 +1,4 @@
+{% load static %}
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" /> 
 <link rel="stylesheet" href="http://static.jquery.com/ui/css/demo-docs-theme/ui.theme.css" type="text/css" media="all" /> 
 
@@ -92,7 +93,7 @@ h5 {
 
 .careermap-base {
     position: relative;
-    background-image: url('/site_media/img/geography_background.png');
+    background-image: url('{% static url %}img/geography_background.png');
     width:600px;
     height: 337px;
 }
@@ -156,7 +157,7 @@ div#legend_container{
 
 div#legend_container.showing_legend{
     height: 205px;
-    background-image:url('/site_media/img/legend.png');
+    background-image:url('{% static url %}img/legend.png');
     background-repeat:   no-repeat;
     background-position: 2px 16px;    
     margin-bottom: 8px;
@@ -247,7 +248,7 @@ table#county_and_stats td #stats_table th {
 }
 
 tr.selected_layer div.layer-box {
-    background: url("/site_media/img/tick.png") no-repeat scroll left 0px transparent;
+    background: url("{% static url %}img/tick.png") no-repeat scroll left 0px transparent;
     background-repeat: no-repeat;
     display: block;  /* may not need this, but I've found I do */
 

@@ -1,9 +1,10 @@
 {% load careerlocation_state %}
+{% load static %}
 
-<script src="/site_media/js/json2.js" type="text/javascript" ></script>
-<script src="/site_media/js/underscore/underscore-min.js" type="text/javascript" ></script>
-<script src="/site_media/js/backbone/backbone-min.js" type="text/javascript" ></script>
-<script src="/site_media/js/backbone-tastypie.js" type="text/javascript" ></script>
+<script src="{% static url %}js/json2.js" type="text/javascript" ></script>
+<script src="{% static url %}js/underscore/underscore-min.js" type="text/javascript" ></script>
+<script src="{% static url %}js/backbone/backbone-min.js" type="text/javascript" ></script>
+<script src="{% static url %}js/backbone-tastypie.js" type="text/javascript" ></script>
 
 <script src="/_careerlocation/media/js/models.js?version=1" type="text/javascript" ></script>
 <script src="/_careerlocation/media/js/interview.js?version=2" type="text/javascript" ></script>
@@ -39,7 +40,7 @@
 
 
 <script type="text/template" id="profile-template">
-    <img id="x" class="btn cancel" src="/site_media/img/close.png"/>
+    <img id="x" class="btn cancel" src="{% static url %}img/close.png"/>
     <div class="question_state">
         <% if (!select_stakeholder && questions.length > 0) { %>
             <% for (var i=0; i < 3; i++, asked--) { %><% if (asked > 0) { %><span class="asked">&bull;</span><% } else { %><span>&bull;</span><% } %><% } %>

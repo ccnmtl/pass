@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}Manage Infographic Items{% endblock %}
 {% block bodyclass %}edit module-{{module.slug}}{% endblock %}
 {% block projectbanner %}{% endblock %}
@@ -8,14 +10,14 @@
 {% block js %}
 {{ block.super }}
     {% ifnotequal module.slug 'young-children' %}
-        <script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
+        <script src="{% static url %}bootstrap/js/bootstrap.min.js"></script>
     {% endifnotequal %}
 {% endblock %}
 {% block css %}
 {{ block.super }}
 
     {% ifnotequal module.slug 'young-children' %}
-        <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="{% static url %}bootstrap/css/bootstrap.css" rel="stylesheet">
     {% endifnotequal %}
 {% endblock %}
 

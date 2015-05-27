@@ -9,7 +9,7 @@
     {% endfor %}
 
     {% ifnotequal module.slug 'young-children' %}
-        <script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
+        <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
     {% endifnotequal %}
 
     <script type="text/javascript">
@@ -59,7 +59,7 @@
 
 {% block css %}
     {% ifnotequal module.slug 'young-children' %}
-        <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="{{STATIC_URL}}bootstrap/css/bootstrap.css" rel="stylesheet">
     {% endifnotequal %}
 
     {% for block in section.pageblock_set.all %}

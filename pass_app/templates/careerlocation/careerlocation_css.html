@@ -1,4 +1,799 @@
+{% load static %}
+
+<style type="text/css">
+
 <!-- Le styles -->
-<link href="/_careerlocation/media/css/careerlocation.css" rel="stylesheet">
-<link rel="stylesheet" href="/site_media/css/main.css?site=PASS" media="screen" />
-<link rel="stylesheet" href="/site_media/css/print.css?site=PASS" media="print" />
+h2.section-label {
+    display: none;
+}
+
+.career_location {
+    position: relative;
+    margin: 0;
+    background-color: white;
+}
+
+.career_location a:visited {
+    color: #333;
+}
+
+.career_location_overlay {
+    position: absolute;
+    background: #AAA;
+    opacity: .70;
+    -moz-opacity:0.70;
+    filter: Alpha(Opacity=70);
+    width: 100%;
+    height: 935px;
+    z-index: 1002;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    left: 0;
+    top: 0;
+    margin-left: -10px;
+    margin-top: -10px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+}
+
+.career_location_map_container.popover {
+    z-index: 3000;
+    margin-top: 40px;
+    margin-left: 20px;
+    width: 836px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+
+.career_location_map_container {
+    background-color: #f2f2f2;
+}
+
+.career_location_map {
+    position: relative;
+    height: 400px;
+    margin-left: 50px;
+    border: 1px solid #F2F2F2;
+}
+
+.career_location_base_layer,
+.career_location_map_layer {
+    position: absolute;
+}
+
+.career_location_map_layer {
+    opacity: .70;
+    -moz-opacity:0.70;
+    filter: Alpha(Opacity=70);
+    background: transparent;
+
+}
+
+div.career_location_summary h2,
+div.toolbar h2.left {
+    margin: 0px !important;
+}
+
+div.toolbar .right {
+    margin: 5px;
+}
+
+a#toggle_map_layers,
+a#toggle_map {
+    width: 89px;
+    text-align: left;
+}
+
+div.strategy_container .career_location_map_container {
+    background-color: white;
+}
+
+div.strategy_container .career_location_map {
+    height: 485px;
+    margin-left: 0px;
+    border: none;
+}
+
+div.strategy_container .key-item {
+    padding: 0;
+}
+
+div.strategy_container div.map_legend {
+    margin: 10px 10px 0 0 !important;
+    width: 200px;
+}
+
+div.strategy_container div.map_legend_container .left {
+    padding: 0;
+}
+
+div.strategy_container div.map_legend h5 {
+    margin: 0 !important;
+}
+
+div.popover-close,
+div.popover-done {
+    text-align: right;
+}
+
+div.interview_state {
+    float: right;
+}
+
+div.unlock_instructions,
+div.basic_instructions {
+    width: 450px;
+    min-height: 20px;
+    padding: 10px;
+    margin-left: 0;
+    margin-top: 0;
+    vertical-align: middle;
+}
+
+div.basic_instructions
+{
+    padding-left: 60px;
+    background-image: url('{% static url %}img/icon_info.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+}
+
+div.unlock_instructions
+{
+    padding-left: 60px;
+    background-image: url('{% static url %}img/icon_check.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+}
+
+div.unlock_instructions b {
+    font-size: 105%;
+}
+
+div.map_layer_content {
+    position: absolute;
+    z-index: 1003;
+    width: 300px;
+}
+
+div.notepad_content {
+    position: absolute;
+    z-index: 1003;
+    right: 203px;
+}
+
+div.notepad_content textarea {
+    width: 300px;
+    height: 300px;
+    resize: none;
+}
+
+div.select_actor_help_content {
+    position: absolute;
+    z-index: 1003;
+    width: 300px;
+}
+
+div.help_content {
+    position: absolute;
+    z-index: 1003;
+    width: 830px;
+}
+
+div.map_layer_content {
+    right: 84px;
+}
+
+div.help_content {
+    right: 5px;
+}
+
+div.notepad_content .btn.right,
+div.map_layer_content .btn.right,
+div.help_content .btn.right {
+    margin: -45px 0px -45px 0px;
+}
+
+
+div.map_layer_content .btn.right {
+    margin: -45px -2px -45px 0;
+}
+
+div.career_location_map_container .btn.right {
+    margin: -40px 82px;
+}
+
+div.actor_container {
+    position: absolute;
+    z-index: 1000;
+}
+
+div.profile {
+    position: absolute;
+    z-index: 1003;
+    border: 1px solid #708090;
+    width: 815px;
+    min-height: 430px;
+    padding: 10px;
+    background-color: #eaeaea;
+    left: 10px;
+}
+
+div.profile h3 {
+    padding-top: 0px;
+}
+
+div.profile div.title-container .name {
+    margin-top: 5px;
+    margin-left: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+div.profile div.title-container .title {
+    margin-left: 15px;
+}
+
+.custom_view_container {
+    margin-top: 10px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.custom_view_container div {
+    margin-bottom: 10px;
+}
+
+.custom_view_container .instructions {
+    font: 18px normal "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin-bottom: 20px;
+}
+
+div.custom_view_container div.title-container div.title.left,
+div.strategy div.title-container div.title.left {
+    max-width: 700px;
+}
+
+div.profile div.title-container .left {
+    margin: 0;
+}
+
+div.profile div.actor-profile-container {
+    margin: 5px;
+}
+
+div.profile div.select-actor-container {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+div.profile div.question_state {
+    position: absolute;
+    margin-top: 40px;
+    margin-left: 9px;
+    color: #ccc;
+}
+
+
+.btn.interview, .btn.cancel {
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.btn.close_profile {
+    float: right;
+    margin-right: 0px;
+    margin-top: 10px;
+}
+
+.btn.ask {
+    float: right;
+}
+
+#x {
+    margin: -7px;
+    float: right;
+    padding: 2px;
+}
+
+#x_actor_help {
+    float: right;
+    padding: 2px;
+    margin: 2px;
+}
+
+div.question_state {
+    margin-top: -15px;
+    margin-left: 11px;
+    color: #a9a9a9;
+}
+
+div.question_state span.asked {
+    /*color: green;*/
+    color: #ff6600;
+}
+
+div.actor_state {
+    border: 1px solid #dedede;
+    width: 40px;
+    height: 56px;
+    margin: 5px 5px 5px 5px;
+    cursor: pointer;
+}
+
+div.actor_state.empty {
+    text-align: center;
+    vertical-align: middle;
+    cursor: default;
+}
+
+
+img.actor {
+    cursor: pointer;
+}
+
+div.actor_container:hover {
+    margin: 2px;
+}
+
+
+div.accordion {
+    float: left;
+    width: 40em;
+}
+
+div.accordion-group {
+    margin-bottom: 6px;
+    vertical-align: middle;
+    font-size: .9em;
+}
+
+div.accordion-group.selected {
+    border: 2px black solid;
+}
+
+div.accordion-group {
+    background-color: #F9F9F9;
+}
+
+div.accordion-group:hover {
+    background-color: #f5f5f5;
+}
+
+div.accordion-heading {
+    min-height: 2em;
+    padding: 10px;
+
+}
+
+div.accordion-heading div.question {
+    float: left;
+    width: 70%;
+}
+
+div.accordion-heading .btn.asked,
+div.accordion-heading .btn.ask {
+    float: right;
+    width: 125px;
+}
+
+div.accordion-body {
+    clear: both;
+}
+
+div.accordion-body button.done {
+    float: right;
+    width: 25%;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+div.interview.left {
+    width: 63%;
+    margin: 0 5px 5px 0;
+}
+
+div.interview_notepad.right {
+    margin: 0;
+    width: 35%;
+}
+
+div.interview_notepad.right textarea {
+    height: 225px;
+    width: 94%;
+}
+
+div.map_legend_container {
+    padding-top: 10px;
+    background-color: white;
+}
+
+div.map_legend_container .left {
+    margin: 5px 5px 5px 0;
+    padding: 5px;
+    background-color: white;
+    border: 1px solid #DDD;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+div.map_legend_container h3
+{
+    margin: 0 !important;
+    padding: 0 !important;
+    font-weight: normal !important;
+}
+
+div.map_legend {
+    width: 192px;
+}
+
+div.map_legend h5 {
+    font-size: 14px !important;
+    padding: 5px !important;
+    margin: -3px !important;
+    -webkit-border-top-left-radius: 4px;
+    -moz-border-top-left-radius: 4px;
+    border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    -moz-border-top-right-radius: 4px;
+    border-top-right-radius: 4px;
+    background-color: #D9EDF7;
+}
+
+
+.key-item {
+    min-height: 20px;
+    padding: 10px 0 5px 0;
+}
+
+.key-icon {
+    float: left;
+    height: 20px;
+    width: 20px;
+}
+
+.key-text {
+    float: left;
+    margin-left: 5px;
+    font-size: 11px;
+    line-height: 12px;
+    max-width: 162px;
+}
+
+#base_map_layer div.map_legend {
+    width: auto;
+    border: 0;
+}
+
+#base_map_layer .key-item {
+    float: left;
+    min-height: 20px;
+    padding: 10px 20px 5px 0;
+}
+
+#base_map_layer .key-icon {
+    float: left;
+    height: 20px;
+    width: 20px;
+}
+
+#base_map_layer .key-text {
+    float: left;
+    margin-left: 5px;
+    font-size: 11px;
+    line-height: 12px;
+}
+
+table.location_grid {
+    margin-left: 50px;
+    position: absolute;
+    border: 1px solid #339999; /*ddd*/
+    width: 742px;
+    height: 400px;
+    z-index: 1001;
+}
+
+table.location_grid td {
+    border: 1px solid #339999; /*ddd*/
+    border-collapse: collapse;
+}
+
+table.location_grid tr {
+    height: 50px;
+    z-index: 1001;
+    padding: 0;
+    margin: 0;
+}
+
+table.location_grid tr td {
+    width: 53px;
+    z-index: 1001;
+    padding: 0;
+    margin: 0;
+    vertical-align: top;
+    line-height: 1em;
+    opacity: 0;
+    -moz-opacity: 0;
+    filter: Alpha(Opacity=0);
+}
+
+table.location_grid.LC tr td.hovered {
+    background-color: #c9c9c9;
+    opacity: .70;
+    -moz-opacity:0.70;
+    filter: Alpha(Opacity=70);
+    cursor: pointer;
+    background-image: url('{% static url %}img/practice_building.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: 1002;
+    color: #d1d0cf;
+}
+
+table.location_grid tr td.selected {
+    background-image: url('{% static url %}img/practice_building.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: 1002;
+    opacity: 1.0;
+    -moz-opacity: 1.0;
+    filter: -;
+    color: #e5e2df;
+}
+
+div.boardmember_container {
+
+}
+
+div.boardmember_container div.left {
+    margin: 7px;
+}
+
+div.boardmember.disabled {
+    opacity: .50;
+    filter: Alpha(Opacity=50);
+    -moz-opacity:0.50;
+}
+
+div.boardmember.disabled.complete {
+    opacity:0.50;
+    -moz-opacity:0.50;
+    filter:alpha(opacity=50);
+    border-bottom: 5px solid green;
+}
+
+
+div.boardmember.selected {
+    margin-top: -10px !important;
+}
+
+div.boardmember_container {
+    position: relative;
+}
+
+div#boardmember_question {
+    margin: 5px 30px;
+}
+
+.question_container {
+    margin: 15px 0 30px 0;
+}
+
+.question_container div.q,
+.answer_container div.a {
+    font-size: 3.5em;
+    float: left;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+div#boardmember_question div.answer_content,
+div.question_content {
+    padding-left: 15px;
+    float: left;
+    width: 90%;
+}
+
+div.question_content {
+    min-height: 40px;
+}
+
+div.question_content p {
+    margin: 0 0 0 0 !important;
+}
+
+div.a {
+    padding-left: 5px !important;
+}
+
+div#boardmember_question div.answer_content div {
+    margin-bottom: 8px;
+}
+
+div#boardmember_question div.answer_content textarea {
+    width: 690px;
+    height: 100px;
+    resize: none
+}
+
+.callout {
+    position: relative;
+    margin: 0;
+    padding: 18px 20px;
+    background-color: #F6F6F6;
+    /* easy rounded corners for modern browsers */
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+.callout .notch {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    margin: 0;
+    border-top: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #f6f6f6;
+    padding: 0;
+    width: 0;
+    height: 0;
+    /* ie6 height fix */
+    font-size: 0;
+    line-height: 0;
+    /* ie6 transparent fix */
+    _border-right-color: pink;
+    _border-left-color: pink;
+    _filter: chroma(color=pink);
+}
+.border-callout { border: 1px solid darkgrey; padding: 10px 10px; }
+.border-callout .border-notch { border-bottom-color: darkgrey; top: -11px; }
+
+.summary_container {
+    border-bottom: 1px dashed black;
+    margin-bottom: 20px;
+}
+
+.user_answer,
+.recommended_answer {
+    width: 325px;
+}
+
+.answer_container  h4 {
+    font-size: 16px;
+    padding: 0 0 10px !important;
+}
+
+h3.popover-title
+{
+    padding: 9px 15px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+}
+
+h4
+{
+    font-size: 14px !important;
+    font-weight: bold !important;
+}
+
+.career_location.RP a#toggle_notepad,
+.career_location.RP a#toggle_help,
+.career_location.RP div.basic_instructions,
+.career_location.RP div.unlock_instructions,
+.career_location.RP div.interview_state,
+.career_location.RP div.boardmember_container,
+.career_location.RP div.actor_container {
+    display: none;
+}
+
+.career_location.RP div.map_layer_content {
+    right: 4px;
+}
+
+.career_location.RP table.location_grid tr td {
+    opacity: 1.0;
+    -moz-opacity: 1.0;
+    filter: -;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/** Strategy Module **/
+
+div.strategy_container h2 {
+    padding: 0 0 12px 0 !important;
+    background-color: white;
+}
+
+div.strategy_container .career_location_map_container.popover {
+    z-index: 3000;
+    margin-top: 77px;
+    margin-left: 8px;
+    width: 850px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+div.strategies h4 {
+    margin-right: 10px !important;
+}
+
+div.strategy-state {
+    width: 30px;
+    height: 23px; 
+    padding: 7px 0 0 0;
+    text-align: center;
+    border: 0;
+    margin: 8px 8px 8px 0;
+    cursor: pointer;
+    background: url('{% static url %}img/icon_strategy_state.jpg') 0 0 no-repeat;
+    font-family: 'arial black', arial, sans-serif;
+    font-weight: 900;
+    color: #999;
+    font-size: 16px !important;
+}
+
+div.strategy-state.viewed {
+    color: #339900;
+    background: url('{% static url %}img/icon_strategy_state_viewed.jpg') 0 0 no-repeat;
+}
+
+div.strategy-state.selected {
+    color: #cc0000;
+    background: url('{% static url %}img/icon_strategy_state_selected.jpg') 0 0 no-repeat;
+}
+
+div.strategies div.strategy-state:hover {
+    color: #000;
+}
+
+div.strategy {
+    position: absolute;
+    z-index: 1003;
+    border: 1px solid #708090;
+    width: 815px;
+    min-height: 330px;
+    padding: 10px;
+    background-color: white;
+    left: 10px;
+    top: 86px;
+}
+
+div.strategy_container div.map_legend_container {
+    padding-top: 0;
+}
+
+div.strategy_container div.map_layer_content {
+    right: 124px;
+}
+
+div.strategy_container div.map_layer_content .btn.right {
+    margin: -42px -2px -45px 0;
+}
+
+div.strategy_container div.help_content .btn.right {
+    margin: -42px 0px -45px 0px;
+}
+
+div.strategy_container div.career_location_map_container .btn.right {
+    margin: -39px 126px;
+}
+
+div.strategy_container div.career_location_map_container h3 {
+    padding: 20px 0 0 0 !important;
+}
+</style>

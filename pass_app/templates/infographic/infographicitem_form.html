@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Add Infographic Item{% endblock %}
 {% block bodyclass %}edit module-{{module.slug}}{% endblock %}
 {% block projectbanner %}{% endblock %}
@@ -7,7 +9,7 @@
 {% block mode-edit %} class="active"{% endblock %}
 
 {% block css %}
-    <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="{% static url %}bootstrap/css/bootstrap.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
