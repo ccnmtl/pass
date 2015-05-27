@@ -53,10 +53,6 @@ TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = False
-MEDIA_ROOT = "/var/www/pass/uploads/"
-MEDIA_URL = '/uploads/'
-STATIC_URL = '/media/'
-STATIC_ROOT = ''
 SECRET_KEY = ')ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
 
 TEMPLATE_LOADERS = (
@@ -125,6 +121,8 @@ INSTALLED_APPS = [
     'django_markwhat',
     'pass_app.supportservices',
     'pass_app.infographic',
+    'gunicorn',
+    'storages'
 ]
 
 STATSD_CLIENT = 'statsd.client'
@@ -157,6 +155,17 @@ EMAIL_SUBJECT_PREFIX = "[pass] "
 EMAIL_HOST = 'localhost'
 SERVER_EMAIL = "pass@ccnmtl.columbia.edu"
 
+MEDIA_URL = "/uploads/"
+MEDIA_ROOT = 'uploads'
+STATIC_URL = "/media/"
+STATIC_ROOT = os.path.join(os.path.dirname(__file__), "../media")
+STATICFILES_DIRS = ('media/',)
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
 COMPRESS_URL = "/media/"
 COMPRESS_ROOT = "media/"
 
@@ -176,10 +185,3 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
 }
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # other finders..
-    'compressor.finders.CompressorFinder',
-)

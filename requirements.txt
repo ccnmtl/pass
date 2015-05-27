@@ -62,3 +62,8 @@ django-stagingcontext==0.1.0
 django-waffle==0.10.1 
 raven==5.2.0
 factory_boy==2.4.1
+
+gunicorn==19.3.0
+boto==2.38.0
+django-storages-redux==1.2.2
+django-cacheds3storage==0.1.1
