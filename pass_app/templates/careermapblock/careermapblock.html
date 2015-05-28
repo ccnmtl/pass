@@ -36,7 +36,7 @@
         </h5>
         <select id="{{block.id}}-basemap-control" class="base_map_select" onchange="update_basemap (this)">
         {% for basemap in block.basemap_set.all %}
-        <option basemap_id="{{basemap.id}}" value="/uploads/{{ basemap.image }}">{{basemap.name}}</option>
+        <option basemap_id="{{basemap.id}}" value="{{MEDIA_URL}}{{ basemap.image }}">{{basemap.name}}</option>
         {% endfor %}
         </select><br />
         <h5>
@@ -81,10 +81,10 @@
 
 <td id = "right_hand_td">
             <div id="{{block.id}}-base" class="careermap-base">
-                <img class="basemap_image"  id="{{block.id}}-basemap" alt="career map" src="/uploads/{{ block.default_base_map.image}}"/>
+                <img class="basemap_image"  id="{{block.id}}-basemap" alt="career map" src="{{MEDIA_URL}}{{ block.default_base_map.image}}"/>
                 <!-- These are the layers that you can show and hide and show up on the list of layers. -->
                 {% for layer in block.layer_set.all %}
-                <img id="layer-{{layer.id}}" src="/uploads/{{layer.image}}"
+                <img id="layer-{{layer.id}}" src="{{MEDIA_URL}}{{layer.image}}"
                      class="careermap-layer show_and_hideable" />
                 {% endfor %}
 
