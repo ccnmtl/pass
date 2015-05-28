@@ -9,10 +9,7 @@ from pass_app.careerlocation.api import MapLayerResource, \
 from pass_app.supportservices.api import SupportServiceResource, \
     SupportServiceStateResource
 from tastypie.api import Api
-import os.path
 admin.autodiscover()
-
-site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
 v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
@@ -67,8 +64,6 @@ urlpatterns = patterns(
 
     (r'^admin/', include(admin.site.urls)),
     (r'^pagetree/', include('pagetree.urls')),
-    (r'^site_media/(?P<path>.*)$',
-     'django.views.static.serve', {'document_root': site_media_root}),
     (r'^uploads/(?P<path>.*)$', 'django.views.static.serve',
      {'document_root': settings.MEDIA_ROOT}),
     (r'^_quiz/', include('quizblock.urls')),

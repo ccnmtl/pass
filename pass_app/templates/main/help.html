@@ -4,12 +4,12 @@
 
 {% block js %}
 {{ block.super }}
-<script src="/site_media/bootstrap/js/bootstrap.min.js"></script>
+<script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
 {% endblock %}
 
 {% block css %}
 {{ block.super }}
-<link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="{{STATIC_URL}}bootstrap/css/bootstrap.css" rel="stylesheet">
 {% endblock %}
 
 {% block loginbutton %}<a href="/" class="btn btn-mini btn-danger">Log in</a>{% endblock %}

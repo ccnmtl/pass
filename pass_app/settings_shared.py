@@ -56,6 +56,7 @@ USE_I18N = False
 MEDIA_ROOT = "/var/www/pass/uploads/"
 MEDIA_URL = '/uploads/'
 STATIC_URL = '/media/'
+STATIC_ROOT = ''
 SECRET_KEY = ')ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
 
 TEMPLATE_LOADERS = (
@@ -68,6 +69,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',
     'django.core.context_processors.request',
     'djangowind.context.context_processor',
+    'django.core.context_processors.static',
     'stagingcontext.staging_processor',
 )
 
@@ -97,6 +99,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.humanize',
+    'django.contrib.staticfiles',
     'sorl.thumbnail',
     'django.contrib.admin',
     'tagging',
@@ -153,13 +156,8 @@ EMAIL_SUBJECT_PREFIX = "[pass] "
 EMAIL_HOST = 'localhost'
 SERVER_EMAIL = "pass@ccnmtl.columbia.edu"
 
-COMPRESS_URL = "/site_media/"
+COMPRESS_URL = "/media/"
 COMPRESS_ROOT = "media/"
-
-# put any static media here to override app served static media
-STATICMEDIA_MOUNTS = (
-    ('/sitemedia', 'sitemedia'),
-)
 
 # WIND settings
 AUTHENTICATION_BACKENDS = ('djangowind.auth.SAMLAuthBackend',
@@ -177,3 +175,10 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
 }
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
