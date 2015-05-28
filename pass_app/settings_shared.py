@@ -56,7 +56,7 @@ USE_I18N = False
 MEDIA_ROOT = "/var/www/pass/uploads/"
 MEDIA_URL = '/uploads/'
 STATIC_URL = '/media/'
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(os.path.dirname(__file__), "../media")
 SECRET_KEY = ')ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
 
 TEMPLATE_LOADERS = (
