@@ -1,0 +1,7 @@
+{% load markup %}
+{% load thumbnail %}
+
+<img alt="{{block.alt}}" src="{{MEDIA_URL}}{{block.image.name}}" />
+<div class="caption">
+{{block.caption|markdown}}
+</div>
