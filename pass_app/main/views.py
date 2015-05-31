@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponseRedirect, HttpResponse, \
     HttpResponseForbidden, HttpResponseServerError
 from django.shortcuts import render_to_response, get_object_or_404
@@ -904,18 +903,3 @@ def clear_state(request):
     SupportServiceState.objects.filter(
         user=request.user).delete()
     return HttpResponseRedirect("/")
-
-
-@login_required
-def download(request, filename):
-    path = "%s/pdf/" % (settings.MEDIA_ROOT)
-    full_path = os.path.join(path, filename)
-    wrapper = FileWrapper(file(full_path))
-    response = HttpResponse(wrapper, content_type='application/pdf')
-
-    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
-    response['Content-Transfer-Encoding'] = 'binary'
-    response['Accept-Ranges'] = 'bytes'
-    response['Content-Encoding'] = 'none'
-    response['Content-Length'] = os.path.getsize(full_path)
-    return response
