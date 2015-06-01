@@ -33,7 +33,7 @@ flake8==2.2.5
 
 django-tastypie==0.9.15
 django-smartif==0.1
-djangowind==0.13.2
+djangowind==0.13.3
 sorl==3.1
 tagging==0.3-pre
 template_utils==0.4p2
@@ -65,5 +65,6 @@ factory_boy==2.4.1
 
 gunicorn==19.3.0
 boto==2.38.0
-django-storages-redux==1.2.2
+django-storages-redux==1.2.3
 django-cacheds3storage==0.1.1
+
