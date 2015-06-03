@@ -121,6 +121,7 @@ INSTALLED_APPS = [
     'django_markwhat',
     'pass_app.supportservices',
     'pass_app.infographic',
+    'pass_app.specialneeds',
     'gunicorn',
     'storages'
 ]
@@ -147,7 +148,8 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'careerlocation.CareerLocationSummaryBlock',
               'careerlocation.CareerLocationStrategyBlock',
               'supportservices.SupportServiceBlock',
-              'infographic.InfographicBlock']
+              'infographic.InfographicBlock',
+              'specialneeds.SpecialNeedsCallBlock']
 
 
 THUMBNAIL_SUBDIR = "thumbs"
