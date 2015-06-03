@@ -1,13 +1,8 @@
-from django.contrib.auth.models import User
+import factory
+from pagetree.tests.factories import UserFactory
+
 from pass_app.supportservices.models import SupportServiceCategory, \
     SupportService, SupportServiceState
-import factory
-
-
-class UserFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = User
-    username = factory.Sequence(lambda n: "user%03d" % n)
-    password = factory.PostGenerationMethodCall('set_password', 'test')
 
 
 class SupportServiceCategoryFactory(factory.DjangoModelFactory):
