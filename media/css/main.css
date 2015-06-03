@@ -801,6 +801,14 @@ a:visited
 	line-height: 18px;
 }
 
+.casequestionexplanationheader {
+    display: none;
+}
+
+.mod5-previsit .casequestionexplanationheader {
+    display: block;
+}
+
 .moretoggle
 {
 	font-weight: bold;
