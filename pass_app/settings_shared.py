@@ -71,7 +71,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'pass_app.main.views.context_processor'
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
     'django_statsd.middleware.GraphiteMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,7 +81,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'waffle.middleware.WaffleMiddleware',
-)
+]
 
 ROOT_URLCONF = 'pass_app.urls'
 
