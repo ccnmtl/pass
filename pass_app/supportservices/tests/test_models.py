@@ -1,7 +1,9 @@
 from django.test import TestCase
+from pagetree.tests.factories import UserFactory
+
 from pass_app.supportservices.models import SupportServiceBlock, SupportService
 from pass_app.supportservices.tests.factories import SupportServiceFactory, \
-    SupportServiceStateFactory, UserFactory
+    SupportServiceStateFactory
 
 
 class SupportServiceBlockTest(TestCase):
