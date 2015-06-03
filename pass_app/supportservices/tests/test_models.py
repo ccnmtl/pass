@@ -6,10 +6,22 @@ from pass_app.supportservices.tests.factories import SupportServiceFactory, \
     SupportServiceStateFactory
 
 
+class SupportServiceTest(TestCase):
+
+    def test_unicode(self):
+        service = SupportServiceFactory(title="test")
+        self.assertEquals(service.__unicode__(), "test")
+
+
 class SupportServiceBlockTest(TestCase):
+
     def setUp(self):
         for i in range(5):
             SupportServiceFactory()
+
+    def test_services(self):
+        block = SupportServiceBlock()
+        self.assertEquals(block.services().count(), 5)
 
     def test_needs_submit(self):
         block = SupportServiceBlock()
