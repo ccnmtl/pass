@@ -1859,3 +1859,21 @@ a.btn-success,
 a.btn-danger {
   color: #fff;
 }
+
+
+/* Module 5 Phone call activity */
+
+.phonecall a.visited {
+    background-color: #efefef;
+} 
+
+.phonecall a.active {
+    background-color: #ccc;
+} 
+
+/* Module 5 Pre-visit quizblock modification */
+
+.mod5-previsit .moretoggle {
+    display: none;
+}
+
