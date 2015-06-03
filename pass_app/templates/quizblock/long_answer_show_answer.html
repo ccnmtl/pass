@@ -1,0 +1,14 @@
+{% load markup %}
+{% comment %} short/long text questions {% endcomment %}
+
+{% if question.explanation %}
+    <div class="casesanswerdisplay">
+        <a href="#q{{question.id}}" class="moretoggle">Show explanation &gt;&gt;</a>
+        <div id="q{{question.id}}" class="toggleable">
+            <div class="casequestionexplanation">
+                <div class="casequestionexplanationheader">Suggested considerations</div>
+                {{question.explanation|markdown}}
+            </div>
+        </div>
+    </div>
+{% endif %}
