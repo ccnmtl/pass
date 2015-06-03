@@ -1863,7 +1863,7 @@ a.btn-danger {
 
 /* Module 5 Phone call activity */
 
-.phonecall a.visited {
+.phonecall .visited {
     background-color: #efefef;
 } 
 

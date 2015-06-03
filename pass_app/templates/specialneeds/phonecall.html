@@ -5,11 +5,11 @@
 {% get_user_state item as visited %}
   <div class="accordion-group">
     <div class="accordion-heading"><i class="icon-chevron-down pull-right"></i>
-      <a class="accordion-toggle {% if visited %}visited{% endif %}" data-item-id="{{item.id}}" data-toggle="collapse" data-parent="#phonecallset" href="#answer{{item.id}}">
+      <a class="accordion-toggle phonecall-item {% if visited %}visited{% endif %}" data-toggle="collapse" data-parent="#phonecallset" href="#answer{{item.id}}">
         {{item.question}}
       </a>
     </div>
-    <div id="answer{{item.id}}" class="accordion-body collapse">
+    <div id="answer{{item.id}}" data-id="{{item.id}}" class="accordion-body collapse">
       <div class="accordion-inner">
         {{item.answer}}
       </div>
