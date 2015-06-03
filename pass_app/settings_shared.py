@@ -46,7 +46,8 @@ JENKINS_TASKS = (
 
 PROJECT_APPS = ['pass_app.main',
                 'pass_app.careerlocation',
-                'pass_app.supportservices']
+                'pass_app.supportservices',
+                'pass_app.specialneeds']
 
 DEFAULT_FROM_EMAIL = 'pass@pass.ccnmtl.columbia.edu'
 TIME_ZONE = 'America/New_York'
