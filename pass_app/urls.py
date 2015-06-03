@@ -68,6 +68,7 @@ urlpatterns = patterns(
     (r'^_quiz/', include('quizblock.urls')),
     (r'^quizblock/', include('quizblock.urls')),
     (r'^_infographic/', include('pass_app.infographic.urls')),
+    (r'^_specialneeds/', include('pass_app.specialneeds.urls')),
     (r'^_careermap/', include('careermapblock.urls')),
     (r'^_careerlocation/', include('pass_app.careerlocation.urls')),
     (r'^_stats/$', TemplateView.as_view(template_name="main/stats.html")),
