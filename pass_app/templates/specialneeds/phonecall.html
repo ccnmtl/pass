@@ -4,8 +4,8 @@
 {% for item in block.questions.all %}
 {% get_user_state item as visited %}
   <div class="accordion-group">
-    <div class="accordion-heading"><i class="icon-chevron-down pull-right"></i>
-      <a class="accordion-toggle phonecall-item {% if visited %}visited{% endif %}" data-toggle="collapse" data-parent="#phonecallset" href="#answer{{item.id}}">
+    <div class="accordion-heading {% if visited %}visited{% endif %}"><div class="chevron-toggle pull-right"><i class="icon-chevron-right"></i></div>
+      <a class="accordion-toggle phonecall-item " data-toggle="collapse" data-parent="#phonecallset" href="#answer{{item.id}}">
         {{item.question}}
       </a>
     </div>
