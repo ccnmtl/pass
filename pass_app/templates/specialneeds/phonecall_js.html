@@ -11,6 +11,12 @@ jQuery(document).ready(function() {
     }
   }
   
+    function toggleAccordion(event) {
+            var prev = jQuery(event.currentTarget).prev();
+            jQuery(prev).find('i').toggleClass('icon-chevron-right icon-chevron-down');
+        }
+
+
   function saveItem(evt) {
     var elt = jQuery('.collapse.in')
     var itemId = elt.data('id')
@@ -37,6 +43,14 @@ jQuery(document).ready(function() {
   jQuery('#phonecallset').on('shown', function (evt) {
     saveItem(evt);
   });
-  
+
+  jQuery('.collapse').on('shown', function() {
+    jQuery(this).prev().find('i').toggleClass('icon-chevron-right icon-chevron-down');
+  });
+
+  jQuery('.collapse').on('hide', function() {
+    jQuery(this).prev().find('i').toggleClass('icon-chevron-right icon-chevron-down');
+  });
+
 });
 </script>

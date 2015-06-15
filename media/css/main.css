@@ -1871,13 +1871,25 @@ a.btn-danger {
 
 /* Module 5 Phone call activity */
 
+.phonecall .accordion-heading {
+    padding-left: 25px;
+    background: #fcfcfc url('../img/visited-unchecked.png') 5px center no-repeat;
+    font-weight: bold;
+}
+
+.phonecall .chevron-toggle {
+    padding-top: 10px;
+    padding-right: 10px;
+}
+
 .phonecall .visited {
-    background-color: #efefef;
+    background: #e1f1f1 url('../img/visited-checked.png') 5px center no-repeat;
 } 
 
-.phonecall a.active {
+.phonecall .active {
     background-color: #ccc;
 } 
+
 
 /* Module 5 Pre-visit quizblock modification */
 
