@@ -801,12 +801,13 @@ a:visited
 	line-height: 18px;
 }
 
-.casequestionexplanationheader {
+.casequestionexplanationheader, .q-mod5 {
     display: none;
 }
 
-.mod5-previsit .casequestionexplanationheader {
-    display: block;
+.response-heading {
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .moretoggle
@@ -1871,6 +1872,10 @@ a.btn-danger {
 
 /* Module 5 Phone call activity */
 
+.phonecall .accordion-group {
+    margin-bottom: 10px;
+}
+
 .phonecall .accordion-heading {
     padding-left: 25px;
     background: #fcfcfc url('../img/visited-unchecked.png') 5px center no-repeat;
@@ -1897,3 +1902,89 @@ a.btn-danger {
     display: none;
 }
 
+.mod5-previsit .casequestionexplanationheader {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.mod5-previsit div.q-mod5 {
+    font-size: 40px;
+    float: left;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-left: 5px;
+    display: block;
+}
+
+.mod5-previsit .question-text {
+    min-height: 35px;
+    padding: 10px 0 0 10px;
+    float: left;
+}
+
+.mod5-previsit .casetitle {
+    display: none;
+}
+
+.mod5-previsit textarea {
+    height: 80px;
+}
+
+.mod5-previsit .yours-lt,
+.mod5-previsit .casesanswerdisplay {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+}
+
+.mod5-previsit .yours-lt,
+.mod5-previsit .casesanswerdisplay {
+    margin: 0 10px;
+    padding: 10px;
+    border: 0;
+    background: none;
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+}
+
+.mod5-previsit .yours-lt {
+    margin-top: 5px;
+    background-color: #e6f2d8;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+	-moz-border-top-left-radius: 6px;
+	-moz-border-top-right-radius: 6px;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+}
+
+.mod5-previsit .casesanswerdisplay {
+    background-color: #f6f6f6;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+	-moz-border-bottom-left-radius: 6px;
+	-moz-border-bottom-right-radius: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-webkit-border-bottom-right-radius: 6px;
+}
+
+.mod5-previsit .response-heading {
+    color: #009999;
+    border-bottom: 1px solid #099;
+    margin: 0 0 10px 0 !important;
+    padding: 0 0 5px 0 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+}
+
+.mod5-previsit .casequestionexplanationheader {
+    color: #333;
+    border-bottom: 1px solid #999;
+    margin: 0 0 10px 0 !important;
+    padding: 0 0 5px 0 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+}
