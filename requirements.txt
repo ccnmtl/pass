@@ -49,7 +49,7 @@ django-jenkins==0.17.0
 django-smoketest==0.3.0
 django-proxyblock==0.1.2
 django-statsd-mozilla==0.3.14
-django-appconf==0.6
+django-appconf==1.0.1
 django-compressor==1.5
 django-bootstrap-form==3.2
 django-markwhat==1.3
