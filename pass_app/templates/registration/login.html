@@ -41,7 +41,7 @@
     
 
 <input class="regbutton" type="submit" value="LOG IN" />
-<input type="hidden" name="next" value="{{ next }}" />
+<input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}" />
 </form>
 
 
