@@ -30,6 +30,9 @@ mccabe==0.2.1
 pyflakes==0.8.1
 BeautifulSoup==3.2.1
 flake8==2.2.5
+pyasn1==0.1.8
+pyOpenSSL==0.15.1
+ndg-httpsclient==0.4.0
 
 django-tastypie==0.9.15
 django-smartif==0.1
