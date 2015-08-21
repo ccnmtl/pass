@@ -544,7 +544,7 @@ class Column(object):
 
 
 def _get_quiz_key(h, s):
-    quiz_type = ContentType.objects.filter(name='quiz')
+    quiz_type = ContentType.objects.filter(model='quiz')
     columns = []
     # quizzes
     for p in s.pageblock_set.filter(content_type=quiz_type):
@@ -560,7 +560,7 @@ def _get_quiz_key(h, s):
 
 
 def _get_quiz_results(h, s):
-    quiz_type = ContentType.objects.filter(name='quiz')
+    quiz_type = ContentType.objects.filter(model='quiz')
     columns = []
 
     # quizzes
@@ -579,7 +579,7 @@ def _get_quiz_results(h, s):
 
 def _get_career_location_results(h, s):
     careerlocation_type = ContentType.objects.filter(
-        name='career location block')
+        model='career location block')
     columns = []
     for p in s.pageblock_set.filter(content_type=careerlocation_type):
         if p.block().view == "IV":
@@ -618,7 +618,7 @@ def iv_columns(p, h, columns):
 
 def _get_career_location_key(h, s):
     careerlocation_type = ContentType.objects.filter(
-        name='career location block')
+        model='career location block')
     columns = []
 
     for p in s.pageblock_set.filter(content_type=careerlocation_type):
@@ -642,7 +642,7 @@ def _get_career_location_key(h, s):
 
 def _get_career_strategy_results(h, s):
     careerstrategy_type = ContentType.objects.filter(
-        name='career location strategy block')
+        model='career location strategy block')
     columns = []
 
     for p in s.pageblock_set.filter(content_type=careerstrategy_type):
@@ -665,7 +665,7 @@ def _get_career_strategy_results(h, s):
 
 def _get_career_strategy_key(h, s):
     careerstrategy_type = ContentType.objects.filter(
-        name='career location strategy block')
+        model='career location strategy block')
     columns = []
 
     for p in s.pageblock_set.filter(content_type=careerstrategy_type):
@@ -688,7 +688,7 @@ def _get_career_strategy_key(h, s):
 
 def _get_support_services_columns(h, s):
     supportservice_type = ContentType.objects.filter(
-        name='support service block')
+        model='support service block')
     columns = []
     for p in s.pageblock_set.filter(content_type=supportservice_type):
         for service in SupportService.objects.all():
@@ -868,7 +868,7 @@ def demographic_survey_complete(request):
         return HttpResponseServerError('Server does not have required data')
 
     section = hierarchy.get_section_from_path('survey')
-    content_type = ContentType.objects.filter(name='quiz')
+    content_type = ContentType.objects.filter(model='quiz')
     registration_quiz = section.pageblock_set.filter(content_type=content_type)
 
     if len(registration_quiz) > 0:

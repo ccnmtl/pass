@@ -61,6 +61,7 @@ class InfographicItem(models.Model):
 class InfographicItemForm(forms.ModelForm):
     class Meta:
         model = InfographicItem
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         super(InfographicItemForm, self).__init__(*args, **kwargs)
@@ -73,6 +74,7 @@ class InfographicItemForm(forms.ModelForm):
 class InfographicForm(forms.ModelForm):
     class Meta:
         model = InfographicBlock
+        exclude = []
 
 
 class InfographicState(models.Model):
