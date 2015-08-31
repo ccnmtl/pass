@@ -22,7 +22,7 @@ python-subunit==1.1.0
 lettuce==0.2.19ccnmtl
 selenium==2.46.1
 coverage==3.7.1
-logilab-common==0.59.0
+logilab-common==1.0.2
 logilab-astng==0.24.1
 pylint==1.4.1
 pep8==1.5.7
