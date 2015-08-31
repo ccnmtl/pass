@@ -75,6 +75,7 @@ class SupportServiceBlock(models.Model):
 class SupportServiceBlockForm(forms.ModelForm):
     class Meta:
         model = SupportServiceBlock
+        exclude = []
 
 
 class SupportServiceState(models.Model):

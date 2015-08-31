@@ -241,6 +241,7 @@ class CareerLocationBlock(models.Model):
 class CareerLocationBlockForm(forms.ModelForm):
     class Meta:
         model = CareerLocationBlock
+        exclude = []
 
 
 class CareerLocationSummaryBlock(models.Model):
@@ -286,6 +287,7 @@ class CareerLocationSummaryBlock(models.Model):
 class CareerLocationSummaryBlockForm(forms.ModelForm):
     class Meta:
         model = CareerLocationSummaryBlock
+        exclude = []
 
 
 STRATEGY_VIEW_CHOICES = (
@@ -376,3 +378,4 @@ class CareerLocationStrategyBlock(models.Model):
 class CareerLocationStrategyBlockForm(forms.ModelForm):
     class Meta:
         model = CareerLocationStrategyBlock
+        exclude = []

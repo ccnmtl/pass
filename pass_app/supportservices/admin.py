@@ -10,6 +10,7 @@ class SupportServiceForm(forms.ModelForm):
         widgets = {
             'title': admin.widgets.AdminTextInputWidget
         }
+        exclude = []
 
 
 class SupportServiceAdmin(admin.ModelAdmin):

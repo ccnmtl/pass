@@ -70,6 +70,7 @@ class SpecialNeedsCallBlock(models.Model):
 class SpecialNeedsCallBlockForm(forms.ModelForm):
     class Meta:
         model = SpecialNeedsCallBlock
+        exclude = []
 
 
 class SpecialNeedsCallState(models.Model):
