@@ -23,7 +23,7 @@ lettuce==0.2.19ccnmtl
 selenium==2.46.1
 coverage==3.7.1
 logilab-common==1.0.2
-logilab-astng==0.24.1
+logilab-astng==0.24.3
 pylint==1.4.1
 pep8==1.5.7
 mccabe==0.3.1
