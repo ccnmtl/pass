@@ -484,14 +484,14 @@ class Column(object):
             (self.actor and self.actor.type == "DS",
              lambda: [self.actor_answer_id(), self.module_name, "short text",
                       clean_header(self.actor_question.question)]),
-            ((self.actor and hasattr(self.actor, 'questions')
-              and len(self.actor.questions.all()) > 1),
+            ((self.actor and hasattr(self.actor, 'questions') and
+              len(self.actor.questions.all()) > 1),
              lambda: [self.actor_id(), self.module_name,
                       "multiple choice", clean_header(self.actor.name),
                       self.actor_question.id,
                       clean_header(self.actor_question.question)]),
-            ((self.actor and hasattr(self.actor, 'questions')
-              and len(self.actor.questions.all()) == 1),
+            ((self.actor and hasattr(self.actor, 'questions') and
+              len(self.actor.questions.all()) == 1),
              lambda: [self.actor_id(), self.module_name, "short text",
                       clean_header(self.actor_question.question)]),
             (self.location,
