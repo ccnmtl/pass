@@ -65,7 +65,7 @@ django-bootstrap-form==3.2
 django-markwhat==1.4
 django-pagetree==1.1.7
 django-pageblocks==1.0.3
-django-quizblock==1.1.1
+django-quizblock==1.1.4
 django-pagetree_export==0.4
 django-careermapblock==0.2.17
 django-stagingcontext==0.1.0
