@@ -1,6 +1,8 @@
+import json
+
+from django.contrib.auth.decorators import user_passes_test
 from django.http.response import HttpResponseNotAllowed, HttpResponse
 from django.utils.decorators import method_decorator
-import json
 
 
 def ajax_required(func):
@@ -35,3 +37,9 @@ class JSONResponseMixin(object):
         return HttpResponse(json.dumps(context),
                             content_type='application/json',
                             **response_kwargs)
+
+
+class LoggedInStaffMixin(object):
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, *args, **kwargs):
+        return super(LoggedInStaffMixin, self).dispatch(*args, **kwargs)

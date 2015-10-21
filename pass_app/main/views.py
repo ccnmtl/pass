@@ -1,25 +1,30 @@
+import csv
+import os
+from zipfile import ZipFile
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+import django.core.exceptions
 from django.http import HttpResponseRedirect, HttpResponse, \
     HttpResponseForbidden, HttpResponseServerError
+from django.http.response import StreamingHttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils.encoding import smart_str
+from django.views.generic.base import View, TemplateView
 from pagetree.helpers import get_hierarchy, get_section_from_path, \
     get_module, needs_submit, submitted
 from pagetree.models import Hierarchy
 from pagetree_export.exportimport import export_zip, import_zip
+from quizblock.models import Submission, Response
+
 from pass_app.careerlocation.models import Actor, CareerLocationState, \
     ActorResponse, Strategy
 from pass_app.main.models import UserProfile, UserVisited
+from pass_app.mixins import LoggedInStaffMixin
 from pass_app.supportservices.models import SupportServiceState, SupportService
-from quizblock.models import Submission, Response
-from zipfile import ZipFile
-import csv
-import django.core.exceptions
-import os
 
 
 def context_processor(request):
@@ -742,63 +747,78 @@ def all_results_key(request):
     return response
 
 
-@login_required
-@rendered_with("main/all_results.html")
-def all_results(request):
+class Echo(object):
+    """An object that implements just the write method of the file-like
+    interface.
     """
-        All system results
-        * One or more column for each question in system.
-            ** 1 column for short/long text. label = itemIdentifier from key
-            ** 1 column for single choice. label = itemIdentifier from key
-            ** n columns for multiple choice: 1 column for each possible answer
-               *** column labeled as itemIdentifer_answer.id
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
 
-        * One row for each user in the system.
-            1. username
-            2 - n: answers
-                * short/long text. text value
-                * single choice. answer.id
-                * multiple choice.
-                    ** answer id is listed in each question/answer
-                    column the user selected
-                * Unanswered fields represented as an empty cell
-    """
 
-    if not request.user.is_staff:
-        return HttpResponseForbidden()
+class PassDetailedResults(LoggedInStaffMixin, TemplateView):
 
-    if not request.GET.get('format', 'html') == 'csv':
-        return dict()
+    template_name = "main/all_results.html"
 
-    columns = []
-    for h in Hierarchy.objects.all():
-        columns = columns + [Column(hierarchy=h)]
-        for s in h.get_root().get_descendants():
-            columns = columns + _get_quiz_results(h, s)
-            columns = columns + _get_career_location_results(h, s)
-            columns = columns + _get_career_strategy_results(h, s)
-            columns = columns + _get_support_services_columns(h, s)
+    def get_rows(self, columns):
+        header = ['userId']
+        for c in columns:
+            header += c.header_column()
+        yield header
 
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=pass_responses.csv'
-    writer = csv.writer(response)
+        # Only look at users who have submission
+        users = User.objects.filter(submission__isnull=False).distinct()
+        for u in users:
+            row = [u.pk]
+            for column in columns:
+                v = smart_str(column.user_value(u))
+                row.append(v)
 
-    headers = ['userId']
-    for c in columns:
-        headers += c.header_column()
-    writer.writerow(headers)
+            yield row
 
-    # Only look at users who have submission
-    users = User.objects.filter(submission__isnull=False).distinct()
-    for u in users:
-        row = [u.pk]
-        for column in columns:
-            v = smart_str(column.user_value(u))
-            row.append(v)
+    def get(self, request, *args, **kwargs):
+        """
+            All system results
+            * One or more column for each question in system.
+                ** 1 column for short/long text. label=itemIdentifier from key
+                ** 1 column for single choice. label=itemIdentifier from key
+                ** n columns for multiple choice: 1 column for each
+                   possible answer
+                   *** column labeled as itemIdentifer_answer.id
 
-        writer.writerow(row)
+            * One row for each user in the system.
+                1. username
+                2 - n: answers
+                    * short/long text. text value
+                    * single choice. answer.id
+                    * multiple choice.
+                        ** answer id is listed in each question/answer
+                        column the user selected
+                    * Unanswered fields represented as an empty cell
+        """
 
-    return response
+        if not request.GET.get('format', '') == 'csv':
+            return self.render_to_response({})
+
+        columns = []
+        for h in Hierarchy.objects.all():
+            columns = columns + [Column(hierarchy=h)]
+            for s in h.get_root().get_descendants():
+                columns = columns + _get_quiz_results(h, s)
+                columns = columns + _get_career_location_results(h, s)
+                columns = columns + _get_career_strategy_results(h, s)
+                columns = columns + _get_support_services_columns(h, s)
+
+        rows = self.get_rows(columns)
+
+        pseudo_buffer = Echo()
+        writer = csv.writer(pseudo_buffer)
+
+        fnm = "pass_responses.csv"
+        response = StreamingHttpResponse(
+            (writer.writerow(row) for row in rows), content_type="text/csv")
+        response['Content-Disposition'] = 'attachment; filename="' + fnm + '"'
+        return response
 
 
 @login_required

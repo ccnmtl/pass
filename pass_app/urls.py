@@ -2,13 +2,17 @@ from django.conf import settings
 from django.conf.urls import include, patterns
 from django.contrib import admin
 from django.views.generic.base import TemplateView
+from tastypie.api import Api
+
 from pass_app.api import UserResource
 from pass_app.careerlocation.api import MapLayerResource, \
     ActorQuestionResource, ActorResource, ActorResponseResource, \
     CareerLocationStateResource, StrategyResource
+from pass_app.main.views import PassDetailedResults
 from pass_app.supportservices.api import SupportServiceResource, \
     SupportServiceStateResource
-from tastypie.api import Api
+
+
 admin.autodiscover()
 
 v1_api = Api(api_name='v1')
@@ -56,7 +60,7 @@ urlpatterns = patterns(
     (r'^export/$', 'pass_app.main.views.exporter'),
     (r'^import/$', 'pass_app.main.views.importer'),
     (r'^admin/_clear_state/$', 'pass_app.main.views.clear_state'),
-    ('^admin/allresults/$', 'pass_app.main.views.all_results'),
+    ('^admin/allresults/$', PassDetailedResults.as_view()),
     ('^admin/allresultskey/$', 'pass_app.main.views.all_results_key'),
     (r'^admin/reports/(?P<path>.*)$', 'pass_app.main.views.reports'),
     (r'^registration/', include('registration.urls')),
