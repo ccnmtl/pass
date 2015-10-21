@@ -9,11 +9,11 @@ from django.contrib.contenttypes.models import ContentType
 import django.core.exceptions
 from django.http import HttpResponseRedirect, HttpResponse, \
     HttpResponseForbidden, HttpResponseServerError
-from django.http.response import StreamingHttpResponse, HttpResponseNotFound
+from django.http.response import StreamingHttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils.encoding import smart_str
-from django.views.generic.base import View, TemplateView
+from django.views.generic.base import TemplateView
 from pagetree.helpers import get_hierarchy, get_section_from_path, \
     get_module, needs_submit, submitted
 from pagetree.models import Hierarchy

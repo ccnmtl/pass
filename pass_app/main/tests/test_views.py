@@ -81,7 +81,7 @@ class BasicTest(TestCase):
         self.u.is_staff = True
         self.u.save()
         response = self.c.get("/admin/allresults/")
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         Hierarchy.objects.all().delete()
         h = Hierarchy.objects.create(name="main", base_url="")
         h.get_root().add_child_section_from_dict(
