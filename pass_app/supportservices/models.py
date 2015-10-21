@@ -80,7 +80,7 @@ class SupportServiceBlockForm(forms.ModelForm):
 
 class SupportServiceState(models.Model):
     user = models.ForeignKey(User, related_name="support_service_state")
-    services = models.ManyToManyField(SupportService, null=True, blank=True)
+    services = models.ManyToManyField(SupportService, blank=True)
 
     def __unicode__(self):
         return self.user.username
