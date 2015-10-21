@@ -75,7 +75,7 @@ class SpecialNeedsCallBlockForm(forms.ModelForm):
 
 class SpecialNeedsCallState(models.Model):
     user = models.ForeignKey(User, related_name="special_needs_call")
-    questions = models.ManyToManyField(SpecialNeedsCall, null=True, blank=True)
+    questions = models.ManyToManyField(SpecialNeedsCall, blank=True)
 
     def __unicode__(self):
         return self.user.username

@@ -51,7 +51,7 @@ class Actor(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
     type = models.CharField(max_length=2, choices=VIEW_CHOICES)
     profile = models.TextField(null=True, blank=True)
-    questions = models.ManyToManyField(ActorQuestion, null=True, blank=True)
+    questions = models.ManyToManyField(ActorQuestion, blank=True)
     left = models.IntegerField(null=True, blank=True)
     top = models.IntegerField(null=True, blank=True)
     order = models.IntegerField(null=True, blank=True)
@@ -93,18 +93,18 @@ class Strategy(models.Model):
 
 class CareerLocationState(models.Model):
     user = models.ForeignKey(User, related_name="career_location_state")
-    layers = models.ManyToManyField(MapLayer, null=True, blank=True)
-    actors = models.ManyToManyField(Actor, null=True, blank=True)
-    responses = models.ManyToManyField(ActorResponse, null=True, blank=True)
+    layers = models.ManyToManyField(MapLayer, blank=True)
+    actors = models.ManyToManyField(Actor, blank=True)
+    responses = models.ManyToManyField(ActorResponse, blank=True)
     notes = models.TextField(null=True, blank=True)
     practice_location_row = models.IntegerField(null=True, blank=True)
     practice_location_column = models.IntegerField(null=True, blank=True)
     strategies_viewed = models.ManyToManyField(
-        Strategy, null=True, blank=True, related_name="strategies_viewed")
+        Strategy, blank=True, related_name="strategies_viewed")
     strategy_selected = models.ForeignKey(
         Strategy, null=True, blank=True, related_name="strategy_selected")
     strategy_responses = models.ManyToManyField(
-        ActorResponse, null=True, blank=True,
+        ActorResponse, blank=True,
         related_name="strategy_responses")
 
     def __unicode__(self):

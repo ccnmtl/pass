@@ -79,7 +79,7 @@ class InfographicForm(forms.ModelForm):
 
 class InfographicState(models.Model):
     user = models.ForeignKey(User, related_name="infographic_state")
-    items = models.ManyToManyField(InfographicItem, null=True, blank=True)
+    items = models.ManyToManyField(InfographicItem, blank=True)
 
     def __unicode__(self):
         return self.user.username
