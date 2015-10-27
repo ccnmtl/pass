@@ -5,11 +5,13 @@ from pagetree.tests.factories import UserFactory
 
 
 class SpecialNeedsCallFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = SpecialNeedsCall
+    class Meta:
+        model = SpecialNeedsCall
     question = factory.Sequence(lambda n: "question%03d" % n)
     answer = factory.Sequence(lambda n: "answer%03d" % n)
 
 
 class SpecialNeedsCallStateFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = SpecialNeedsCallState
+    class Meta:
+        model = SpecialNeedsCallState
     user = factory.SubFactory(UserFactory)

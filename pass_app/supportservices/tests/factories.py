@@ -6,12 +6,14 @@ from pass_app.supportservices.models import SupportServiceCategory, \
 
 
 class SupportServiceCategoryFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = SupportServiceCategory
+    class Meta:
+        model = SupportServiceCategory
     name = factory.Sequence(lambda n: "category%03d" % n)
 
 
 class SupportServiceFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = SupportService
+    class Meta:
+        model = SupportService
     title = factory.Sequence(lambda n: "service%03d" % n)
     phone = "555-212-1111"
     category = factory.SubFactory(SupportServiceCategoryFactory)
@@ -19,5 +21,6 @@ class SupportServiceFactory(factory.DjangoModelFactory):
 
 
 class SupportServiceStateFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = SupportServiceState
+    class Meta:
+        model = SupportServiceState
     user = factory.SubFactory(UserFactory)
