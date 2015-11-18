@@ -11,3 +11,4 @@ uploads
 reports
 .DS_Store
 media/CACHE
+node_modules

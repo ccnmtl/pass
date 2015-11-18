@@ -1,10 +1,10 @@
 (function (jQuery) {
 
-    User = Backbone.Model.extend({
+    var User = Backbone.Model.extend({
         urlRoot: '/api/v1/user/'
     });
 
-    SupportService = Backbone.Model.extend({
+    var SupportService = Backbone.Model.extend({
         urlRoot: '/api/v1/service/',
         toJSON: function() {
             return this.get('resource_uri');
@@ -14,7 +14,7 @@
         }
     });
 
-    SupportServiceList = Backbone.Collection.extend({
+    var SupportServiceList = Backbone.Collection.extend({
         model: SupportService,
         urlRoot: '/api/v1/service/',
         initialize: function (lst) {
@@ -37,11 +37,11 @@
             return a;
         },
         comparator: function(service) {
-            return [service.get('category').name, service.get('title')]
+            return [service.get('category').name, service.get('title')];
         }
     });
 
-    UserState = Backbone.Model.extend({
+    var UserState = Backbone.Model.extend({
         defaults: {
             services: new SupportServiceList()
         },
