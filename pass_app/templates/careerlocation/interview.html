@@ -8,17 +8,6 @@
     <div class="profile" style="display: none"></div>
 
     <div class="toolbar">
-        <h2 class="left">
-            {% ifequal block.view "IV" %}
-                Interview Stakeholders
-            {% else %}{% ifequal block.view "LC" %}
-                Select a Practice Location
-            {% else %}{% ifequal block.view "BD" %}
-                Board of Director's Meeting
-            {% else %}{% ifequal block.view "RP" %}
-                Practice Location Report
-            {% endifequal %}{% endifequal %}{% endifequal %}{% endifequal %}
-        </h2>
         <a class="btn right" href="#" id="toggle_help" data-toggle="help_text" role="button"><i class="icon-question-sign"></i> Help</a>
         {% ifequal block.view "BD" %}
             <a class="btn right" href="#" id="toggle_map"><i class="icon-picture"></i> Map View</a>
