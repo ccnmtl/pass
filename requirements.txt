@@ -72,7 +72,7 @@ django-pagetree_export==0.4
 django-careermapblock==0.2.17
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
-django-waffle==0.10.1 
+django-waffle==0.11 
 raven==5.8.1
 fake-factory==0.5.3
 factory_boy==2.6.0
