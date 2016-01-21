@@ -29,7 +29,7 @@ testscenarios==0.5.0
 python-subunit==1.2.0
 lettuce==0.2.19ccnmtl
 selenium==2.48.0
-coverage==3.7.1
+coverage==4.0.3
 logilab-common==1.1.0
 logilab-astng==0.24.3
 pylint==1.4.4
@@ -57,7 +57,7 @@ django-annoying==0.8.5
 django-treebeard==3.0
 django-registration-redux==1.2
 django-responseblock==0.1.5
-django-jenkins==0.17.0
+django-jenkins==0.18.1
 django-smoketest==0.3.0
 django-proxyblock==0.1.2
 django-statsd-mozilla==0.3.16
