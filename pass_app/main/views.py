@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 import django.core.exceptions
 from django.http import HttpResponseRedirect, HttpResponse, \
-    HttpResponseForbidden, HttpResponseServerError
+    HttpResponseForbidden, HttpResponseServerError, Http404
 from django.http.response import StreamingHttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -315,7 +315,12 @@ class Column(object):
         self.hierarchy = hierarchy
         self.question = question
         self.answer = answer
-        self.module_name = self.hierarchy.get_top_level()[0].label
+
+        module = self.hierarchy.get_top_level().first()
+        if module is None:
+            raise Http404
+        self.module_name = module.label
+
         self.actor = actor
         self.actor_question = actor_question
         self.location = location
