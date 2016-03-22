@@ -23,7 +23,6 @@ INSTALLED_APPS += [  # noqa
     'django.contrib.humanize',
     'sorl.thumbnail',
     'tagging',
-    'smartif',
     'template_utils',
     'typogrify',
     'bootstrapform',
