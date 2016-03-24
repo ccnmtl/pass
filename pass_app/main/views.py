@@ -405,11 +405,8 @@ class Column(object):
             return r[0].value
         elif self.question.is_multiple_choice():
             return self.multiple_choice_answer(r)
-        else:  # single choice
-            for a in self._answer_cache:
-                if a.value == r[0].value:
-                    return a.id
-        return ''
+        else:
+            return self.single_choice_answer(r)
 
     def is_multiple_choice_answer(self, r):
         return self.answer.value in [res.value for res in r]
@@ -419,6 +416,12 @@ class Column(object):
             return self.answer.id
         else:
             return ''
+
+    def single_choice_answer(self, r):
+        for a in self._answer_cache:
+            if a.value == r[0].value:
+                return a.id
+        return ''
 
     def service_value(self, user):
         try:
