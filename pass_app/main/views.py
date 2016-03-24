@@ -697,20 +697,25 @@ def _get_career_strategy_key(h, s):
     columns = []
 
     for p in s.pageblock_set.filter(content_type=careerstrategy_type):
-        if p.block().view == "SS":
-            for s in Strategy.objects.all():
-                columns.append(Column(hierarchy=h,
-                                      strategy=s))
-            for s in Strategy.objects.all():
-                columns.append(Column(hierarchy=h,
-                                      strategy=s,
-                                      actor_question=s.question))
+        columns = career_strategy_block_columns(p, h, columns)
+    return columns
 
-        elif p.block().view == "DS":
-            for a in Actor.objects.filter(type="DS").order_by("order"):
-                for q in a.questions.all():
-                    columns.append(Column(
-                        hierarchy=h, actor=a, actor_question=q))
+
+def career_strategy_block_columns(p, h, columns):
+    if p.block().view == "SS":
+        for s in Strategy.objects.all():
+            columns.append(Column(hierarchy=h,
+                                  strategy=s))
+        for s in Strategy.objects.all():
+            columns.append(Column(hierarchy=h,
+                                  strategy=s,
+                                  actor_question=s.question))
+
+    elif p.block().view == "DS":
+        for a in Actor.objects.filter(type="DS").order_by("order"):
+            for q in a.questions.all():
+                columns.append(Column(
+                    hierarchy=h, actor=a, actor_question=q))
     return columns
 
 
