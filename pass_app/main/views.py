@@ -398,17 +398,18 @@ class Column(object):
             return ""
         submission = r[0]
         r = self._response_cache.filter(submission=submission)
-        if r.count() > 0:
-            if (self.question.is_short_text() or
-                    self.question.is_long_text()):
-                return r[0].value
-            elif self.question.is_multiple_choice():
-                if self.is_multiple_choice_answer(r):
-                    return self.answer.id
-            else:  # single choice
-                for a in self._answer_cache:
-                    if a.value == r[0].value:
-                        return a.id
+        if r.count() < 1:
+            return ''
+        if (self.question.is_short_text() or
+                self.question.is_long_text()):
+            return r[0].value
+        elif self.question.is_multiple_choice():
+            if self.is_multiple_choice_answer(r):
+                return self.answer.id
+        else:  # single choice
+            for a in self._answer_cache:
+                if a.value == r[0].value:
+                    return a.id
         return ''
 
     def is_multiple_choice_answer(self, r):
