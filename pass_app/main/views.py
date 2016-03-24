@@ -403,13 +403,16 @@ class Column(object):
                     self.question.is_long_text()):
                 return r[0].value
             elif self.question.is_multiple_choice():
-                if self.answer.value in [res.value for res in r]:
+                if self.is_multiple_choice_answer(r):
                     return self.answer.id
             else:  # single choice
                 for a in self._answer_cache:
                     if a.value == r[0].value:
                         return a.id
         return ''
+
+    def is_multiple_choice_answer(self, r):
+        return self.answer.value in [res.value for res in r]
 
     def service_value(self, user):
         try:
