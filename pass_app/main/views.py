@@ -64,12 +64,18 @@ def _unlocked(profile, section):
 
     # if the previous page had blocks to submit
     # we only let them by if they submitted
-    for p in previous.pageblock_set.all():
-        if hasattr(p.block(), 'unlocked'):
-            if not p.block().unlocked(profile.user):
-                return False
+    if unlocked_blocks(previous, profile.user):
+        return False
 
     return profile.has_visited(previous)
+
+
+def unlocked_blocks(page, user):
+    for p in page.pageblock_set.all():
+        if hasattr(p.block(), 'unlocked'):
+            if not p.block().unlocked(user):
+                return True
+    return False
 
 
 class rendered_with(object):
@@ -392,17 +398,29 @@ class Column(object):
             return ""
         submission = r[0]
         r = self._response_cache.filter(submission=submission)
-        if r.count() > 0:
-            if (self.question.is_short_text() or
-                    self.question.is_long_text()):
-                return r[0].value
-            elif self.question.is_multiple_choice():
-                if self.answer.value in [res.value for res in r]:
-                    return self.answer.id
-            else:  # single choice
-                for a in self._answer_cache:
-                    if a.value == r[0].value:
-                        return a.id
+        if r.count() < 1:
+            return ''
+        if (self.question.is_short_text() or
+                self.question.is_long_text()):
+            return r[0].value
+        elif self.question.is_multiple_choice():
+            return self.multiple_choice_answer(r)
+        else:
+            return self.single_choice_answer(r)
+
+    def is_multiple_choice_answer(self, r):
+        return self.answer.value in [res.value for res in r]
+
+    def multiple_choice_answer(self, r):
+        if self.is_multiple_choice_answer(r):
+            return self.answer.id
+        else:
+            return ''
+
+    def single_choice_answer(self, r):
+        for a in self._answer_cache:
+            if a.value == r[0].value:
+                return a.id
         return ''
 
     def service_value(self, user):
@@ -679,20 +697,25 @@ def _get_career_strategy_key(h, s):
     columns = []
 
     for p in s.pageblock_set.filter(content_type=careerstrategy_type):
-        if p.block().view == "SS":
-            for s in Strategy.objects.all():
-                columns.append(Column(hierarchy=h,
-                                      strategy=s))
-            for s in Strategy.objects.all():
-                columns.append(Column(hierarchy=h,
-                                      strategy=s,
-                                      actor_question=s.question))
+        columns = career_strategy_block_columns(p, h, columns)
+    return columns
 
-        elif p.block().view == "DS":
-            for a in Actor.objects.filter(type="DS").order_by("order"):
-                for q in a.questions.all():
-                    columns.append(Column(
-                        hierarchy=h, actor=a, actor_question=q))
+
+def career_strategy_block_columns(p, h, columns):
+    if p.block().view == "SS":
+        for s in Strategy.objects.all():
+            columns.append(Column(hierarchy=h,
+                                  strategy=s))
+        for s in Strategy.objects.all():
+            columns.append(Column(hierarchy=h,
+                                  strategy=s,
+                                  actor_question=s.question))
+
+    elif p.block().view == "DS":
+        for a in Actor.objects.filter(type="DS").order_by("order"):
+            for q in a.questions.all():
+                columns.append(Column(
+                    hierarchy=h, actor=a, actor_question=q))
     return columns
 
 
