@@ -2,7 +2,7 @@
 Django==1.8.11
 lxml==3.5.0
 feedparser==5.2.1
-Markdown==2.6.5
+Markdown==2.6.6
 smartypants==1.8.6
 uuid==1.30
 psycopg2==2.6.1
