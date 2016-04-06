@@ -22,7 +22,6 @@ ROOT_URLCONF = 'pass_app.urls'
 INSTALLED_APPS += [  # noqa
     'django.contrib.humanize',
     'sorl.thumbnail',
-    'tagging',
     'template_utils',
     'typogrify',
     'bootstrapform',
