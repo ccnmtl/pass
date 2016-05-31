@@ -75,7 +75,7 @@ django-careermapblock==0.3.0
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-waffle==0.11 
-raven==5.18.0
+raven==5.19.0
 fake-factory==0.5.7
 factory_boy==2.7.0
 django-impersonate==1.0.1
