@@ -1,15 +1,11 @@
 {% load markup %}
-
+{% spaceless %}
 <select name="pageblock-{{block.pageblock.id}}-question{{question.id}}">
-    {% for answer in question.answer_set.all %}
-
-        <option value="{{answer.value}}"
-                {% if response %}
-                    {%  ifequal response.value answer.value %} selected='selected'{% endifequal %}
-                {% endif %}>
-
-            {{answer.label}}
-
-        </option>
-    {% endfor %}
+{% for answer in question.answer_set.all %}
+<option value="{{answer.value}}"
+    {% if response %}
+        {%  ifequal response.value answer.value %} selected='selected'{% endifequal %}
+    {% endif %}>{{answer.label}}</option>
+{% endfor %}
 </select>
+{% endspaceless %}
