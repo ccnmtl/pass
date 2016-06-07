@@ -49,7 +49,7 @@ rjsmin==1.0.12
 ipaddress==1.0.16
 
 django-tastypie==0.13.3
-djangowind==0.14.3
+djangowind==0.15.0
 sorl==3.1
 template_utils==0.4p2
 typogrify==2.0.7
