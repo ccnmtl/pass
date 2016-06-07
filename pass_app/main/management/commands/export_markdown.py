@@ -73,7 +73,9 @@ class Command(BaseCommand):
             # export the pageblocks
             for pb in section.pageblock_set.all():
                 f.write('<h3>{}</h3>'.format(pb.label.encode('utf-8')))
+                f.write('<div class="pageblock {}">'.format(pb.css_extra))
                 f.write(pb.render(**self.render_context).encode('utf-8'))
+                f.write('</div>')
 
         # export the children
         for child in section.get_children():
