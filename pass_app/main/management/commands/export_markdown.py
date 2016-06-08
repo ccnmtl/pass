@@ -1,12 +1,26 @@
 import os
+from urlparse import urlparse
 
 from django.core.management.base import BaseCommand
 from django.test.client import RequestFactory
 from pagetree.models import Hierarchy
 from pagetree.tests.factories import UserFactory
 
+from bs4 import BeautifulSoup
+import requests
+
 
 class Command(BaseCommand):
+
+    EXPORTABLE_BLOCKS = [
+        'HTMLBlock', 'HTMLBlockWYSIWYG', 'ImageBlock', 'ImagePullQuoteBlock',
+        'PullQuoteBlock', 'Quiz', 'TextBlock'
+    ]
+
+    POSTPROCESS_BLOCKS = [
+        'HTMLBlock', 'HTMLBlockWYSIWYG', 'ImageBlock', 'ImagePullQuoteBlock',
+        'TextBlock'
+    ]
 
     def add_arguments(self, parser):
         parser.add_argument('dest',  help='Destination directory')
@@ -33,7 +47,7 @@ class Command(BaseCommand):
 
     def get_or_create_image_directory(self):
         if not hasattr(self, 'image_directory'):
-            self.image_directory = '{}static/img/'.format(self.dest)
+            self.image_directory = '{}static/img/assets/'.format(self.dest)
             self.create_directory(self.image_directory)
         return self.image_directory
 
@@ -43,7 +57,42 @@ class Command(BaseCommand):
             qs = qs.filter(name=hierarchy_name)
         return qs
 
-    def section_as_yaml(self, module, idx, section, f):
+    def process_image(self, img):
+        src = img.attrs['src']
+        alt = img.attrs['alt'] if 'alt' in img.attrs else ''
+        basename = os.path.basename(urlparse(src).path)
+
+        filename = self.get_or_create_image_directory() + basename
+        if not os.path.exists(filename):
+            with open(filename, 'wb') as imagef:
+                r = requests.get(src)
+                for chunk in r:
+                    imagef.write(chunk)
+                print("saved image {}".format(filename))
+
+        shortcode = '{{{{< figure src="/img/assets/{}" alt="{}" >}}}}'
+        img.parent.append(shortcode.format(basename, alt))
+
+        img.extract()
+
+    def process_video(self, iframe):
+        shortcode = '{{< youtube id="NWNxuJ0MK3k" autoplay="false" >}}'
+        iframe.parent.append(shortcode)
+        iframe.extract()
+
+    def postprocess(self, rendered):
+        soup = BeautifulSoup(rendered)
+        for tag in soup.findAll(True):
+            if tag.name == 'img':
+                self.process_image(tag)
+            elif tag.name == 'iframe':
+                self.process_video(tag)
+
+        body = soup.find('body')
+        body.hidden = True  # don't export the body tag
+        return body.encode(formatter=None) if body else ''
+
+    def frontmatter(self, module, idx, section, f):
         f.write('---\n')
         f.write('title: "{}"\n'.format(section.label.encode('utf8')))
         f.write('module: "{}"\n'.format(module.label.encode('utf8')))
@@ -67,11 +116,16 @@ class Command(BaseCommand):
         print filename
 
         with open(filename, 'w') as f:
-            # frontmatter
-            self.section_as_yaml(module, idx, section, f)
+            self.frontmatter(module, idx, section, f)
 
-            # export the pageblocks
+            # export pageblocks
             for pb in section.pageblock_set.all():
+                blk = pb.block()
+                type_name = type(blk).__name__
+
+                if type_name not in self.EXPORTABLE_BLOCKS:
+                    continue
+
                 if pb.label:
                     f.write('<h3>{}</h3>'.format(pb.label.encode('utf-8')))
                 f.write('<div class="pageblock')
@@ -79,10 +133,16 @@ class Command(BaseCommand):
                     f.write(' ')
                     f.write(pb.css_extra)
                 f.write('">')
-                f.write(pb.render(**self.render_context).encode('utf-8'))
+
+                rendered = pb.render(**self.render_context).encode('utf-8')
+                if (len(rendered.strip()) > 0 and
+                        type_name in self.POSTPROCESS_BLOCKS):
+                    rendered = self.postprocess(rendered)
+
+                f.write(rendered)
                 f.write('</div>')
 
-        # export the children
+        # export the section children
         for child in section.get_children():
             idx = idx + 1
             self.export_section(module, idx, module_directory, child)
