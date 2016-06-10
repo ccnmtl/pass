@@ -60,6 +60,7 @@ class Command(BaseCommand):
     def process_image(self, img):
         src = img.attrs['src']
         alt = img.attrs['alt'] if 'alt' in img.attrs else ''
+        imgclass = ' '.join(img.attrs['class'] if 'class' in img.attrs else '')
         basename = os.path.basename(urlparse(src).path)
 
         filename = self.get_or_create_image_directory() + basename
@@ -70,8 +71,9 @@ class Command(BaseCommand):
                     imagef.write(chunk)
                 print("saved image {}".format(filename))
 
-        shortcode = '{{{{< figure src="/img/assets/{}" alt="{}" >}}}}'
-        img.parent.append(shortcode.format(basename, alt))
+        shortcode = '{{{{< figure src="/img/assets/{}"' + \
+            ' alt="{}" class="{}" >}}}}'
+        img.parent.append(shortcode.format(basename, alt, imgclass))
 
         img.extract()
 
