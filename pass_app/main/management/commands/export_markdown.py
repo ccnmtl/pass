@@ -76,7 +76,7 @@ class Command(BaseCommand):
         img.extract()
 
     def process_video(self, iframe):
-        shortcode = '{{< youtube id="NWNxuJ0MK3k" autoplay="false" >}}'
+        shortcode = '{{< youtube id="NWNxuJ0MK3k" >}}'
         iframe.parent.append(shortcode)
         iframe.extract()
 
