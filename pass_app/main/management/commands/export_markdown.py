@@ -76,7 +76,7 @@ class Command(BaseCommand):
         img.extract()
 
     def process_video(self, iframe):
-        shortcode = '{{< youtube id="NWNxuJ0MK3k" autoplay="false" >}}'
+        shortcode = '{{< youtube id="NWNxuJ0MK3k" >}}'
         iframe.parent.append(shortcode)
         iframe.extract()
 
@@ -96,7 +96,7 @@ class Command(BaseCommand):
         f.write('---\n')
         f.write('title: "{}"\n'.format(section.label.encode('utf8')))
         f.write('module: "{}"\n'.format(module.label.encode('utf8')))
-        f.write('type: "module_page"\n')
+        f.write('type: "module-page"\n')
         f.write('ordinal: {}\n'.format(idx))
         f.write('depth: {}\n'.format(section.depth))
 
