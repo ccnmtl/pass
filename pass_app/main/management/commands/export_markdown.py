@@ -29,6 +29,10 @@ class Command(BaseCommand):
             '--hierarchy', dest='hierarchy', default='all',
             help='A specific hierarchy to export')
 
+        parser.add_argument(
+            '--media-url', dest='media_url', default='uploads',
+            help='url for fully qualified media location, i.e. S3 url')
+
     def create_directory(self, dirname):
         if not os.path.exists(dirname):
             os.makedirs(dirname)
@@ -154,7 +158,10 @@ class Command(BaseCommand):
 
         request = RequestFactory()
         request.user = UserFactory()
-        self.render_context = {'request': request}
+        self.render_context = {
+            'request': request,
+            'MEDIA_URL': options['media_url']
+        }
 
         try:
             # hierarchies to export
