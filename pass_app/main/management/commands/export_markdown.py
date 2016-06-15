@@ -12,6 +12,15 @@ import requests
 
 class Command(BaseCommand):
 
+    SHORTCODES = {
+        'SpecialNeedsCallBlock':
+            '{{< highlight html >}}<b>Special Needs Q&A</b>{{< /highlight >}}',
+        'SupportServiceBlock':
+            '{{< highlight html >}}<b>Support Services</b>{{< /highlight >}}',
+        'InfographicBlock':
+            '{{< highlight html >}}<b>Infographic</b>{{< /highlight >}}',
+    }
+
     EXPORTABLE_BLOCKS = [
         'HTMLBlock', 'HTMLBlockWYSIWYG', 'ImageBlock', 'ImagePullQuoteBlock',
         'PullQuoteBlock', 'Quiz', 'TextBlock'
@@ -61,7 +70,7 @@ class Command(BaseCommand):
             qs = qs.filter(name=hierarchy_name)
         return qs
 
-    def process_image(self, img):
+    def postprocess_image(self, img):
         src = img.attrs['src']
         alt = img.attrs['alt'] if 'alt' in img.attrs else ''
         imgclass = ' '.join(img.attrs['class'] if 'class' in img.attrs else '')
@@ -81,7 +90,7 @@ class Command(BaseCommand):
 
         img.extract()
 
-    def process_video(self, iframe):
+    def postprocess_video(self, iframe):
         shortcode = '{{< youtube id="NWNxuJ0MK3k" >}}'
         iframe.parent.append(shortcode)
         iframe.extract()
@@ -90,13 +99,30 @@ class Command(BaseCommand):
         soup = BeautifulSoup(rendered)
         for tag in soup.findAll(True):
             if tag.name == 'img':
-                self.process_image(tag)
+                self.postprocess_image(tag)
             elif tag.name == 'iframe':
-                self.process_video(tag)
+                self.postprocess_video(tag)
 
         body = soup.find('body')
         body.hidden = True  # don't export the body tag
         return body.encode(formatter=None) if body else ''
+
+    def export_block(self, f, type_name, pb):
+        if pb.label:
+            f.write('<h3>{}</h3>'.format(pb.label.encode('utf-8')))
+        f.write('<div class="pageblock')
+        if pb.css_extra:
+            f.write(' ')
+            f.write(pb.css_extra)
+        f.write('">')
+
+        rendered = pb.render(**self.render_context).encode('utf-8')
+        if (len(rendered.strip()) > 0 and
+                type_name in self.POSTPROCESS_BLOCKS):
+            rendered = self.postprocess(rendered)
+
+        f.write(rendered)
+        f.write('</div>')
 
     def frontmatter(self, module, idx, section, f):
         f.write('---\n')
@@ -129,24 +155,13 @@ class Command(BaseCommand):
                 blk = pb.block()
                 type_name = type(blk).__name__
 
-                if type_name not in self.EXPORTABLE_BLOCKS:
+                if type_name in self.SHORTCODES:
+                    f.write(self.SHORTCODES[type_name])
                     continue
-
-                if pb.label:
-                    f.write('<h3>{}</h3>'.format(pb.label.encode('utf-8')))
-                f.write('<div class="pageblock')
-                if pb.css_extra:
-                    f.write(' ')
-                    f.write(pb.css_extra)
-                f.write('">')
-
-                rendered = pb.render(**self.render_context).encode('utf-8')
-                if (len(rendered.strip()) > 0 and
-                        type_name in self.POSTPROCESS_BLOCKS):
-                    rendered = self.postprocess(rendered)
-
-                f.write(rendered)
-                f.write('</div>')
+                elif type_name not in self.EXPORTABLE_BLOCKS:
+                    continue
+                else:
+                    self.export_block(f, type_name, pb)
 
         # export the section children
         for child in section.get_children():
