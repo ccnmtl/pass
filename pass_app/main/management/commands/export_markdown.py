@@ -70,6 +70,16 @@ class Command(BaseCommand):
             qs = qs.filter(name=hierarchy_name)
         return qs
 
+    def open_form(self, f):
+        f.write('<form method="post" action=".">')
+
+    def close_form(self, f, needs_submit):
+        if needs_submit:
+            f.write('<div class="submit-container">'
+                    '<input class="btn btn-info btn-submit-section" '
+                    'type="submit" value="Submit" /></div>')
+        f.write('</form>')
+
     def postprocess_image(self, img):
         src = img.attrs['src']
         alt = img.attrs['alt'] if 'alt' in img.attrs else ''
@@ -151,6 +161,9 @@ class Command(BaseCommand):
             self.frontmatter(module, idx, section, f)
 
             # export pageblocks
+            self.open_form(f)
+
+            needs_submit = False
             for pb in section.pageblock_set.all():
                 blk = pb.block()
                 type_name = type(blk).__name__
@@ -160,8 +173,14 @@ class Command(BaseCommand):
                     continue
                 elif type_name not in self.EXPORTABLE_BLOCKS:
                     continue
+                elif type_name == 'Quiz':
+                    blk.rhetorical = True
+                    self.export_block(f, type_name, pb)
+                    needs_submit = True
                 else:
                     self.export_block(f, type_name, pb)
+
+            self.close_form(f, needs_submit)
 
         # export the section children
         for child in section.get_children():
