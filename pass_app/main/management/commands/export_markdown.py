@@ -14,11 +14,13 @@ class Command(BaseCommand):
 
     SHORTCODES = {
         'SpecialNeedsCallBlock':
-            '{{< highlight html >}}<b>Special Needs Q&A</b>{{< /highlight >}}',
+            '{{< interactives url="specialneedsvisit" width="900px"' +
+            ' height="800px" >}}',
         'SupportServiceBlock':
-            '{{< highlight html >}}<b>Support Services</b>{{< /highlight >}}',
+            '{{< interactives url="supportservices" width="900px"' +
+            ' height="800px" >}}',
         'InfographicBlock':
-            '{{< highlight html >}}<b>Infographic</b>{{< /highlight >}}',
+            '{{< highlight html >}}<b>Infographic TBD</b>{{< /highlight >}}',
     }
 
     EXPORTABLE_BLOCKS = [
