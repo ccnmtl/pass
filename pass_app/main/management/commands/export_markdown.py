@@ -187,7 +187,9 @@ class Command(BaseCommand):
         # export the section children
         for child in section.get_children():
             idx = idx + 1
-            self.export_section(module, idx, module_directory, child)
+            idx = self.export_section(module, idx, module_directory, child)
+
+        return idx
 
     def handle(self, *args, **options):
         self.dest = self.get_destination_directory(options['dest'])
