@@ -13,8 +13,6 @@
             </div>
 
             {% if question.answerable %}
-                {% if block.rhetorical %}<form id="form-{{question.id}}" method="post">{% endif %}
-
                 {% if question.is_single_choice %}
                     {% if block.pageblock.css_extra == 'response-prioritized' %}
                         {% include 'quizblock/single_choice_prioritized.html' %}
@@ -29,10 +27,6 @@
 
                 {% if question.is_multiple_choice %}
                     {% include 'quizblock/multiple_choice.html' %}
-                {% endif %}
-
-                {% if block.rhetorical %}
-                    </form>
                 {% endif %}
             {% else %}
                 {% if question.is_short_text %}
