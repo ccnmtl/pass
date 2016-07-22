@@ -32,7 +32,7 @@ selenium==2.48.0
 coverage==4.1
 logilab-common==1.2.2
 logilab-astng==0.24.3
-pylint==1.5.6
+pylint==1.6.4
 pep8==1.7.0
 mccabe==0.5.0
 pyflakes==1.2.3
