@@ -1,16 +1,21 @@
 {% load markup %}
 {% if not response %}<div class="selection-list">{% endif %}
     {% for answer in question.answer_set.all %}
-    
         {% if block.rhetorical %}
-            <div><input name="question{{question.id}}" value="{{answer.label}}" type="radio" />{{answer.label}}</div>
+            <label class="selection">
+                <input name="question{{question.id}}" value="{{answer.value}}" type="radio" />{{answer.label}}
+            </label>
+            <div class="selection-block hidden">
+                <h3>{{answer.label}}</h3>
+                {{answer.explanation|safe}}
+            </div>
         {% else %}
             {% if response %}
                 {% ifequal response.value answer.value %}
                 <div class="your-choice choice-header">Your concern is...</div>
                     <div class="selection-block highlighted">
                     <h3>{{answer.label}}</h3>
-                    
+
                     {{answer.explanation|safe}}
                     </div>
                 {% endifequal %}
@@ -20,12 +25,12 @@
                 value="{{answer.value}}" type="radio" />{{answer.label}}</label>
             {% endif %}
         {% endif %}
-   
+
     {% endfor %}
 {% if not response %}</div>{% endif %}
 
 {% if response %}<hr />
-<div class="other-choices choice-header">Let’s look at the other choices...</div>
+    <div class="other-choices choice-header">Let’s look at the other choices...</div>
 {% endif %}
 
     {% for answer in question.answer_set.all %}
@@ -35,7 +40,7 @@
                 {% ifnotequal response.value answer.value %}
              <div class="selection-block unselected">
                    <h3>{{answer.label}}</h3>
-                    
+
                     {{answer.explanation|safe}}
              </div>
               {% endifnotequal %}
