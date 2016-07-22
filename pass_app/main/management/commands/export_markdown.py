@@ -1,12 +1,12 @@
 import os
 from urlparse import urlparse
 
+from bs4 import BeautifulSoup
+from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 from django.test.client import RequestFactory
 from pagetree.models import Hierarchy
 from pagetree.tests.factories import UserFactory
-
-from bs4 import BeautifulSoup
 import requests
 
 
@@ -71,6 +71,10 @@ class Command(BaseCommand):
         if hierarchy_name != 'all':
             qs = qs.filter(name=hierarchy_name)
         return qs
+
+    def needs_form(self, section):
+        return section.pageblock_set.filter(
+            content_type=self.quiz_type).count() > 0
 
     def open_form(self, f):
         f.write('<form method="post" action=".">')
@@ -166,9 +170,10 @@ class Command(BaseCommand):
             self.frontmatter(module, idx, section, f)
 
             # export pageblocks
-            self.open_form(f)
+            needs_form = self.needs_form(section)
+            if needs_form:
+                self.open_form(f)
 
-            needs_submit = False
             for pb in section.pageblock_set.all():
                 blk = pb.block()
                 type_name = type(blk).__name__
@@ -181,11 +186,11 @@ class Command(BaseCommand):
                 elif type_name == 'Quiz':
                     blk.rhetorical = True
                     self.export_block(f, type_name, pb)
-                    needs_submit = True
                 else:
                     self.export_block(f, type_name, pb)
 
-            self.close_form(f, needs_submit)
+            if needs_form:
+                self.close_form(f)
 
         # export the section children
         for child in section.get_children():
@@ -196,6 +201,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.dest = self.get_destination_directory(options['dest'])
+        self.quiz_type = ContentType.objects.filter(model='quiz')
 
         request = RequestFactory()
         request.user = UserFactory()
