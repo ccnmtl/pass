@@ -165,31 +165,32 @@ class Command(BaseCommand):
         f.write('---\n')
 
     def export_section(self, module, idx, module_directory, section):
-        # create a file in the content directory
-        filename = '{}{}.md'.format(module_directory, section.slug)
-        print filename
+        if section.pageblock_set.all().count() > 0:
+            # create a file in the content directory
+            filename = '{}{}.md'.format(module_directory, section.slug)
+            print filename
 
-        with open(filename, 'w') as f:
-            self.frontmatter(module, idx, section, f)
+            with open(filename, 'w') as f:
+                self.frontmatter(module, idx, section, f)
 
-            # export pageblocks
-            needs_form = self.open_form(f, section)
+                # export pageblocks
+                needs_form = self.open_form(f, section)
 
-            for pb in section.pageblock_set.all():
-                blk = pb.block()
-                type_name = type(blk).__name__
+                for pb in section.pageblock_set.all():
+                    blk = pb.block()
+                    type_name = type(blk).__name__
 
-                if type_name in self.SHORTCODES:
-                    f.write(self.SHORTCODES[type_name])
-                elif type_name not in self.EXPORTABLE_BLOCKS:
-                    continue
-                elif type_name == 'Quiz':
-                    blk.rhetorical = True
-                    self.export_block(f, type_name, pb)
-                else:
-                    self.export_block(f, type_name, pb)
+                    if type_name in self.SHORTCODES:
+                        f.write(self.SHORTCODES[type_name])
+                    elif type_name not in self.EXPORTABLE_BLOCKS:
+                        continue
+                    elif type_name == 'Quiz':
+                        blk.rhetorical = True
+                        self.export_block(f, type_name, pb)
+                    else:
+                        self.export_block(f, type_name, pb)
 
-            self.close_form(f, needs_form)
+                self.close_form(f, needs_form)
 
         # export the section children
         for child in section.get_children():
