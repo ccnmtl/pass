@@ -76,15 +76,18 @@ class Command(BaseCommand):
         return section.pageblock_set.filter(
             content_type=self.quiz_type).count() > 0
 
-    def open_form(self, f):
-        f.write('<form method="post" action=".">')
+    def open_form(self, f, section):
+        needs_form = self.needs_form(section)
+        if needs_form:
+            f.write('<form method="post" action=".">')
+        return needs_form
 
-    def close_form(self, f, needs_submit):
-        if needs_submit:
+    def close_form(self, f, needs_form):
+        if needs_form:
             f.write('<div class="submit-container">'
                     '<input class="btn btn-info btn-submit-section" '
                     'type="submit" value="Submit" /></div>')
-        f.write('</form>')
+            f.write('</form>')
 
     def postprocess_image(self, img):
         src = img.attrs['src']
@@ -170,9 +173,7 @@ class Command(BaseCommand):
             self.frontmatter(module, idx, section, f)
 
             # export pageblocks
-            needs_form = self.needs_form(section)
-            if needs_form:
-                self.open_form(f)
+            needs_form = self.open_form(f, section)
 
             for pb in section.pageblock_set.all():
                 blk = pb.block()
@@ -180,7 +181,6 @@ class Command(BaseCommand):
 
                 if type_name in self.SHORTCODES:
                     f.write(self.SHORTCODES[type_name])
-                    continue
                 elif type_name not in self.EXPORTABLE_BLOCKS:
                     continue
                 elif type_name == 'Quiz':
@@ -189,8 +189,7 @@ class Command(BaseCommand):
                 else:
                     self.export_block(f, type_name, pb)
 
-            if needs_form:
-                self.close_form(f)
+            self.close_form(f, needs_form)
 
         # export the section children
         for child in section.get_children():
