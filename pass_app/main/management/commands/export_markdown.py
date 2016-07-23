@@ -13,24 +13,64 @@ import requests
 class Command(BaseCommand):
 
     SHORTCODES = {
-        'SpecialNeedsCallBlock':
+        'specialneedscallblock':
             '{{< interactives url="specialneedsvisit" width="900px"' +
             ' height="800px" >}}',
-        'SupportServiceBlock':
+        'supportserviceblock':
             '{{< interactives url="supportservices" width="900px"' +
             ' height="800px" >}}',
-        'InfographicBlock':
+        'infographicblock':
             '{{< highlight html >}}<b>Infographic TBD</b>{{< /highlight >}}',
+        'careermap':
+            '{{< interactives url="careermap" width="900px"' +
+            ' height="800px" >}}',
+        'proxyblock':
+            '{{< interactives url="careermap" width="900px"' +
+            ' height="800px" >}}',
+        'careerlocationstrategyblock':
+            '{{< interactives url="ruralhealth" width="900px"' +
+            ' height="800px" >}}',
+        'careerlocationblock':
+            '{{< interactives url="dentaloffice" width="900px"' +
+            ' height="800px" >}}',
     }
 
     EXPORTABLE_BLOCKS = [
-        'HTMLBlock', 'HTMLBlockWYSIWYG', 'ImageBlock', 'ImagePullQuoteBlock',
-        'PullQuoteBlock', 'Quiz', 'TextBlock'
+        'htmlblock', 'htmlblockwysiwyg', 'imageblock', 'imagepullquoteblock',
+        'pullquoteblock', 'quiz', 'textblock'
     ]
 
     POSTPROCESS_BLOCKS = [
-        'HTMLBlock', 'HTMLBlockWYSIWYG', 'ImageBlock', 'ImagePullQuoteBlock',
-        'TextBlock'
+        'htmlblock', 'htmlblockwysiwyg', 'imageblock', 'imagepullquoteblock',
+        'textblock'
+    ]
+
+    # These sections are now extraneous due to multi-page javascript
+    # interactions being distilled into one page. This is a bit hacky and
+    # closely tied to the PASS hierarchy, but creates the ability to
+    # generate the export without a need for postprocessing.
+    DEPRECATED_SECTIONS = [
+        # module_one
+        'Sam',
+        'Sam\'s Summary',
+        'Sally',
+        'Sally\'s Summary',
+        'Your Career',
+        'Your Summary',
+
+        # module_two
+        'Select a Practice Location',
+        'Board of Director\'s Meeting',
+        'Practice Location Report',
+
+        # module_three
+        'Select Strategy',
+        'Defend Strategy',
+        'Pros & Cons',
+        'Rethink Strategy Selection',
+
+        # all modules
+        'Feedback'
     ]
 
     def add_arguments(self, parser):
@@ -72,12 +112,17 @@ class Command(BaseCommand):
             qs = qs.filter(name=hierarchy_name)
         return qs
 
-    def needs_form(self, section):
+    def has_quizzes(self, section):
         return section.pageblock_set.filter(
             content_type=self.quiz_type).count() > 0
 
+    def has_interactives(self, section):
+        return section.pageblock_set.filter(
+            content_type__model__in=self.SHORTCODES.keys()).count() > 0
+
     def open_form(self, f, section):
-        needs_form = self.needs_form(section)
+        needs_form = (not self.has_interactives(section) and
+                      self.has_quizzes(section))
         if needs_form:
             f.write('<form method="post" action=".">')
         return needs_form
@@ -143,7 +188,7 @@ class Command(BaseCommand):
         f.write(rendered)
         f.write('</div>')
 
-    def frontmatter(self, module, idx, section, f):
+    def frontmatter(self, module, idx, section, f, prev, nxt):
         f.write('---\n')
         f.write('title: "{}"\n'.format(section.label.encode('utf8')))
         f.write('module: "{}"\n'.format(module.label.encode('utf8')))
@@ -154,50 +199,50 @@ class Command(BaseCommand):
         f.write('    weight: {}\n'.format(idx))
         f.write('depth: {}\n'.format(section.depth))
 
-        nxt = section.get_next()
-        if nxt and not nxt.is_root():
+        if nxt:
             f.write('next: "../{}/"\n'.format(nxt.slug))
 
-        prev = section.get_previous()
-        if prev and prev != module:
+        if prev:
             f.write('previous: "../{}/"\n'.format(prev.slug))
 
         f.write('---\n')
 
-    def export_section(self, module, idx, module_directory, section):
-        if section.pageblock_set.all().count() > 0:
-            # create a file in the content directory
-            filename = '{}{}.md'.format(module_directory, section.slug)
-            print filename
+    def export_section(self, module, module_dir, idx, section, prev, nxt):
+        # create a file in the content directory
+        filename = '{}{}.md'.format(module_dir, section.slug)
+        print filename
 
-            with open(filename, 'w') as f:
-                self.frontmatter(module, idx, section, f)
+        with open(filename, 'w') as f:
+            self.frontmatter(module, idx, section, f, prev, nxt)
 
-                # export pageblocks
-                needs_form = self.open_form(f, section)
+            # export pageblocks
+            needs_form = self.open_form(f, section)
 
-                for pb in section.pageblock_set.all():
-                    blk = pb.block()
-                    type_name = type(blk).__name__
+            for pb in section.pageblock_set.all():
+                blk = pb.block()
+                type_name = type(blk).__name__.lower()
 
-                    if type_name in self.SHORTCODES:
-                        f.write(self.SHORTCODES[type_name])
-                    elif type_name not in self.EXPORTABLE_BLOCKS:
-                        continue
-                    elif type_name == 'Quiz':
-                        blk.rhetorical = True
-                        self.export_block(f, type_name, pb)
-                    else:
-                        self.export_block(f, type_name, pb)
+                if type_name in self.SHORTCODES:
+                    f.write(self.SHORTCODES[type_name])
+                    break
+                elif type_name not in self.EXPORTABLE_BLOCKS:
+                    continue
+                elif type_name == 'quiz':
+                    blk.rhetorical = True
+                    self.export_block(f, type_name, pb)
+                else:
+                    self.export_block(f, type_name, pb)
 
-                self.close_form(f, needs_form)
+            self.close_form(f, needs_form)
 
-        # export the section children
-        for child in section.get_children():
-            idx = idx + 1
-            idx = self.export_section(module, idx, module_directory, child)
-
-        return idx
+    def exportable_sections(self, module):
+        sections = []
+        for section in module.get_descendants():
+            if (not section.is_root() and
+                section.pageblock_set.all().count() > 0 and
+                    section.label not in self.DEPRECATED_SECTIONS):
+                sections.append(section)
+        return sections
 
     def handle(self, *args, **options):
         self.dest = self.get_destination_directory(options['dest'])
@@ -211,16 +256,23 @@ class Command(BaseCommand):
         }
 
         try:
-            # hierarchies to export
-            hierarchies = self.hierarchies(options['hierarchy'])
-
-            for hierarchy in hierarchies:
+            for hierarchy in self.hierarchies(options['hierarchy']):
                 # Match/Pass have a root node, followed by a content node
                 # This export pattern will not work for all our pagetree apps
                 module = hierarchy.get_root().get_first_child()
-                module_directory = '{}{}/'.format(
+                d = '{}{}/'.format(
                     self.get_or_create_content_directory(), module.slug)
-                self.create_directory(module_directory)
-                self.export_section(module, 1, module_directory, module)
+                self.create_directory(d)
+
+                # construct an array of exportable sections
+                prev = None
+                nxt = None
+                sections = self.exportable_sections(module)
+                count = len(sections)
+                for idx, section in enumerate(sections):
+                    nextIdx = idx + 1
+                    nxt = sections[nextIdx] if nextIdx < count else None
+                    self.export_section(module, d, idx, section, prev, nxt)
+                    prev = section
         finally:
             request.user.delete()
