@@ -22,10 +22,10 @@ class Command(BaseCommand):
         'infographicblock':
             '{{< highlight html >}}<b>Infographic TBD</b>{{< /highlight >}}',
         'careermap':
-            '{{< interactives url="careermap" width="900px"' +
+            '{{< interactives url="careerplan" width="900px"' +
             ' height="800px" >}}',
         'proxyblock':
-            '{{< interactives url="careermap" width="900px"' +
+            '{{< interactives url="careerplan" width="900px"' +
             ' height="800px" >}}',
         'careerlocationstrategyblock':
             '{{< interactives url="ruralhealth" width="900px"' +
