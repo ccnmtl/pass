@@ -20,13 +20,14 @@ class Command(BaseCommand):
             '{{< interactives url="supportservices" width="900px"' +
             ' height="800px" >}}',
         'infographicblock':
-            '{{< highlight html >}}<b>Infographic TBD</b>{{< /highlight >}}',
+            '{{{{< interactives url="{}" width="900px"' +
+            ' height="800px" >}}}}',
         'careermap':
-            '{{< interactives url="careerplan" width="900px"' +
-            ' height="800px" >}}',
+            '{{{{< interactives url="careerplan/?actorIdx={}" width="900px"' +
+            ' height="800px">}}}}',
         'proxyblock':
-            '{{< interactives url="careerplan" width="900px"' +
-            ' height="800px" >}}',
+            '{{{{< interactives url="careerplan/?actorIdx={}" width="900px"' +
+            ' height="800px" >}}}}',
         'careerlocationstrategyblock':
             '{{< interactives url="ruralhealth" width="900px"' +
             ' height="800px" >}}',
@@ -171,6 +172,23 @@ class Command(BaseCommand):
         body.hidden = True  # don't export the body tag
         return body.encode(formatter=None) if body else ''
 
+    def write_shortcode(self, f, section, type_name):
+        code = self.SHORTCODES[type_name]
+        if type_name == 'careermap' or type_name == 'proxyblock':
+            if section.label == 'Advise Sam':
+                code = code.format(0)
+            elif section.label == 'Advise Sally':
+                code = code.format(1)
+            else:
+                code = code.format(2)
+        elif type_name == 'infographicblock':
+            if section.label == 'Scenario 1':
+                code = code.format('elderdresser')
+            else:
+                code = code.format('elderfridge')
+
+        f.write(code)
+
     def export_block(self, f, type_name, pb):
         if pb.label:
             f.write('<h3>{}</h3>'.format(pb.label.encode('utf-8')))
@@ -223,7 +241,7 @@ class Command(BaseCommand):
                 type_name = type(blk).__name__.lower()
 
                 if type_name in self.SHORTCODES:
-                    f.write(self.SHORTCODES[type_name])
+                    self.write_shortcode(f, section, type_name)
                     break
                 elif type_name not in self.EXPORTABLE_BLOCKS:
                     continue
