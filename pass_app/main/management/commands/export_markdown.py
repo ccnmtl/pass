@@ -43,7 +43,7 @@ class Command(BaseCommand):
 
     POSTPROCESS_BLOCKS = [
         'htmlblock', 'htmlblockwysiwyg', 'imageblock', 'imagepullquoteblock',
-        'textblock'
+        'textblock', 'quiz'
     ]
 
     # These sections are now extraneous due to multi-page javascript
@@ -167,6 +167,8 @@ class Command(BaseCommand):
                 self.postprocess_image(tag)
             elif tag.name == 'iframe':
                 self.postprocess_video(tag)
+            elif tag.name == 'script':
+                tag.extract()
 
         body = soup.find('body')
         body.hidden = True  # don't export the body tag
