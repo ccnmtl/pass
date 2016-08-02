@@ -14,26 +14,26 @@ class Command(BaseCommand):
 
     SHORTCODES = {
         'specialneedscallblock':
-            '{{< interactives url="specialneedsvisit" width="900px"' +
-            ' height="800px" >}}',
+            '\n\n{{< interactives url="specialneedsvisit" minsize="all"' +
+            ' name="specialneedsvisit" >}}',
         'supportserviceblock':
-            '{{< interactives url="supportservices" width="900px"' +
-            ' height="800px" >}}',
+            '\n\n{{< interactives url="supportservices" minsize="all"' +
+            ' name="supportservices" >}}',
         'infographicblock':
             '{{{{< interactives url="{}" width="900px"' +
             ' height="800px" >}}}}',
         'careermap':
-            '{{{{< interactives url="careerplan/?actorIdx={}" width="900px"' +
-            ' height="800px">}}}}',
+            '\n\n{{{{< interactives url="careerplan/?actorIdx={}"' +
+            ' minsize="all" name="careerplan">}}}}',
         'proxyblock':
-            '{{{{< interactives url="careerplan/?actorIdx={}" width="900px"' +
-            ' height="800px" >}}}}',
+            '\n\n{{{{< interactives url="careerplan/?actorIdx={}"' +
+            ' minsize="all" name="careerplan" >}}}}',
         'careerlocationstrategyblock':
-            '{{< interactives url="ruralhealth" width="900px"' +
-            ' height="800px" >}}',
+            '\n\n{{< interactives url="ruralhealth" minsize="all"' +
+            ' name="ruralhealth" >}}',
         'careerlocationblock':
-            '{{< interactives url="dentaloffice" width="900px"' +
-            ' height="800px" >}}',
+            '\n\n{{< interactives url="dentaloffice" minsize="all"' +
+            ' name="dentaloffice" >}}',
     }
 
     EXPORTABLE_BLOCKS = [
