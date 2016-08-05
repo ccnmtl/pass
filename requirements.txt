@@ -72,7 +72,7 @@ django-bootstrap3==7.0.1
 django-markwhat==1.5
 django-pagetree==1.2.2
 django-pageblocks==1.0.4
-django-quizblock==1.2.1
+django-quizblock==1.2.2
 django-pagetree_export==0.4
 django-careermapblock==0.3.1
 django-stagingcontext==0.1.0
