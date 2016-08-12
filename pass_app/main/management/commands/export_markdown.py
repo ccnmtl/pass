@@ -1,5 +1,5 @@
 import os
-from urlparse import urlparse
+from urlparse import urlparse, parse_qs
 
 from bs4 import BeautifulSoup
 from django.contrib.contenttypes.models import ContentType
@@ -73,6 +73,42 @@ class Command(BaseCommand):
         # all modules
         'Feedback'
     ]
+
+    VIDEOS = {
+        '': 'missing',
+
+        # module one - exemplars.md
+        ('projects/pediatric_oral_health/'
+         'pediatric_oral_health_pass_brodkin.mp4'): 'NWNxuJ0MK3k',
+        ('projects/pediatric_oral_health/'
+         'pediatric_oral_health_pass_ureles.mp4'): 'NWNxuJ0MK3k',
+
+        # module two - exemplars.md
+        ('projects/pediatric_oral_health/'
+         'pediatric_oral_health_pass_chinn.mp4'): 'NWNxuJ0MK3k',
+        ('projects/pediatric_oral_health/'
+         'pediatric_oral_health_pass_blumenthal.mp4'): 'NWNxuJ0MK3k',
+
+        # module three
+        ('pass_summer2013_pratt_1.mp4'): 'NWNxuJ0MK3k',  # introduction.md
+        ('pass_summer2013_pratt_2.mp4'): 'NWNxuJ0MK3k',  # dr-carole-pratt.md
+
+        # module four
+        ('/d196205b-5424-4d08-b47d-5ca55a4f69a2-Pass_Dr_Ahluwalia_082014'
+         '-mp4-aac-480w-850kbps-ffmpeg.mp4'): 'NWNxuJ0MK3k',  # introduction.md
+        ('/3e87793d-de01-4aab-8ec4-2645f4833113-Pass_Dr_Bunza_2014-mp4-'
+         'aac-480w-850kbps-ffmpeg.mp4'): 'NWNxuJ0MK3k',  # a-few-years-later.md
+        ('/bacd45a6-a42e-4f1e-ae5a-c929150314f6-Pass_Dr_Albert_082014-mp4-'
+         'aac-480w-850kbps-ffmpeg.mp4'): 'NWNxuJ0MK3k',  # dr-david-albert.md
+
+        # module five
+        ('/96626613-0ebc-4b29-a540-59b0f291c81d_480-20150217_pass_upd_v1_et'
+         '.mp4'): 'NWNxuJ0MK3k',  # introduction.md
+        ('/b98abe13-5d70-4d24-b9ba-be6f9a34d796_480-20150217_pass_upd_v2_et'
+         '.mp4'): 'NWNxuJ0MK3k',  # pre-visit.md
+        ('/c70811d6-7d36-4aa5-8fa8-977048adf4a3_480-20150217_pass_upd_v3_et'
+         '.mp4'): 'NWNxuJ0MK3k',  # visit-summary.md
+    }
 
     def add_arguments(self, parser):
         parser.add_argument('dest',  help='Destination directory')
@@ -156,7 +192,16 @@ class Command(BaseCommand):
         img.extract()
 
     def postprocess_video(self, iframe):
-        shortcode = '{{< youtube id="NWNxuJ0MK3k" >}}'
+        parts = urlparse(iframe.attrs['src'])
+        params = parse_qs(parts[4])
+        try:
+            link = self.VIDEOS[params['file'][0]]
+        except KeyError:
+            print 'Missing: {}'.format(params['file'][0])
+            link = ''
+
+        # parse out the file
+        shortcode = '{{{{< youtube id="{}" >}}}}'.format(link)
         iframe.parent.append(shortcode)
         iframe.extract()
 
