@@ -17,11 +17,11 @@ class Command(BaseCommand):
             '\n\n{{< interactives url="specialneedsvisit" minsize="all"' +
             ' name="specialneedsvisit" >}}',
         'supportserviceblock':
-            '\n\n{{< interactives url="supportservices" minsize="all"' +
+            '\n\n{{< interactives url="supportservices" minsize="sm"' +
             ' name="supportservices" >}}',
         'infographicblock':
-            '{{{{< interactives url="{}" width="900px"' +
-            ' height="800px" >}}}}',
+            '\n\n{{{{< interactives url="{}" minsize="sm"' +
+            ' name="elderissues" >}}}}',
         'careermap':
             '\n\n{{{{< interactives url="careerplan/?actorIdx={}"' +
             ' minsize="all" name="careerplan">}}}}',
