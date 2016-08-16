@@ -262,6 +262,7 @@ class Command(BaseCommand):
         f.write('  {}:\n'.format(module.slug.replace('-', '_')))
         f.write('    parent: "{}"\n'.format(module.slug.replace('-', '_')))
         f.write('    weight: {}\n'.format(idx))
+        f.write('    identifier: "{}"\n'.format(section.slug))
         f.write('depth: {}\n'.format(section.depth))
 
         if nxt:
