@@ -20,19 +20,19 @@ class Command(BaseCommand):
             '\n\n{{< interactives url="supportservices" minsize="sm"' +
             ' name="supportservices" >}}',
         'infographicblock':
-            '\n\n{{{{< interactives url="{}" minsize="sm"' +
+            '\n\n{{{{< interactives url="{}" minsize="md"' +
             ' name="elderissues" >}}}}',
         'careermap':
             '\n\n{{{{< interactives url="careerplan/?actorIdx={}"' +
-            ' minsize="all" name="careerplan">}}}}',
+            ' minsize="md" name="careerplan" >}}}}',
         'proxyblock':
             '\n\n{{{{< interactives url="careerplan/?actorIdx={}"' +
-            ' minsize="all" name="careerplan" >}}}}',
+            ' minsize="md" name="careerplan" >}}}}',
         'careerlocationstrategyblock':
-            '\n\n{{< interactives url="ruralhealth" minsize="all"' +
+            '\n\n{{< interactives url="ruralhealth" minsize="md"' +
             ' name="ruralhealth" >}}',
         'careerlocationblock':
-            '\n\n{{< interactives url="dentaloffice" minsize="all"' +
+            '\n\n{{< interactives url="dentaloffice" minsize="md"' +
             ' name="dentaloffice" >}}',
     }
 
