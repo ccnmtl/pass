@@ -13,9 +13,9 @@ PROJECT_APPS = [
     'pass_app.specialneeds',
 ]
 
-TEMPLATE_CONTEXT_PROCESSORS += [  # noqa
+TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
     'pass_app.main.views.context_processor'
-]
+)
 
 ROOT_URLCONF = 'pass_app.urls'
 
