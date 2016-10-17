@@ -42,7 +42,7 @@ enum34==1.1.6
 configparser==3.5.0
 flake8==3.0.4
 pyasn1==0.1.9
-pyOpenSSL==16.1.0
+pyOpenSSL==16.2.0
 ndg-httpsclient==0.4.2
 sqlparse==0.2.1
 contextlib2==0.5.4
