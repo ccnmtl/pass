@@ -90,24 +90,24 @@ class Command(BaseCommand):
          'pediatric_oral_health_pass_blumenthal.mp4'): 'NWNxuJ0MK3k',
 
         # module three
-        ('pass_summer2013_pratt_1.mp4'): 'NWNxuJ0MK3k',  # introduction.md
-        ('pass_summer2013_pratt_2.mp4'): 'NWNxuJ0MK3k',  # dr-carole-pratt.md
+        ('pass_summer2013_pratt_1.mp4'): '6C_u3oIO5AQ',  # introduction.md
+        ('pass_summer2013_pratt_2.mp4'): '-jg4noiXlVg',  # dr-carole-pratt.md
 
         # module four
         ('/d196205b-5424-4d08-b47d-5ca55a4f69a2-Pass_Dr_Ahluwalia_082014'
-         '-mp4-aac-480w-850kbps-ffmpeg.mp4'): 'NWNxuJ0MK3k',  # introduction.md
+         '-mp4-aac-480w-850kbps-ffmpeg.mp4'): 'BxVpW_YOL5E',  # introduction.md
         ('/3e87793d-de01-4aab-8ec4-2645f4833113-Pass_Dr_Bunza_2014-mp4-'
-         'aac-480w-850kbps-ffmpeg.mp4'): 'NWNxuJ0MK3k',  # a-few-years-later.md
+         'aac-480w-850kbps-ffmpeg.mp4'): 'D-y12J6SIZI',  # a-few-years-later.md
         ('/bacd45a6-a42e-4f1e-ae5a-c929150314f6-Pass_Dr_Albert_082014-mp4-'
-         'aac-480w-850kbps-ffmpeg.mp4'): 'NWNxuJ0MK3k',  # dr-david-albert.md
+         'aac-480w-850kbps-ffmpeg.mp4'): 'VZ_9wRVM7JY',  # dr-david-albert.md
 
         # module five
         ('/96626613-0ebc-4b29-a540-59b0f291c81d_480-20150217_pass_upd_v1_et'
-         '.mp4'): 'NWNxuJ0MK3k',  # introduction.md
+         '.mp4'): 'IlLN3iXB3hk',  # introduction.md
         ('/b98abe13-5d70-4d24-b9ba-be6f9a34d796_480-20150217_pass_upd_v2_et'
-         '.mp4'): 'NWNxuJ0MK3k',  # pre-visit.md
+         '.mp4'): 'ouTJEbK4NpU',  # pre-visit.md
         ('/c70811d6-7d36-4aa5-8fa8-977048adf4a3_480-20150217_pass_upd_v3_et'
-         '.mp4'): 'NWNxuJ0MK3k',  # visit-summary.md
+         '.mp4'): 'cvPKS5EEkvU',  # visit-summary.md
     }
 
     def add_arguments(self, parser):
