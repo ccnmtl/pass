@@ -79,15 +79,15 @@ class Command(BaseCommand):
 
         # module one - exemplars.md
         ('projects/pediatric_oral_health/'
-         'pediatric_oral_health_pass_brodkin.mp4'): 'NWNxuJ0MK3k',
+         'pediatric_oral_health_pass_brodkin.mp4'): 'bnvRu4yEwok',
         ('projects/pediatric_oral_health/'
-         'pediatric_oral_health_pass_ureles.mp4'): 'NWNxuJ0MK3k',
+         'pediatric_oral_health_pass_ureles.mp4'): '8xVEHAMkRy8',
 
         # module two - exemplars.md
         ('projects/pediatric_oral_health/'
-         'pediatric_oral_health_pass_chinn.mp4'): 'NWNxuJ0MK3k',
+         'pediatric_oral_health_pass_chinn.mp4'): 'ormKDFoEsU8',
         ('projects/pediatric_oral_health/'
-         'pediatric_oral_health_pass_blumenthal.mp4'): 'NWNxuJ0MK3k',
+         'pediatric_oral_health_pass_blumenthal.mp4'): 'pumkDIigEM4',
 
         # module three
         ('pass_summer2013_pratt_1.mp4'): '6C_u3oIO5AQ',  # introduction.md
