@@ -23,10 +23,10 @@ class Command(BaseCommand):
             '\n\n{{{{< interactives url="{}" minsize="md"' +
             ' name="elderissues" >}}}}',
         'careermap':
-            '\n\n{{{{< interactives url="careerplan/?actorIdx={}"' +
+            '\n\n{{{{< interactives url="careerplan/?actorIdx={}&next=1"' +
             ' minsize="md" name="careerplan" >}}}}',
         'proxyblock':
-            '\n\n{{{{< interactives url="careerplan/?actorIdx={}"' +
+            '\n\n{{{{< interactives url="careerplan/?actorIdx={}&next=1"' +
             ' minsize="md" name="careerplan" >}}}}',
         'careerlocationstrategyblock':
             '\n\n{{< interactives url="ruralhealth" minsize="md"' +
