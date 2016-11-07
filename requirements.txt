@@ -37,7 +37,7 @@ pep8==1.7.0
 mccabe==0.5.2
 pyflakes==1.3.0
 BeautifulSoup4==4.5.1
-pycodestyle==2.0.0
+pycodestyle==2.1.0
 enum34==1.1.6
 configparser==3.5.0
 flake8==3.0.4
