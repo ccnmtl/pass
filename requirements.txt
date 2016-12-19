@@ -80,7 +80,7 @@ django-ga-context==0.1.0
 django-waffle==0.11.1 
 raven==5.32.0
 Faker==0.7.3
-factory_boy==2.7.0
+factory_boy==2.8.1
 django-impersonate==1.0.1
 django-debug-toolbar==1.6
 gunicorn==19.6.0
