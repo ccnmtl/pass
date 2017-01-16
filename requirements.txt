@@ -69,7 +69,7 @@ django-statsd-mozilla==0.3.16
 django-appconf==1.0.2
 django-compressor==2.1
 django-bootstrap-form==3.2.1
-django-bootstrap3==8.0.0
+django-bootstrap3==8.1.0
 django-markwhat==1.5.1
 django-pagetree==1.2.4
 django-pageblocks==1.0.4
