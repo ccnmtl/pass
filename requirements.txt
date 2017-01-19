@@ -71,7 +71,7 @@ django-compressor==2.1
 django-bootstrap-form==3.2.1
 django-bootstrap3==8.1.0
 django-markwhat==1.5.1
-django-pagetree==1.2.4
+django-pagetree==1.2.5
 django-pageblocks==1.0.4
 django-quizblock==1.2.2
 django-pagetree_export==0.4
