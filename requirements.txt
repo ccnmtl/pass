@@ -35,7 +35,7 @@ logilab-common==1.3.0
 logilab-astng==0.24.3
 pylint==1.6.5
 pep8==1.7.0
-mccabe==0.5.3
+mccabe==0.6.0
 pyflakes==1.5.0
 BeautifulSoup4==4.5.3
 pycodestyle==2.0
