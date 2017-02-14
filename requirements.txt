@@ -41,8 +41,11 @@ BeautifulSoup4==4.5.3
 pycodestyle==2.0
 enum34==1.1.6
 configparser==3.5.0
+
+pyasn1==0.2.2
+
 flake8==3.3.0
-pyasn1==0.2.1
+
 pyOpenSSL==16.2.0
 ndg-httpsclient==0.4.2
 sqlparse==0.2.2
