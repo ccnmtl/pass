@@ -42,7 +42,7 @@ pycodestyle==2.0
 enum34==1.1.6
 configparser==3.5.0
 
-pyasn1==0.2.2
+pyasn1==0.2.3
 
 flake8==3.3.0
 
