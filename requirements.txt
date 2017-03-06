@@ -48,7 +48,7 @@ flake8==3.3.0
 
 pyOpenSSL==16.2.0
 ndg-httpsclient==0.4.2
-sqlparse==0.2.2
+sqlparse==0.2.3
 contextlib2==0.5.4
 rcssmin==1.0.6
 rjsmin==1.0.12
@@ -86,8 +86,10 @@ raven==6.0.0
 Faker==0.7.9
 factory_boy==2.8.1
 django-impersonate==1.1
-django-debug-toolbar==1.6
+
+django-debug-toolbar==1.7
 gunicorn==19.7.0
+
 boto==2.46.1
 django-storages==1.5.2
 django-cacheds3storage==0.1.2
