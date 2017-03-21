@@ -13,7 +13,7 @@ six==1.10.0
 python-dateutil==2.6.0
 mimeparse==0.1.3
 fuzzywuzzy==0.15.0
-sure==1.4.1
+sure==1.4.3
 traitlets==4.3.2
 ipython_genutils==0.2.0
 decorator==4.0.11
