@@ -88,7 +88,7 @@ factory_boy==2.8.1
 django-impersonate==1.1
 
 django-debug-toolbar==1.7
-gunicorn==19.7.0
+gunicorn==19.7.1
 
 boto==2.46.1
 django-storages==1.5.2
