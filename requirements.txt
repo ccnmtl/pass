@@ -33,6 +33,7 @@ selenium==2.53.6
 coverage==4.3.4
 logilab-common==1.4.0
 logilab-astng==0.24.3
+editdistance==0.3.1
 pylint==1.7.0
 pep8==1.7.0
 mccabe==0.6.1
