@@ -30,7 +30,7 @@ testscenarios==0.5.0
 python-subunit==1.2.0
 lettuce==0.2.19ccnmtl
 selenium==2.53.6
-coverage==4.3.4
+coverage==4.4
 logilab-common==1.4.0
 logilab-astng==0.24.3
 editdistance==0.3.1
