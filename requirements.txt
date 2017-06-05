@@ -91,7 +91,7 @@ django-impersonate==1.1
 django-debug-toolbar==1.8
 gunicorn==19.7.1
 
-boto==2.46.1
+boto==2.47.0
 django-storages==1.5.2
 django-cacheds3storage==0.1.2
 django-smtp-ssl==1.0
