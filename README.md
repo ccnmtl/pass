@@ -5,7 +5,7 @@ PASS is a five-year project to build a website with tools to educate pre-doctora
 
 This Django project was deprecated July 2017, and is not actively maintained.
 
-A sustainable, static site was developed in Hugo to house the content and activities. Visit <a href="http://pass.ctl.columbia.edu">Pass</a>.
+A sustainable, static site was developed in Hugo to house the content and activities. Visit <a href="http://pass.ctl.columbia.edu">Pass pass.ctl.columbia.edu</a>.
 
 REQUIREMENTS
 ------------
